@@ -30,7 +30,6 @@ passport.use('google-signup', new GoogleStrategy(signUp, async(accessToken, refr
     const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "1h" })
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
-    console.log("user is" + user)
     done(null, user)
 }));
 

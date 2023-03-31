@@ -11,12 +11,6 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    dob: {
-        type: Date
-    },
-    contactno: {
-        type: Number
-    },
     username: {
         type: String,
         required: true

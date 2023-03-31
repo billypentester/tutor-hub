@@ -42,7 +42,6 @@ const login = async(req, res) => {
 const emailVerification = (req, res) => {
 
     const token = req.params.token
-    console.log(req.params,token)
     jwt.verify(token, process.env.secret, (err, decoded) => {
         if(err){
             res.status(400).json({msg: 'Invalid token'})

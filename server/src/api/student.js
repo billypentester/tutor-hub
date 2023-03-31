@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {signUp, login, userPanel, emailVerification} = require('../controllers/studentController')
+const {signUp, login, userPanel, emailVerification, getUser} = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const passport = require('passport');
 
+router.get('/student/details/:id', getUser)
 router.post('/student/signup', Register, signUp)
 router.post('/student/login', Login, login)
 router.get('/student/dashboard', auth, userPanel)

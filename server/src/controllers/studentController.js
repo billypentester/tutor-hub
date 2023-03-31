@@ -7,8 +7,8 @@ require('dotenv').config();
 const signUp = async(req, res) => {
 
     try{
-        const {name, email, password, contactno, dob, username} = req.body;
-        const student = new Student({name, email, password, contactno, dob, username})
+        const {name, email, password, username} = req.body;
+        const student = new Student({name, email, password, username})
 
         const token = jwt.sign({ email: email, role:'student'  }, process.env.secret , { expiresIn: "1h" })
         student.tokens = student.tokens.concat({ token : token })
@@ -17,10 +17,10 @@ const signUp = async(req, res) => {
         const verificationLink = `http://localhost:3000/student/verify/${token}`
         await mail({ from: process.env.email, to: email, subject: 'Email verification', text: `Please click on the following link to verify your email: ${verificationLink}`})
 
-        res.json({ msg: 'Student created successfully'})
+        res.status(200).json({ msg: 'Student created successfully'})
     }
     catch(err){
-        res.status(400).send(err.message);
+        res.status(400).json(err.message);
     }
 
 }
@@ -50,7 +50,7 @@ const emailVerification = (req, res) => {
             Student.findOne({email: decoded.email}).then((student) => {
                 student.isVerified = true
                 student.save()
-                res.json({msg: 'Email verified successfully'})
+                res.redirect(`http://localhost:5173/signup/student/verify/${student.isVerified}`)
             })
         }
     })
@@ -58,10 +58,23 @@ const emailVerification = (req, res) => {
 }
 
 const userPanel = async(req, res) => {
+    res.redirect(`http://localhost:5173/student/dashboard/${req.user._id}`)
+}
 
-    res.json(req.user)
+const getUser = async(req, res) => {
+
+    try{
+        console.log(req.params.id)
+        const student = await Student.findById(req.params.id)
+        res.json(student)
+    }
+    catch(err){
+        console.log(err)
+        res.status(400).json(err.message);
+    }
 
 }
 
-module.exports = {signUp, login, userPanel, emailVerification}
+
+module.exports = {signUp, login,  emailVerification, userPanel, getUser}
 
