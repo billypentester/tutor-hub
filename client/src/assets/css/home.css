@@ -176,3 +176,33 @@ CSS.g-6,
     padding-bottom: 4.5rem !important;
   }
 }
+
+
+.signupBackground {
+  background-image: url("https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+
+.legendLine {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  overflow: hidden;
+  text-align: center;
+}
+.legendLine:before, .legendLine:after {
+  position: absolute;
+  top: 52%;
+  overflow: hidden;
+  width: 30%;
+  height: 1px;
+  content: '\a0';
+  background-color: #6c83a2;
+}
+.legendLine:before {
+  margin-left: -30%;
+  text-align: right;
+}
