@@ -5,9 +5,7 @@ import './../../assets/css/home.css'
 
 function Verifier() {
 
-    const { status } = useParams()
-
-    console.log(status)
+  const { status, role } = useParams()
 
   return (
     <div>
@@ -24,19 +22,19 @@ function Verifier() {
                 <p className='lead p-0 m-0'>If you don't see the email in your inbox, please check your spam folder.</p>
               </div>
               <div>
-                <Link className='btn btn-primary mx-2' to="/login/student">Login</Link>
-                <Link className='btn btn-outline-primary mx-2'  to="/">Go to Home</Link>
+                <Link className='btn btn-primary mx-2' to={'/login/'+role}>Login</Link>
+                <Link className='btn btn-outline-primary mx-2' to="/">Go to Home</Link>
               </div>
             </div>
             :
             <div className="p-5 text-center text-dark">
-              <h1 class='display-4 text-dark'>Email Verified</h1>
+              <h1 className='display-4 text-dark'>Email Verified</h1>
               <div className='my-4'>
                 <p className='lead p-0 m-0'>Thanks for email verification.<br/> <strong>Your email have been verified.</strong> </p>
                 <p className='lead p-0 m-0'>Now, you can use your credential to login to your account.</p>
               </div>
               <div>
-                <Link className='btn btn-primary mx-2' to="/login/student">Login</Link>
+                <Link className='btn btn-primary mx-2' to={'/login/'+role}>Login</Link>
                 <Link className='btn btn-outline-primary mx-2'  to="/">Go to Home</Link>
               </div>
             </div>

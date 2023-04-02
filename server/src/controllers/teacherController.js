@@ -35,7 +35,7 @@ const login = async(req, res) => {
     await teacher.save();
     res.cookie('token', token);
 
-    res.json(teacher);
+    res.json({token: token, teacher: teacher})
 
 }
 
@@ -50,7 +50,7 @@ const emailVerification = (req, res) => {
             Teacher.findOne({email: decoded.email}).then((teacher) => {
                 teacher.isVerified = true
                 teacher.save()
-                res.json({msg: 'Email verified successfully'})
+                res.redirect(`http://localhost:5173/verify/student/${teacher.isVerified}`)
             })
         }
     })
@@ -59,19 +59,13 @@ const emailVerification = (req, res) => {
 
 const userPanel = async(req, res) => {
 
-    res.redirect(`http://localhost:5173/teacher/dashboard/${req.user._id}`)
-
-}
-
-const getUser = async(req, res) => {
-
     try{
-        console.log(req.params.id)
-        const teacher = await Teacher.findById(req.params.id)
+        const {token} = req.body;
+        const decoded = jwt.verify(token, process.env.secret)
+        const teacher = await Teacher.findOne({email: decoded.email})
         res.json(teacher)
     }
     catch(err){
-        console.log(err)
         res.status(400).json(err.message);
     }
 
@@ -79,5 +73,5 @@ const getUser = async(req, res) => {
 
 
 
-module.exports = {signUp, login, userPanel, emailVerification, getUser}
+module.exports = {signUp, login, userPanel, emailVerification}
 

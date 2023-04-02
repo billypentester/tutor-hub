@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Statistics({student}) {
+function Statistics({teacher}) {
   return (
     <div>
       <h3 className='text-center my-3'>Statistics</h3>
@@ -14,27 +14,27 @@ function Statistics({student}) {
         <tbody>
           <tr>
             <th scope="row">Name</th>
-            <td>{student.name}</td>
+            <td>{teacher.name}</td>
           </tr>
           <tr>
             <th scope="row">Email</th>
-            <td>{student.email}</td>
+            <td>{teacher.email}</td>
           </tr>
           <tr>
             <th scope="row">Username</th>
-            <td>{student.username}</td>
+            <td>{teacher.username}</td>
           </tr>
           <tr>
             <th scope="row">Role</th>
-            <td>{student.role}</td>
+            <td>{teacher.role}</td>
           </tr>
           <tr>
             <th scope="row">Verified</th>
-            <td>{JSON.stringify(student.isVerified)}</td>
+            <td>{JSON.stringify(teacher.isVerified)}</td>
           </tr>
           <tr>
             <th scope="row">Password</th>
-            <td>{student.password}</td>
+            <td>{teacher.password}</td>
           </tr>
         </tbody>
       </table>  

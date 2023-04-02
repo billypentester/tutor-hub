@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function Navbar({student}) {
+function Navbar() {
 
   function logout() {
-    localStorage.removeItem('student')
+    localStorage.removeItem('teacher')
     localStorage.removeItem('token')
     window.location.href = '/'
   }

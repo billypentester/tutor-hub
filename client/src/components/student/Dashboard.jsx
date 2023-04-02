@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
 import Navbar from './Navbar'
@@ -11,26 +11,40 @@ import Appointments from './Appointments'
 import Profile from './Profile'
 
 
-function Dashoard() {
-  
+function StudentDashoard() {
+
     const [student, setStudent] = useState('')
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
 
     async function getStudent() {
-      const student = localStorage.getItem('student')
-      if (!student)
-      {
-        navigate('/')
-        return  // This is important
-      }
 
-      setStudent(JSON.parse(student))
+      try{
+        if(localStorage.getItem('student')) {
+          const student = JSON.parse(localStorage.getItem('student'))
+          setStudent(student)
+        } 
+        else
+        {
+          const res = await axios.post('http://localhost:3000/student/details', {token})
+          console.log(res)
+          setStudent(res.data)
+          localStorage.setItem('student', JSON.stringify(res.data))
+        } 
+      }
+      catch(err) {
+        console.log(err)
+        navigate('/login')
+      }
+        
     }
 
     useEffect(() => {
       getStudent()
-    }, [])
-
+    }, [token])
 
   return (
     <>
@@ -49,4 +63,4 @@ function Dashoard() {
   )
 }
 
-export default Dashoard
+export default StudentDashoard

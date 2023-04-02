@@ -31,7 +31,7 @@ const teacherLogin = {
 
 passport.use('student-signup', new GoogleStrategy(studentSignUp, async(accessToken, refreshToken, profile, done) => {
     const find = await Student.findOne({email: profile.emails[0].value})
-    if(find) return done(null, {message: 'User already exists'})
+    if(find) return done(null, find)
     const user = new Student({
         name: profile.displayName,
         email: profile.emails[0].value,
@@ -48,16 +48,24 @@ passport.use('student-signup', new GoogleStrategy(studentSignUp, async(accessTok
 
 passport.use('student-login', new GoogleStrategy(studentLogin, async(accessToken, refreshToken, profile, done) => {
     const find = await Student.findOne({email: profile.emails[0].value})
-    if(!find) return done(null, {message: 'User does not exists'})
+    if(find) return done(null, find)
+    const user = new Student({
+        name: profile.displayName,
+        email: profile.emails[0].value,
+        username: profile.id,
+        password: profile.id,
+        isVerified: profile.emails[0].verified,
+        role:'student'
+    })
     const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "1h" })
-    find.tokens = find.tokens.concat({ token : token })
-    await find.save();
-    done(null, find)
+    user.tokens = user.tokens.concat({ token : token })
+    await user.save();
+    done(null, user)
 }));
 
 passport.use('teacher-signup', new GoogleStrategy(teacherSignUp, async(accessToken, refreshToken, profile, done) => {
     const find = await Teacher.findOne({email: profile.emails[0].value})
-    if(find) return done(null, {message: 'User already exists'})
+    if(find) return done(null, find)
     const user = new Teacher({
         name: profile.displayName,
         email: profile.emails[0].value,
@@ -74,11 +82,19 @@ passport.use('teacher-signup', new GoogleStrategy(teacherSignUp, async(accessTok
 
 passport.use('teacher-login', new GoogleStrategy(teacherLogin, async(accessToken, refreshToken, profile, done) => {
     const find = await Teacher.findOne({email: profile.emails[0].value})
-    if(!find) return done(null, {message: 'User does not exists'})
+    if(find) return done(null, find)
+    const user = new Teacher({
+        name: profile.displayName,
+        email: profile.emails[0].value,
+        username: profile.id,
+        password: profile.id,
+        isVerified: profile.emails[0].verified,
+        role:'teacher'
+    })
     const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "1h" })
-    find.tokens = find.tokens.concat({ token : token })
-    await find.save();
-    done(null, find)
+    user.tokens = user.tokens.concat({ token : token })
+    await user.save();
+    done(null, user)
 }));
 
 

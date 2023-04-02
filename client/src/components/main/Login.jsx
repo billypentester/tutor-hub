@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import './../../assets/css/home.css'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
 function Login() {
@@ -88,6 +88,10 @@ function Login() {
                 </div>
 
                 <button className="btn px-5 btn-primary" onClick={handleSubmit}>Login</button>
+
+                <span className="text-center d-block pt-4">
+                  Don't have an account? <Link to={`/signup/${role}`} className="text-primary"> Signup</Link>
+                </span>
 
               </form>
             </div>

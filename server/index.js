@@ -16,18 +16,18 @@ const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
 app.use(cors());
 app.use(morgan('tiny'))
 
 app.use(session({
     secret: process.env.secret,
     resave: false,
-    saveUninitialized: true
-}));
+    saveUninitialized: true,
+    cookie: { secure: false }
+}))
 
-app.use(passport.session());
 app.use(passport.initialize())
+app.use(passport.session());
 
 app.use(student)
 app.use(teacher)

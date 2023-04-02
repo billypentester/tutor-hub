@@ -19,9 +19,9 @@ function Signup() {
 
   const [loading, setLoading] = useState(false);
 
-  const authwithGoogle = async() => {
-    const url = `http://localhost:3000/${role}/createGoogle`;
-    window.location.href = url;
+  const authwithGoogle = async () => {
+    const url = `http://localhost:3000/${role}/createGoogle`  
+    window.location.href = url
   }
 
   const handleChangeInput = e => {
@@ -36,7 +36,7 @@ function Signup() {
       const res = await axios.post(`http://localhost:3000/${role}/signup`, user)
       if(res.status === 200) {
         setLoading(false)
-        navigate(`/signup/${role}/verify/false`)
+        navigate(`/verify/${role}/false`)
       }
     } catch (err) {
       console.log(err)
@@ -63,7 +63,7 @@ function Signup() {
             <p className="mb-4">Thanks for joining us. Please register by completing the information below.</p>
 
             <div className="row">
-              <button type="button" className="btn btn-outline-danger btn-lg btn-block" onClick={authwithGoogle}>
+              <button className="btn btn-outline-danger btn-lg btn-block" onClick={authwithGoogle}>
                 <i className="fa-brands fa-google text-outline-danger mx-3"></i> Sign up with Google
               </button>
             </div>
@@ -123,8 +123,8 @@ function Signup() {
 
               <button className="btn px-5 btn-primary" onClick={handleSubmit}>Sign up</button>
 
-              <span className="text-center d-block pt-4">Already have an account?
-                <Link to='/login/${role}' className="btn btn-link">Login here</Link>
+              <span className="text-center d-block pt-4">
+                Already have an account? <Link to={`/login/${role}`} className="text-primary"> Login</Link>
               </span>
 
             </form>

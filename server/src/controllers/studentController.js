@@ -50,7 +50,7 @@ const emailVerification = (req, res) => {
             Student.findOne({email: decoded.email}).then((student) => {
                 student.isVerified = true
                 student.save()
-                res.redirect(`http://localhost:5173/signup/student/verify/${student.isVerified}`)
+                res.redirect(`http://localhost:5173/signup/verify/student/${student.isVerified}`)
             })
         }
     })
@@ -59,10 +59,26 @@ const emailVerification = (req, res) => {
 
 const userPanel = async(req, res) => {
 
-    const user = req.user;
-    console.log(user)
-    res.send(`Hello,!`);
+    try{
+        const {token} = req.body;
+        const decoded = jwt.verify(token, process.env.secret)
+        const student = await Student.findOne({email: decoded.email})
+        res.json(student)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
 
+}
+
+const signupredirection = (req, res) => {
+    // get req status code
+    console.log('code: ', req.statusCode)
+    res.redirect('/student/createGoogle')
+}
+
+const loginredirection = (req, res) => {
+    res.redirect('/student/useGoogle')
 }
 
 const getUser = async(req, res) => {
@@ -80,5 +96,5 @@ const getUser = async(req, res) => {
 }
 
 
-module.exports = {signUp, login,  emailVerification, userPanel, getUser}
+module.exports = {signUp, login,  emailVerification, userPanel, getUser, signupredirection, loginredirection}
 
