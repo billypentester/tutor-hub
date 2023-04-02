@@ -12,6 +12,8 @@ const auth = async (req, res, next) => {
         if (!token) throw new Error();
         const verifyUser = jwt.verify(token, process.env.secret);
 
+        console.log(verifyUser.role)
+
         switch (verifyUser.role) 
         {
             case 'student':

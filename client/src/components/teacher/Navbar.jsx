@@ -23,26 +23,26 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarColor01">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link active" to="/student/dashboard">Dashboard
+              <Link className="nav-link active" to="/teacher/dashboard">Dashboard
                 <span className="visually-hidden">(current)</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/finder">Finder</Link>
+              <Link className="nav-link" to="/teacher/dashboard/finder">Finder</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/classNameroom">Classroom</Link>
+              <Link className="nav-link" to="/teacher/dashboard/classNameroom">Classroom</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/messages">Messages</Link>
+              <Link className="nav-link" to="/teacher/dashboard/messages">Messages</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/appointments">Appointments</Link>
+              <Link className="nav-link" to="/teacher/dashboard/appointments">Appointments</Link>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Profile</a>
               <div className="dropdown-menu">
-                <Link className="dropdown-item" to="/student/dashboard/profile">View Profile</Link>
+                <Link className="dropdown-item" to="/teacher/dashboard/profile">View Profile</Link>
                 <Link className="dropdown-item" href="#">Edit Profile</Link>
                 <Link className="dropdown-item" href="#">Delete Profile</Link>
                 <div className="dropdown-divider"></div>

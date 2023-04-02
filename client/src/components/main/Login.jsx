@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import './../../assets/css/home.css'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
+import Loader from '../utils/Loader'
 
 function Login() {
 
@@ -12,6 +13,9 @@ function Login() {
     email: '',
     password: '',
   })
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const authwithGoogle = async() => {
     const url = `http://localhost:3000/${role}/useGoogle`;
@@ -24,24 +28,32 @@ function Login() {
   }
 
   const handleSubmit = async e => {
+    setLoading(true)
     e.preventDefault()
     try {
       console.log(user)
       const res = await axios.post(`http://localhost:3000/${role}/login`, user)
       console.log(res)
       if(res.status === 200) {
-        const { token, student } = res.data
+        setLoading(false)
+        const { token } = res.data
         localStorage.setItem('token', token)
-        localStorage.setItem('student', JSON.stringify(student))
         navigate(`/${role}/dashboard`)
       }
-    } catch (err) {
-      console.log(err)
+    } 
+    catch (err) {
+      setLoading(false)
+      setError(err.response.data.message)
     }
   }
 
   return (
     <div>
+
+      {
+        loading && <Loader loading={loading} />
+      }
+
       <div className="d-flex">
 
         <div className="col-3 loginBackground"></div>
@@ -59,6 +71,14 @@ function Login() {
               </div>
 
               <span className="text-muted text-center my-4 d-block legendLine">or</span>
+
+              {
+                error && 
+                <div className="postion-absolute w-100 alert alert-danger alert-dismissible m-0">
+                  <strong>Oh snap!</strong> {error}
+                  <button type="button" class="btn-close" data-dismiss="alert"></button>
+                </div>
+              }
 
               <form>
 

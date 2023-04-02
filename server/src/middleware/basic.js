@@ -5,7 +5,7 @@ const url = require('url');
 
 const Register = async(req, res, next) => {
     const alreadyExist = req.body.role == 'student' ? await Student.findOne({email: req.body.email}) : await Teacher.findOne({email: req.body.email});
-    if(alreadyExist) return res.status(400).json({message: `${req.body.role} User already exist`});
+    if(alreadyExist) return res.status(409).json({message: `User already exist`});
     if(!req.body.name || !req.body.email || !req.body.password || !req.body.username) return res.status(400).json({message: 'Please fill all the fields'});
     next();
 }
@@ -16,9 +16,9 @@ const Login = async(req, res, next) => {
     const path = parsedUrl.pathname;
     const userType = path.split('/')[1];
     const find = userType === 'student' ? await Student.findOne({email: req.body.email}) : await Teacher.findOne({email: req.body.email})
-    if(!find) return res.status(400).json({message: `${req.body.role} does not exist`});
+    if(!find) return res.status(404).json({message: `Email does not exist`});
     const decrypt = bycrypt.compareSync(req.body.password, find.password);
-    if(!decrypt) return res.status(400).json({message: 'Invalid Password'});
+    if(!decrypt) return res.status(401).json({message: 'Invalid Password'});
     req.user = find;
     next();
 }

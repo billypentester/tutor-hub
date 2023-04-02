@@ -18,6 +18,7 @@ function Signup() {
   })
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const authwithGoogle = async () => {
     const url = `http://localhost:3000/${role}/createGoogle`  
@@ -38,8 +39,10 @@ function Signup() {
         setLoading(false)
         navigate(`/verify/${role}/false`)
       }
-    } catch (err) {
-      console.log(err)
+    } 
+    catch (err) {
+      setLoading(false)
+      setError(err.response.data.message)
     }
   }
 
@@ -51,8 +54,9 @@ function Signup() {
       loading && <Loader loading={loading} />
     }
 
-    <div className="d-flex">
 
+    <div className="d-flex">
+     
      <div className="col-3 signupBackground"></div>
 
       <div className="container">
@@ -69,6 +73,14 @@ function Signup() {
             </div>
 
             <span className="text-muted text-center my-4 d-block legendLine">or</span>
+
+            {
+              error && 
+              <div className="postion-absolute w-100 alert alert-danger alert-dismissible m-0">
+                <strong>Oh snap!</strong> {error}
+                <button type="button" class="btn-close" data-dismiss="alert"></button>
+              </div>
+            }
 
             <form>
 

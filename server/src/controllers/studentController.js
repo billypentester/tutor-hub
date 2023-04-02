@@ -35,7 +35,7 @@ const login = async(req, res) => {
     
     await student.save();
    
-    res.json({token: token, student: student})
+    res.json({token: token})
 
 }
 
@@ -56,6 +56,7 @@ const emailVerification = (req, res) => {
     })
 
 }
+    
 
 const userPanel = async(req, res) => {
 
@@ -71,30 +72,8 @@ const userPanel = async(req, res) => {
 
 }
 
-const signupredirection = (req, res) => {
-    // get req status code
-    console.log('code: ', req.statusCode)
-    res.redirect('/student/createGoogle')
-}
-
-const loginredirection = (req, res) => {
-    res.redirect('/student/useGoogle')
-}
-
-const getUser = async(req, res) => {
-
-    try{
-        console.log(req.params.id)
-        const student = await Student.findById(req.params.id)
-        res.json(student)
-    }
-    catch(err){
-        console.log(err)
-        res.status(400).json(err.message);
-    }
-
-}
 
 
-module.exports = {signUp, login,  emailVerification, userPanel, getUser, signupredirection, loginredirection}
+
+module.exports = {signUp, login,  emailVerification, userPanel}
 

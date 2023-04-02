@@ -19,9 +19,11 @@ function TeacherDashoard() {
     async function getTeacher() {
 
       try{
-        if(localStorage.getItem('teacher')) {
-          const teacher = JSON.parse(localStorage.getItem('teacher'))
-          setTeacher(teacher)
+        if(localStorage.getItem('token')) {
+          const res = await axios.post('http://localhost:3000/teacher/details', {token: localStorage.getItem('token')})
+          console.log(res)
+          setTeacher(res.data)
+          localStorage.setItem('teacher', JSON.stringify(res.data))
         } 
         else
         {
@@ -40,7 +42,7 @@ function TeacherDashoard() {
 
     useEffect(() => {
       getTeacher()
-    }, [token])
+    }, [])
 
   return (
     <>

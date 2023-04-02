@@ -23,9 +23,12 @@ function StudentDashoard() {
     async function getStudent() {
 
       try{
-        if(localStorage.getItem('student')) {
-          const student = JSON.parse(localStorage.getItem('student'))
-          setStudent(student)
+        if(localStorage.getItem('token')) {
+          console.log(localStorage.getItem('token'))
+          const res = await axios.post('http://localhost:3000/student/details', {token: localStorage.getItem('token')})
+          console.log(res)
+          setStudent(res.data)
+          localStorage.setItem('student', JSON.stringify(res.data))
         } 
         else
         {
@@ -44,7 +47,7 @@ function StudentDashoard() {
 
     useEffect(() => {
       getStudent()
-    }, [token])
+    }, [])
 
   return (
     <>
