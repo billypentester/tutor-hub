@@ -8,7 +8,7 @@ require('dotenv').config();
 const auth = async (req, res, next) => {
 
     try {
-        const token = req.cookies.token || req.user.tokens[0].token;
+        const token = req.body.token;
         if (!token) throw new Error();
         const verifyUser = jwt.verify(token, process.env.secret);
 

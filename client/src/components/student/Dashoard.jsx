@@ -1,30 +1,51 @@
 import React, {useEffect, useState} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-function Dashoard() {
+import Navbar from './Navbar'
+import Statistics from './Statistics'
+import Finder from './Finder'
+import Classroom from './Classroom'
+import Messages from './Messages'
+import Appointments from './Appointments'
+import Profile from './Profile'
 
-    const { id } = useParams()
-    const [student, setStudent] = useState([])
+
+function Dashoard() {
+  
+    const [student, setStudent] = useState('')
+    const navigate = useNavigate()
 
     async function getStudent() {
-      const res = await axios.get(`http://localhost:3000/student/details/${id}`)
-      console.log(res.data)
-      setStudent(res.data)
+      const student = localStorage.getItem('student')
+      if (!student)
+      {
+        navigate('/')
+        return  // This is important
+      }
+
+      setStudent(JSON.parse(student))
     }
 
     useEffect(() => {
       getStudent()
-    }, [id])
+    }, [])
 
 
   return (
-    <div>
-      <h1>Student Dashboard</h1>
-      <h2>{student.name}</h2>
-      <h2>{student.email}</h2>
-      <h2>{student.username}</h2>
-    </div>
+    <>
+      <Navbar />
+      <div className="container p-5">
+        <Routes>
+          <Route path="/" element={ <Statistics student={student} /> } />
+          <Route path="/finder" element={ <Finder/> } />
+          <Route path="/classroom" element={ <Classroom/> } />
+          <Route path="/messages" element={ <Messages/> } />
+          <Route path="/appointments" element={ <Appointments/> } />
+          <Route path="/profile" element={ <Profile/> } />
+        </Routes>
+      </div>
+    </>
   )
 }
 

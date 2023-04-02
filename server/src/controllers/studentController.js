@@ -12,6 +12,7 @@ const signUp = async(req, res) => {
 
         const token = jwt.sign({ email: email, role:'student'  }, process.env.secret , { expiresIn: "1h" })
         student.tokens = student.tokens.concat({ token : token })
+        res.cookie('token', token);
         await student.save();
 
         const verificationLink = `http://localhost:3000/student/verify/${token}`
@@ -33,9 +34,8 @@ const login = async(req, res) => {
     student.tokens = student.tokens.concat({ token : token })
     
     await student.save();
-    res.cookie('token', token);
-
-    res.json(student);
+   
+    res.json({token: token, student: student})
 
 }
 
@@ -58,7 +58,11 @@ const emailVerification = (req, res) => {
 }
 
 const userPanel = async(req, res) => {
-    res.redirect(`http://localhost:5173/student/dashboard/${req.user._id}`)
+
+    const user = req.user;
+    console.log(user)
+    res.send(`Hello,!`);
+
 }
 
 const getUser = async(req, res) => {

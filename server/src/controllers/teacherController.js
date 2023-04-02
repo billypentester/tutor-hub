@@ -7,8 +7,8 @@ const mail = require('./../modules/mail');
 const signUp = async(req, res) => {
 
     try{
-        const {name, email, contactno, username, password} = req.body;
-        const teacher = new Teacher({name, email, contactno, username, password})
+        const {name, email, username, password} = req.body;
+        const teacher = new Teacher({name, email, username, password})
 
         const token = jwt.sign({ email: email, role:'teacher'  }, process.env.secret , { expiresIn: "1h" })
         teacher.tokens = teacher.tokens.concat({ token : token })
@@ -59,11 +59,25 @@ const emailVerification = (req, res) => {
 
 const userPanel = async(req, res) => {
 
-    res.json(req.user)
+    res.redirect(`http://localhost:5173/teacher/dashboard/${req.user._id}`)
+
+}
+
+const getUser = async(req, res) => {
+
+    try{
+        console.log(req.params.id)
+        const teacher = await Teacher.findById(req.params.id)
+        res.json(teacher)
+    }
+    catch(err){
+        console.log(err)
+        res.status(400).json(err.message);
+    }
 
 }
 
 
 
-module.exports = {signUp, login, userPanel, emailVerification}
+module.exports = {signUp, login, userPanel, emailVerification, getUser}
 

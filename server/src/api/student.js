@@ -9,27 +9,23 @@ const jwt = require('jsonwebtoken')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const passport = require('passport');
 
-router.get('/student/details/:id', getUser)
+// router.get('/student/details/:id', getUser)
 router.post('/student/signup', Register, signUp)
 router.post('/student/login', Login, login)
-router.get('/student/dashboard', auth, userPanel)
+router.get('/student/details', userPanel)
 router.get('/student/verify/:token', emailVerification)
 
-router.get('/student/createGoogle', passport.authenticate('google-signup', {  scope: ['profile', 'email'] }))
-router.get('/auth/google/signup/callback', passport.authenticate('google-signup', { failureRedirect: '/student/login' }), (req, res) => {
+router.get('/student/createGoogle', passport.authenticate('student-signup', {  scope: ['profile', 'email'] }))
+router.get('/auth/google/student/signup/callback', passport.authenticate('student-signup', { failureRedirect: '/student/login' }), (req, res) => {
     if(req.user.message) return res.json({msg: req.user.message})
-    res.cookie('token', req.user.tokens[0].token)
-    res.redirect('/student/dashboard')
-})
-router.get('/student/useGoogle', passport.authenticate('google-login', {  scope: ['profile', 'email'] }))
-router.get('/auth/google/login/callback', passport.authenticate('google-login', { failureRedirect: '/student/signup' }), (req, res) => {
-
-    if(req.user.message) return res.json({msg: req.user.message})
-    res.cookie('token', req.user.tokens[0].token)
-    res.redirect('/student/dashboard')
-
+    res.redirect('/student/details')
 })
 
+router.get('/student/useGoogle', passport.authenticate('student-login', {  scope: ['profile', 'email'] }))
+router.get('/auth/google/student/login/callback', passport.authenticate('student-login', { failureRedirect: '/student/signup' }), (req, res) => {
+    if(req.user.message) return res.json({msg: req.user.message})
+    res.redirect('/student/details')
+})
 
 router.get('/student/logout', (req, res) => {
     res.clearCookie('token')

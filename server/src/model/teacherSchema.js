@@ -11,10 +11,6 @@ const teacherSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    contactno: {
-        type: Number,
-        required: true
-    },
     username: {
         type: String,
         required: true
