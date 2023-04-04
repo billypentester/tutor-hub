@@ -10,7 +10,7 @@ const signUp = async(req, res) => {
         const {name, email, password, username} = req.body;
         const student = new Student({name, email, password, username})
 
-        const token = jwt.sign({ email: email, role:'student'  }, process.env.secret , { expiresIn: "1h" })
+        const token = jwt.sign({ email: email, role:'student'  }, process.env.secret , { expiresIn: "10h" })
         student.tokens = student.tokens.concat({ token : token })
         res.cookie('token', token);
         await student.save();
@@ -30,7 +30,7 @@ const login = async(req, res) => {
 
     const student = req.user;
 
-    const token = jwt.sign({ email: student.email, role:'student' }, process.env.secret, { expiresIn: "1h" })
+    const token = jwt.sign({ email: student.email, role:'student' }, process.env.secret, { expiresIn: "10h" })
     student.tokens = student.tokens.concat({ token : token })
     
     await student.save();

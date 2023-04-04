@@ -11,6 +11,7 @@ import Appointments from './Appointments'
 import Profile from './Profile'
 
 
+
 function StudentDashoard() {
 
     const [student, setStudent] = useState('')

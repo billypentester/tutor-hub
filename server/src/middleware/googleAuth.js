@@ -29,18 +29,26 @@ const teacherLogin = {
     callbackURL: 'http://localhost:3000/auth/google/teacher/login/callback'
 }
 
+function generateUsername(email) {
+    const emailPrefix = email.split('@')[0];
+    const alphanumericPrefix = emailPrefix.replace(/[^a-zA-Z0-9]/g, '');
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    const username = alphanumericPrefix + randomSuffix;
+    return username;
+}
+
 passport.use('student-signup', new GoogleStrategy(studentSignUp, async(accessToken, refreshToken, profile, done) => {
     const find = await Student.findOne({email: profile.emails[0].value})
     if(find) return done(null, find)
     const user = new Student({
         name: profile.displayName,
         email: profile.emails[0].value,
-        username: profile.id,
+        username: generateUsername(profile.emails[0].value),
         password: profile.id,
         isVerified: profile.emails[0].verified,
         role:'student'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "1h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "10h" })
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)
@@ -52,12 +60,12 @@ passport.use('student-login', new GoogleStrategy(studentLogin, async(accessToken
     const user = new Student({
         name: profile.displayName,
         email: profile.emails[0].value,
-        username: profile.id,
+        username: generateUsername(profile.emails[0].value),
         password: profile.id,
         isVerified: profile.emails[0].verified,
         role:'student'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "1h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "10h" })
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)
@@ -69,12 +77,12 @@ passport.use('teacher-signup', new GoogleStrategy(teacherSignUp, async(accessTok
     const user = new Teacher({
         name: profile.displayName,
         email: profile.emails[0].value,
-        username: profile.id,
+        username: generateUsername(profile.emails[0].value),
         password: profile.id,
         isVerified: profile.emails[0].verified,
         role:'teacher'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "1h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "10h" })
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)
@@ -86,12 +94,12 @@ passport.use('teacher-login', new GoogleStrategy(teacherLogin, async(accessToken
     const user = new Teacher({
         name: profile.displayName,
         email: profile.emails[0].value,
-        username: profile.id,
+        username: generateUsername(profile.emails[0].value),
         password: profile.id,
         isVerified: profile.emails[0].verified,
         role:'teacher'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "1h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "10h" })
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)

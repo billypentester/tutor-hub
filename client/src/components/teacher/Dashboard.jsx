@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import Navbar from './Navbar'
 import Statistics from './Statistics'
+import EditProfile from './EditProfile'
 
 
 
@@ -47,11 +48,10 @@ function TeacherDashoard() {
   return (
     <>
       <Navbar />
-      <div className="container p-5">
-        <Routes>
-          <Route path="/" element={ <Statistics teacher={teacher} /> } />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={ <Statistics teacher={teacher} /> } />
+        <Route path="/edit-profile" element={ <EditProfile teacher={teacher} /> } />
+      </Routes>
     </>
   )
 }

@@ -11,7 +11,7 @@ const login = async(req, res) => {
 
     if(!email || !password) return res.status(400).json({msg: 'Please enter all fields'})
     if(email === process.env.adminEmail && password === process.env.adminPassword){
-        const token = jwt.sign({ email: email, role:'admin'  }, process.env.secret , { expiresIn: "1h" })
+        const token = jwt.sign({ email: email, role:'admin'  }, process.env.secret , { expiresIn: "10h" })
         res.cookie('token', token);
         res.json({msg: 'Login successful'})
     }

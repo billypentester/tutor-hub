@@ -10,7 +10,7 @@ const signUp = async(req, res) => {
         const {name, email, username, password} = req.body;
         const teacher = new Teacher({name, email, username, password})
 
-        const token = jwt.sign({ email: email, role:'teacher'  }, process.env.secret , { expiresIn: "1h" })
+        const token = jwt.sign({ email: email, role:'teacher'  }, process.env.secret , { expiresIn: "10h" })
         teacher.tokens = teacher.tokens.concat({ token : token })
         await teacher.save();
 
@@ -29,7 +29,7 @@ const login = async(req, res) => {
 
     const teacher = req.user;
 
-    const token = jwt.sign({ email: teacher.email, role:'teacher'  }, process.env.secret , { expiresIn: "1h" })
+    const token = jwt.sign({ email: teacher.email, role:'teacher'  }, process.env.secret , { expiresIn: "10h" })
     teacher.tokens = teacher.tokens.concat({ token : token })
     
     await teacher.save();
