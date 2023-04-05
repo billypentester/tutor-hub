@@ -48,7 +48,7 @@ passport.use('student-signup', new GoogleStrategy(studentSignUp, async(accessTok
         isVerified: profile.emails[0].verified,
         role:'student'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "10h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret)
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)
@@ -65,7 +65,7 @@ passport.use('student-login', new GoogleStrategy(studentLogin, async(accessToken
         isVerified: profile.emails[0].verified,
         role:'student'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret, { expiresIn: "10h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret)
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)
@@ -82,7 +82,7 @@ passport.use('teacher-signup', new GoogleStrategy(teacherSignUp, async(accessTok
         isVerified: profile.emails[0].verified,
         role:'teacher'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "10h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret)
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)
@@ -99,7 +99,7 @@ passport.use('teacher-login', new GoogleStrategy(teacherLogin, async(accessToken
         isVerified: profile.emails[0].verified,
         role:'teacher'
     })
-    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret, { expiresIn: "10h" })
+    const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret)
     user.tokens = user.tokens.concat({ token : token })
     await user.save();
     done(null, user)

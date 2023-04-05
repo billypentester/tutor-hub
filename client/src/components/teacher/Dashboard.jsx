@@ -5,6 +5,8 @@ import axios from 'axios'
 import Navbar from './Navbar'
 import Statistics from './Statistics'
 import EditProfile from './EditProfile'
+import DeleteProfile from './DeleteProfile'
+import ViewProfile from './ViewProfile'
 
 
 
@@ -31,6 +33,7 @@ function TeacherDashoard() {
           const res = await axios.post('http://localhost:3000/teacher/details', {token})
           console.log(res)
           setTeacher(res.data)
+          localStorage.setItem('token', token)
           localStorage.setItem('teacher', JSON.stringify(res.data))
         } 
       }
@@ -51,6 +54,8 @@ function TeacherDashoard() {
       <Routes>
         <Route path="/" element={ <Statistics teacher={teacher} /> } />
         <Route path="/edit-profile" element={ <EditProfile teacher={teacher} /> } />
+        <Route path="/view-profile" element={ <ViewProfile teacher={teacher} /> } />
+        <Route path="/delete-profile" element={ <DeleteProfile/> } />
       </Routes>
     </>
   )

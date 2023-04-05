@@ -10,7 +10,7 @@ const signUp = async(req, res) => {
         const {name, email, username, password} = req.body;
         const teacher = new Teacher({name, email, username, password})
 
-        const token = jwt.sign({ email: email, role:'teacher'  }, process.env.secret , { expiresIn: "10h" })
+        const token = jwt.sign({ email: email, role:'teacher'  }, process.env.secret)
         teacher.tokens = teacher.tokens.concat({ token : token })
         await teacher.save();
 
@@ -29,7 +29,7 @@ const login = async(req, res) => {
 
     const teacher = req.user;
 
-    const token = jwt.sign({ email: teacher.email, role:'teacher'  }, process.env.secret , { expiresIn: "10h" })
+    const token = jwt.sign({ email: teacher.email, role:'teacher'  }, process.env.secret)
     teacher.tokens = teacher.tokens.concat({ token : token })
     
     await teacher.save();
@@ -60,9 +60,7 @@ const emailVerification = (req, res) => {
 const userPanel = async(req, res) => {
 
     try{
-        const {token} = req.body;
-        const decoded = jwt.verify(token, process.env.secret)
-        const teacher = await Teacher.findOne({email: decoded.email})
+        const teacher = req.user;
         res.json(teacher)
     }
     catch(err){
@@ -71,7 +69,34 @@ const userPanel = async(req, res) => {
 
 }
 
+const updateProfile = async(req, res) => {
+
+    try{
+        const { teacher } = req.body;
+        console.log(req.user.id)
+        console.log(teacher)
+        const { id } = req.user;
+        const updation = await Teacher.findByIdAndUpdate(id, teacher, {new: true})
+        res.json(updation)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+
+}
+
+const deleteProfile =  async(req, res) => {
+    try{
+        const {email} = req.body;
+        const { id } = req.user;
+        const deletion =  await Teacher.findByIdAndDelete(id)  
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification}
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile}
 

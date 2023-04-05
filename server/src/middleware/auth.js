@@ -3,11 +3,10 @@ const Teacher = require('../model/teacherSchema');
 const Student = require('../model/studentSchema');
 require('dotenv').config();
 
-
-
 const auth = async (req, res, next) => {
 
     try {
+        console.log(req.body.token)
         const token = req.body.token;
         if (!token) throw new Error();
         const verifyUser = jwt.verify(token, process.env.secret);

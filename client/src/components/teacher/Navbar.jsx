@@ -42,9 +42,9 @@ function Navbar() {
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Profile</a>
               <div className="dropdown-menu">
-                <Link className="dropdown-item" to="/teacher/dashboard/profile">View Profile</Link>
+                <Link className="dropdown-item" to="view-profile">View Profile</Link>
                 <Link className="dropdown-item" to="edit-profile">Edit Profile</Link>
-                <Link className="dropdown-item" href="#">Delete Profile</Link>
+                <Link className="dropdown-item" to="delete-profile">Delete Profile</Link>
                 <div className="dropdown-divider"></div>
                 <button className="dropdown-item" onClick={logout}>Logout</button>
               </div>

@@ -11,6 +11,7 @@ const teacherSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    profile:String,
     username: {
         type: String,
         required: true
@@ -19,9 +20,36 @@ const teacherSchema = new mongoose.Schema({
         type: String,
         default: 'teacher'
     },
+    gender:{
+        type: String
+    },
+    age:{
+        type: Number
+    },
+    contactno:{
+        type: Number
+    },
     password: {
         type: String,
         required: true
+    },
+    education:{
+        qualification:String,
+        marks:String,
+        confirmation:Boolean
+    },
+    experience:{
+        years:String,
+        interest:String,
+        typeofSubject:String,
+        levelofSubject:String,
+        expertise:String,
+        multipleSubjects:[String]
+    },
+    availibility:{
+        hours:Number,
+        location:[Number],
+        availableHours:[String]
     },
     tokens: [
         {
