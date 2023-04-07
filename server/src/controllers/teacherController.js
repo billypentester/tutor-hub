@@ -69,6 +69,16 @@ const userPanel = async(req, res) => {
 
 }
 
+const getAllTeachers = async(req, res) => {
+    try{
+        const teachers = await Teacher.find()
+        res.json(teachers)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
 const updateProfile = async(req, res) => {
 
     try{
@@ -96,7 +106,14 @@ const deleteProfile =  async(req, res) => {
     }
 }
 
+const getTeacherCount = async(req, res) => {
+   
+    const count = await Teacher.countDocuments()
+    return count;
+   
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile}
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount}
 

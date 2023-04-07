@@ -2,7 +2,6 @@ const express = require('express')
 const app = express()
 require('dotenv').config()
 const session = require('express-session')
-const cookieParser = require('cookie-parser')
 var morgan = require('morgan')
 const cors = require('cors');
 const passport = require('./src/middleware/googleAuth')
@@ -10,6 +9,7 @@ const passport = require('./src/middleware/googleAuth')
 const student = require('./src/api/student')
 const teacher = require('./src/api/teacher')
 const admin = require('./src/api/admin')
+const contact = require('./src/api/general')
 
 const port = process.env.PORT || 3000
 
@@ -32,6 +32,7 @@ app.use(passport.session());
 app.use(student)
 app.use(teacher)
 app.use(admin)
+app.use(contact)
 
 
 app.listen(port, () => {

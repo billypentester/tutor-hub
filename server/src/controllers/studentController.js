@@ -72,8 +72,23 @@ const userPanel = async(req, res) => {
 
 }
 
+const getAllStudents = async(req, res) => {
+    try{
+        const students = await Student.find()
+        res.json(students)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+const getStudentCount = async(req, res) => {
+    
+    const count = await Student.countDocuments()
+    return count;
+
+}
 
 
-
-module.exports = {signUp, login,  emailVerification, userPanel}
+module.exports = {signUp, login,  emailVerification, userPanel, getAllStudents, getStudentCount}
 
