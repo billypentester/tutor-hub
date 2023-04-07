@@ -21,7 +21,7 @@ function Signup() {
   const [error, setError] = useState(null);
 
   const authwithGoogle = async () => {
-    const url = `http://localhost:3000/${role}/createGoogle`  
+    const url = `http://localhost:5000/${role}/createGoogle`  
     window.location.href = url
   }
 
@@ -34,7 +34,7 @@ function Signup() {
     setLoading(true)
     e.preventDefault()
     try {
-      const res = await axios.post(`http://localhost:3000/${role}/signup`, user)
+      const res = await axios.post(`/api/${role}/signup`, user)
       if(res.status === 200) {
         setLoading(false)
         navigate(`/verify/${role}/false`)

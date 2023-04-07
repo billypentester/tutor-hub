@@ -23,14 +23,14 @@ function TeacherDashoard() {
 
       try{
         if(localStorage.getItem('token')) {
-          const res = await axios.post('http://localhost:3000/teacher/details', {token: localStorage.getItem('token')})
+          const res = await axios.post('/api/teacher/details', {token: localStorage.getItem('token')})
           console.log(res)
           setTeacher(res.data)
           localStorage.setItem('teacher', JSON.stringify(res.data))
         } 
         else
         {
-          const res = await axios.post('http://localhost:3000/teacher/details', {token})
+          const res = await axios.post('/api/teacher/details', {token})
           console.log(res)
           setTeacher(res.data)
           localStorage.setItem('token', token)

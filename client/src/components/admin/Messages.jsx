@@ -9,7 +9,7 @@ function Messages() {
 
     const fetchcontacts = async () => {
         setLoading(true)
-        const res = await axios.get('http://localhost:3000/contact/all')
+        const res = await axios.get('/api/contact/all')
         setcontacts(res.data)
         console.log(res.data)
         setLoading(false)

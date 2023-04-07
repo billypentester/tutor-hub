@@ -15,13 +15,14 @@ router.get('/teacher/all', getAllTeachers)
 
 router.post('/teacher/update',auth, updateProfile)
 
-router.get('/teacher/createGoogle', passport.authenticate('teacher-signup', {  scope: ['profile', 'email'] }))
-router.get('/auth/google/teacher/signup/callback', passport.authenticate('teacher-signup', { failureRedirect: '/teacher/login' }), (req, res) => {
-    res.redirect('http://localhost:5173/teacher/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
+router.get('/teacher/createGoogle', passport.authenticate('teacher', {  scope: ['profile', 'email'] }))
+router.get('/auth/google/teacher/callback', passport.authenticate('teacher', { failureRedirect: '/teacher/login' }), (req, res) => {
+    res.redirect('http://localhost:3000/teacher/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
 })
-router.get('/teacher/useGoogle', passport.authenticate('teacher-login', {  scope: ['profile', 'email'] }))
-router.get('/auth/google/teacher/login/callback', passport.authenticate('teacher-login', { failureRedirect: '/teacher/signup' }), (req, res) => {
-    res.redirect('http://localhost:5173/teacher/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
+
+router.get('/teacher/useGoogle', passport.authenticate('teacher', {  scope: ['profile', 'email'] }))
+router.get('/auth/google/teacher/callback', passport.authenticate('teacher', { failureRedirect: '/teacher/signup' }), (req, res) => {
+    res.redirect('http://localhost:3000/teacher/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
 })
 
 

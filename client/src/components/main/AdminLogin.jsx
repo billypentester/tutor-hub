@@ -25,7 +25,7 @@ function AdminLogin() {
         e.preventDefault()
         try {
             console.log(admin)
-            const res = await axios.post(`http://localhost:3000/admin/login`, admin)
+            const res = await axios.post(`/api/admin/login`, admin)
             console.log(res)
             if(res.status === 200) {
                 const { token } = res.data

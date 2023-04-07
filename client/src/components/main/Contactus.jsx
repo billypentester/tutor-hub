@@ -17,7 +17,7 @@ function Contactus() {
 
     const sendMessage = async() => {
         try{
-            const res = await axios.post('http://localhost:3000/api/contactus', contact)
+            const res = await axios.post('/api/contactus', contact)
             console.log(res)
             if(res.status === 200){
                 alert('Message sent successfully!')

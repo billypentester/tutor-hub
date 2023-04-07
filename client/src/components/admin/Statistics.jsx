@@ -6,7 +6,7 @@ function Statistics() {
   const [statistics, setStatistics] = useState([])
 
   const getStatistics = async () => {
-    const res = await axios.get('http://localhost:3000/admin/statistics')
+    const res = await axios.get('/api/admin/statistics')
     console.log(res.data)
     setStatistics(res.data)
   }

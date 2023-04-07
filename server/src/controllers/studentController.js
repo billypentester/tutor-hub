@@ -15,7 +15,7 @@ const signUp = async(req, res) => {
         res.cookie('token', token);
         await student.save();
 
-        const verificationLink = `http://localhost:3000/student/verify/${token}`
+        const verificationLink = `http://localhost:5000/student/verify/${token}`
         await mail({ from: process.env.email, to: email, subject: 'Email verification', text: `Please click on the following link to verify your email: ${verificationLink}`})
 
         res.status(200).json({ msg: 'Student created successfully'})

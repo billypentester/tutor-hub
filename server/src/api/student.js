@@ -18,14 +18,14 @@ router.get('/student/verify/:token', emailVerification)
 router.get('/student/all', getAllStudents)
 router.get('/student/count', getStudentCount)
 
-router.get('/student/createGoogle', passport.authenticate('student-signup', { scope: ['profile', 'email'] }))
-router.get('/auth/google/student/signup/callback', passport.authenticate('student-signup', { failureRedirect: '/student/signup' }), (req, res) => {
-    res.redirect('http://localhost:5173/student/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
+router.get('/student/createGoogle', passport.authenticate('student', { scope: ['profile', 'email'] }))
+router.get('/auth/google/student/callback', passport.authenticate('student', { failureRedirect: '/student/signup' }), (req, res) => {
+    res.redirect('http://localhost:3000/student/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
 })
 
-router.get('/student/useGoogle', passport.authenticate('student-login', {  scope: ['profile', 'email'] }))
-router.get('/auth/google/student/login/callback', passport.authenticate('student-login', { failureRedirect: '/student/login' }), (req, res) => {
-    res.redirect('http://localhost:5173/student/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
+router.get('/student/useGoogle', passport.authenticate('student', {  scope: ['profile', 'email'] }))
+router.get('/auth/google/student/callback', passport.authenticate('student', { failureRedirect: '/student/login' }), (req, res) => {
+    res.redirect('http://localhost:3000/student/dashboard?token=' + req.user.tokens[req.user.tokens.length-1].token)
 })
 
 

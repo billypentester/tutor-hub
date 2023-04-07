@@ -23,7 +23,7 @@ function EditProfile() {
   const submitProfile = async() => {
     setLoading(true)
     const info = JSON.parse(localStorage.getItem('info'))
-    const result = await axios.post('http://localhost:3000/teacher/update', {
+    const result = await axios.post('/api/teacher/update', {
       token : localStorage.getItem('token'),
       teacher : info
     })

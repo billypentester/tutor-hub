@@ -9,7 +9,7 @@ function Students() {
 
     const fetchStudents = async () => {
         setLoading(true)
-        const res = await axios.get('http://localhost:3000/student/all')
+        const res = await axios.get('/api/student/all')
         setStudents(res.data)
         console.log(res.data)
         setLoading(false)

@@ -9,7 +9,7 @@ function Teachers() {
 
     const fetchTeachers = async () => {
         setLoading(true)
-        const res = await axios.get('http://localhost:3000/teacher/all')
+        const res = await axios.get('/api/teacher/all')
         setTeachers(res.data)
         console.log(res.data)
         setLoading(false)

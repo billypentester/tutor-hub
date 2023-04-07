@@ -18,7 +18,7 @@ function Login() {
   const [error, setError] = useState(null);
 
   const authwithGoogle = async() => {
-    const url = `http://localhost:3000/${role}/useGoogle`;
+    const url = `http://localhost:5000/${role}/useGoogle`;
     window.location.href = url;
   }
 
@@ -32,7 +32,7 @@ function Login() {
     e.preventDefault()
     try {
       console.log(user)
-      const res = await axios.post(`http://localhost:3000/${role}/login`, user)
+      const res = await axios.post(`/api/${role}/login`, user)
       console.log(res)
       if(res.status === 200) {
         setLoading(false)

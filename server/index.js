@@ -11,7 +11,7 @@ const teacher = require('./src/api/teacher')
 const admin = require('./src/api/admin')
 const contact = require('./src/api/general')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 
 
 app.use(express.json())
