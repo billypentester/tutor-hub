@@ -94,7 +94,7 @@ const deleteStudent = async(req, res) => {
         const {email} = req.body;
         console.log(email)
         if(req.user.email == email){
-            const student = await Student.findOneAndDelete({email: email})
+            await Student.findOneAndDelete({email: email})
             res.json({msg: 'Student deleted successfully'})
         }
         else{
@@ -106,7 +106,19 @@ const deleteStudent = async(req, res) => {
     }
 }
 
+const updateStudent = async(req, res) => {
+    try{
+        const {data} = req.body;
+        if(req.user.email == data.email){
+            await Student.findOneAndUpdate({email: data.email}, data, {new: true})
+            res.json({msg: 'Student updated successfully'})
+        }
+    }
+    catch(err){
+        res.status(400).json(err.msg);
+    }
+}
 
 
-module.exports = {signUp, login,  emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent}
+module.exports = {signUp, login,  emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent}
 

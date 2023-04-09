@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent } = require('../controllers/studentController')
+const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent } = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -17,7 +17,7 @@ router.get('/student/verify/:token', emailVerification)
 router.get('/student/all', getAllStudents)
 router.get('/student/count', getStudentCount)
 router.post('/student/delete', auth, deleteStudent)
-// router.post('student/update', auth, updateStudent)
+router.post('/student/update', auth, updateStudent)
 
 router.get('/student/createGoogle', passport.authenticate('student', { scope: ['profile', 'email'] }))
 router.get('/auth/google/student/callback', passport.authenticate('student', { failureRedirect: '/student/signup' }), (req, res) => {
