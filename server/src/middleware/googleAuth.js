@@ -6,15 +6,15 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 const student = {
-    clientID: '105385184117-ht1e2jr8p5j31nj53bdiubgg3s68t0o9.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: 'http://localhost:5000/auth/google/student/callback',
+    clientID: "105385184117-ht1e2jr8p5j31nj53bdiubgg3s68t0o9.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "http://localhost:5000/auth/google/student/callback"
 }
 
 const teacher = {
-    clientID: '105385184117-ht1e2jr8p5j31nj53bdiubgg3s68t0o9.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: 'http://localhost:5000/auth/google/teacher/callback'
+    clientID: "105385184117-ht1e2jr8p5j31nj53bdiubgg3s68t0o9.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "http://localhost:5000/auth/google/student/callback"
 }
 
 function generateUsername(email) {
@@ -34,7 +34,8 @@ passport.use('student', new GoogleStrategy(student, async(accessToken, refreshTo
         username: generateUsername(profile.emails[0].value),
         password: profile.id,
         isVerified: profile.emails[0].verified,
-        role:'student'
+        role:'student',
+        profile: profile.photos[0].value
     })
     const token = jwt.sign({ email: profile.emails[0].value, role:'student' }, process.env.secret)
     user.tokens = user.tokens.concat({ token : token })
@@ -45,13 +46,15 @@ passport.use('student', new GoogleStrategy(student, async(accessToken, refreshTo
 passport.use('teacher', new GoogleStrategy(teacher, async(accessToken, refreshToken, profile, done) => {
     const find = await Teacher.findOne({email: profile.emails[0].value})
     if(find) return done(null, find)
+    console.log(profile)
     const user = new Teacher({
         name: profile.displayName,
         email: profile.emails[0].value,
         username: generateUsername(profile.emails[0].value),
         password: profile.id,
         isVerified: profile.emails[0].verified,
-        role:'teacher'
+        role:'teacher',
+        profile: profile.photos[0].value
     })
     const token = jwt.sign({ email: profile.emails[0].value, role:'teacher' }, process.env.secret)
     user.tokens = user.tokens.concat({ token : token })

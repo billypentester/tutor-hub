@@ -54,7 +54,6 @@ function Signup() {
       loading && <Loader loading={loading} />
     }
 
-
     <div className="d-flex">
      
      <div className="col-3 signupBackground"></div>

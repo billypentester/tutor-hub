@@ -8,7 +8,10 @@ import Finder from './Finder'
 import Classroom from './Classroom'
 import Messages from './Messages'
 import Appointments from './Appointments'
-import Profile from './Profile'
+
+import ViewProfile from './ViewProfile'
+import EditProfile from './EditProfile'
+import DeleteProfile from './DeleteProfile'
 
 
 
@@ -35,8 +38,9 @@ function StudentDashoard() {
         {
           const res = await axios.post('/api/student/details', {token})
           console.log(res)
-          setStudent(res.data)
+          setStudent(res.data)          
           localStorage.setItem('student', JSON.stringify(res.data))
+          localStorage.setItem('token', token)
         } 
       }
       catch(err) {
@@ -52,7 +56,7 @@ function StudentDashoard() {
 
   return (
     <>
-      <Navbar />
+      <Navbar student={student}/>
       <div className="container p-5">
         <Routes>
           <Route path="/" element={ <Statistics student={student} /> } />
@@ -60,7 +64,9 @@ function StudentDashoard() {
           <Route path="/classroom" element={ <Classroom/> } />
           <Route path="/messages" element={ <Messages/> } />
           <Route path="/appointments" element={ <Appointments/> } />
-          <Route path="/profile" element={ <Profile/> } />
+          <Route path="/view-profile" element={ <ViewProfile/> } />
+          <Route path="/edit-profile" element={ <EditProfile/> } />
+          <Route path="/delete-profile" element={ <DeleteProfile/> } />
         </Routes>
       </div>
     </>

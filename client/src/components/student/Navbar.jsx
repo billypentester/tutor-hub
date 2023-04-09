@@ -31,7 +31,7 @@ function Navbar({student}) {
               <Link className="nav-link" to="/student/dashboard/finder">Finder</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/classNameroom">Classroom</Link>
+              <Link className="nav-link" to="/student/dashboard/classroom">Classroom</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/student/dashboard/messages">Messages</Link>
@@ -40,11 +40,14 @@ function Navbar({student}) {
               <Link className="nav-link" to="/student/dashboard/appointments">Appointments</Link>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Profile</a>
+              <a className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <span className="mx-2 text-light h-4">Profile</span>
+                <img src={student.profile} alt="avatar" className="img-fluid rounded-circle" style={{width: '20px', height: '20px'}}/>
+              </a>
               <div className="dropdown-menu">
-                <Link className="dropdown-item" to="/student/dashboard/profile">View Profile</Link>
-                <Link className="dropdown-item" href="#">Edit Profile</Link>
-                <Link className="dropdown-item" href="#">Delete Profile</Link>
+                <Link className="dropdown-item" to="/student/dashboard/view-profile">View Profile</Link>
+                <Link className="dropdown-item" to="/student/dashboard/edit-profile">Edit Profile</Link>
+                <Link className="dropdown-item" to="/student/dashboard/delete-profile">Delete Profile</Link>
                 <div className="dropdown-divider"></div>
                 <button className="dropdown-item" onClick={logout}>Logout</button>
               </div>

@@ -27,6 +27,10 @@ const studentSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    profile:{
+        type: String,
+        default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png'
+    },
     tokens: [
         {
             token:{

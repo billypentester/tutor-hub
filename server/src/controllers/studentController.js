@@ -89,6 +89,24 @@ const getStudentCount = async(req, res) => {
 
 }
 
+const deleteStudent = async(req, res) => {
+    try{
+        const {email} = req.body;
+        console.log(email)
+        if(req.user.email == email){
+            const student = await Student.findOneAndDelete({email: email})
+            res.json({msg: 'Student deleted successfully'})
+        }
+        else{
+            res.status(400).json({msg: 'You are not authorized to delete the account'})
+        }
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
 
-module.exports = {signUp, login,  emailVerification, userPanel, getAllStudents, getStudentCount}
+
+
+module.exports = {signUp, login,  emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent}
 

@@ -69,9 +69,9 @@ function Footer() {
             </div>
         </section>
         
-        <div className="text-center p-4 bg-primary text-white">
+        <div className="text-center p-4 bg-info text-light">
             © 2023 Copyright: 
-            <a className="text-reset fw-bold" href="https://mdbootstrap.com/"> tutorhub</a>
+            <a className="text-reset fw-bold" href=""> tutorhub</a>
         </div>
     
     </footer>

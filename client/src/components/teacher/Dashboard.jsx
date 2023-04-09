@@ -9,7 +9,6 @@ import DeleteProfile from './DeleteProfile'
 import ViewProfile from './ViewProfile'
 
 
-
 function TeacherDashoard() {
 
     const [teacher, setTeacher] = useState('')
@@ -51,12 +50,14 @@ function TeacherDashoard() {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={ <Statistics teacher={teacher} /> } />
-        <Route path="/edit-profile" element={ <EditProfile teacher={teacher} /> } />
-        <Route path="/view-profile" element={ <ViewProfile teacher={teacher} /> } />
-        <Route path="/delete-profile" element={ <DeleteProfile/> } />
-      </Routes>
+      <div className="container p-5">
+        <Routes>
+          <Route path="/" element={ <Statistics teacher={teacher} /> } />
+          <Route path="/edit-profile" element={ <EditProfile teacher={teacher} /> } />
+          <Route path="/view-profile" element={ <ViewProfile teacher={teacher} /> } />
+          <Route path="/delete-profile" element={ <DeleteProfile/> } />
+        </Routes>
+      </div>
     </>
   )
 }
