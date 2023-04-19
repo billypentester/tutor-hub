@@ -11,7 +11,8 @@ function EditProfile() {
   async function getProfile() {
     const response = localStorage.getItem('student')
     const data = JSON.parse(response)
-    setUpdateProfile(data)
+    setUpdateProfile(data)  
+    
   }
 
   const inputHandler = (e) => {
@@ -37,9 +38,10 @@ function EditProfile() {
         data : updateProfile,
         token: token
       })
-      console.log(res)
       if(res.status === 200) {
-        localStorage.setItem('student', JSON.stringify(updateProfile))
+        console.log(res.data)
+        localStorage.setItem('student', JSON.stringify(res.data))
+        setUpdateProfile(res.data)
         setLoading(false)
         alert('Profile Updated')
       }
@@ -91,7 +93,7 @@ function EditProfile() {
                   <div className='col-md-6'>
                     <div class="form-group">
                       <label for="updateUsername" class="form-label mt-4">Username</label>
-                      <input type="text" class="form-control" id="updateUsername" placeholder="Enter username" name="username"  value={updateProfile.username} onChange={inputHandler}/>
+                      <input disabled type="text" class="form-control" id="updateUsername" placeholder="Enter username" name="username"  value={updateProfile.username} onChange={inputHandler}/>
                     </div>
                   </div>
                 </div>
@@ -99,13 +101,13 @@ function EditProfile() {
                   <div className='col-md-6'>
                     <div class="form-group">
                       <label for="updateEmail" class="form-label mt-4">Email address</label>
-                      <input type="email" class="form-control" id="updateEmail" placeholder="Enter email" name="email" value={updateProfile.email} onChange={inputHandler}/>
+                      <input disabled type="email" class="form-control" id="updateEmail" placeholder="Enter email" name="email" value={updateProfile.email} onChange={inputHandler}/>
                     </div>
                   </div>
                   <div className='col-md-6'>
                     <div class="form-group">
                       <label for="updateContact" class="form-label mt-4">Contact No.</label>
-                      <input type="email" class="form-control" id="updateContact" placeholder="Enter Phone No." name="contactno" value={updateProfile.contact} onChange={inputHandler}/>
+                      <input type="email" class="form-control" id="updateContact" placeholder="Enter Phone No." name="contactno" value={updateProfile.contactno} onChange={inputHandler}/>
                     </div>
                   </div>
                 </div>
@@ -114,7 +116,7 @@ function EditProfile() {
                     <div class="form-group">
                       <label for="formFile" class="form-label mt-4 d-block">Profile</label>
                       <div className='text-center my-4'>
-                        <img src={updateProfile.profile} alt='profile' className='img-fluid rounded-circle'/>
+                        <img src={updateProfile.profile} alt='profile' className='rounded-circle' style={{width: '100px', height: '100px'}}/>
                       </div>
                       <input class="form-control" type="file" id="formFile" accept="image/*" name="profile" onChange={handleFileChange}/> 
                     </div>
@@ -136,6 +138,7 @@ function EditProfile() {
                     <div class="form-group">
                       <label for="updateCity" class="form-label mt-4">City</label>
                       <select class="form-select" id="updateCity" name="city" value={updateProfile.city} onChange={inputHandler}>
+                        <option>Select City</option>
                         <option value="Lahore">Lahore</option>
                         <option value="Karachi">Karachi</option>
                         <option value="Islamabad">Islamabad</option>
@@ -150,6 +153,7 @@ function EditProfile() {
                     <div class="form-group">
                       <label for="updateGender" class="form-label mt-4">Gender</label>
                       <select class="form-select" id="updateGender" name='gender' onChange={inputHandler} value={updateProfile.gender}>
+                        <option>Select Gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
@@ -160,6 +164,7 @@ function EditProfile() {
                     <div class="form-group">
                       <label for="updateLanguage" class="form-label mt-4">Language</label>
                       <select class="form-select" id="updateLanguage" name='language' onChange={inputHandler} value={updateProfile.language}>
+                        <option>Select Language</option>
                         <option value="Urdu">Urdu</option>
                         <option value="English">English</option>
                         <option value="Punjabi">Punjabi</option>
@@ -174,8 +179,10 @@ function EditProfile() {
                 </div>
               </div>
             </div>
-            <div className='my-3 mx-auto'>
-              <button type="submit" class="btn btn-primary" onClick={updateProfileHandler}>Save</button>
+            <div className='my-5 w-100'>
+              <div className='text-center'>
+              <button type="submit" class="btn btn-primary col-4" onClick={updateProfileHandler}>Save</button>
+              </div>
             </div>
 
           </div>

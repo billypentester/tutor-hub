@@ -109,9 +109,10 @@ const deleteStudent = async(req, res) => {
 const updateStudent = async(req, res) => {
     try{
         const {data} = req.body;
+        console.log(data)
         if(req.user.email == data.email){
-            await Student.findOneAndUpdate({email: data.email}, data, {new: true})
-            res.json({msg: 'Student updated successfully'})
+            const result = await Student.findOneAndUpdate({email: data.email}, data, {new: true})
+            res.json(result);
         }
     }
     catch(err){

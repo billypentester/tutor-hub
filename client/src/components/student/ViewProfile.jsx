@@ -24,7 +24,7 @@ function ViewProfile() {
             <h1 className='mb-0'>{profile.name}</h1>
           </div>
           <div>
-            <img src={profile.profile} alt='profile' className='img-fluid rounded-circle' />
+            <img src={profile.profile} alt='profile' className='rounded-circle' width={'100px'} height={'100px'} />
           </div>
         </div>
 

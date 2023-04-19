@@ -14,7 +14,7 @@ const student = {
 const teacher = {
     clientID: "105385184117-ht1e2jr8p5j31nj53bdiubgg3s68t0o9.apps.googleusercontent.com",
     clientSecret: "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",
-    callbackURL: "http://localhost:5000/auth/google/student/callback"
+    callbackURL: "http://localhost:5000/auth/google/teacher/callback"
 }
 
 function generateUsername(email) {
