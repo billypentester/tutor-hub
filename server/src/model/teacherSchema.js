@@ -29,6 +29,12 @@ const teacherSchema = new mongoose.Schema({
     contactno:{
         type: Number
     },
+    language:{
+        type: String
+    },
+    city:{
+        type: String
+    },
     password: {
         type: String,
         required: true
@@ -39,17 +45,20 @@ const teacherSchema = new mongoose.Schema({
         confirmation:Boolean
     },
     experience:{
-        years:String,
+        experience:String,
         interest:String,
-        typeofSubject:String,
-        levelofSubject:String,
         expertise:String,
-        multipleSubjects:[String]
+        subjectLevel:String,
+        subjectType:String,
+        multipleSubject:[String]
     },
-    availibility:{
+    availability:{
         hours:Number,
-        location:[Number],
-        availableHours:[String]
+        startDate:String,
+        endDate:String,
+        days:[String],
+        timeslot:[String],
+        location:[Number]
     },
     tokens: [
         {

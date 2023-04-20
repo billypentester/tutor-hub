@@ -83,7 +83,6 @@ const updateProfile = async(req, res) => {
 
     try{
         const { teacher } = req.body;
-        console.log(req.user.id)
         console.log(teacher)
         const { id } = req.user;
         const updation = await Teacher.findByIdAndUpdate(id, teacher, {new: true})
@@ -113,7 +112,18 @@ const getTeacherCount = async(req, res) => {
    
 }
 
+const getProfile = async(req, res) => {
+    try{
+        const { username } = req.params;
+        const teacher = await Teacher.findOne({username: username})
+        res.json(teacher)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount}
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile}
 

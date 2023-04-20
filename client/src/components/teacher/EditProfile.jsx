@@ -6,19 +6,16 @@ import {withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps
 
 const MyMapComponent = compose(
   withProps({
-    googleMapURL:
-      "https://maps.googleapis.com/maps/api/js?&v=3.exp&libraries=geometry,drawing,places",
+    googleMapURL:"https://maps.googleapis.com/maps/api/js?&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
     mapElement: <div style={{ height: `100%` }} />
   }),
   withScriptjs,
   withGoogleMap
-)((props) => (                                
-  <GoogleMap defaultZoom={15} defaultCenter={{ lat: 31.469693, lng: 74.27284610000001 }}>
-    {props.isMarkerShown && (
-      <Marker position={{ lat: 31.469693, lng: 74.27284610000001 }} />
-    )}
+)(({lat, lng}) => (
+  <GoogleMap defaultZoom={15} defaultCenter={{ lat : lat, lng : lng}}>
+      <Marker position={{ lat : lat, lng : lng}} />
   </GoogleMap>
 ));
 
@@ -30,13 +27,28 @@ function EditProfile() {
   const [education, setEducation] = useState('');
   const [experience, setExperience] = useState('');
   const [availability, setAvailability] = useState('');
+  const [map, setMap] = useState(false);
 
   const submitProfile = async() => {
     setLoading(true)
-    const info = JSON.parse(localStorage.getItem('info'))
+    const {name, username, email, gender, city, age, contactno, language} = JSON.parse(localStorage.getItem('info'))
+    const education = JSON.parse(localStorage.getItem('education'))
+    const experience = JSON.parse(localStorage.getItem('experience'))
     const result = await axios.post('/api/teacher/update', {
       token : localStorage.getItem('token'),
-      teacher : info
+      teacher : {
+        name,
+        username,
+        email,
+        gender,
+        city,
+        age,
+        contactno,
+        language,
+        education,
+        experience,
+        availability
+      }
     })
     setLoading(false)
     console.log(result)
@@ -114,6 +126,47 @@ function EditProfile() {
     const value = Array.from(e.target.selectedOptions, option => option.value);
     setExperience({...experience, [name]:value})
   }
+
+  const handleChangeCheckbox = (e) => {
+    const {name, value} = e.target
+    setAvailability((prev) => {
+      if(e.target.checked)
+      {
+        return {
+          ...prev,
+          [name]: [...(prev[name] || []), value],
+        }
+      }
+      else
+      {
+        return {
+          ...prev,
+          [name]: prev[name].filter((item) => item !== value),
+        }
+      }
+    })
+  }
+
+  const getLocation = () => {
+    // if(availability.address)
+    // {
+      setLoading(true)
+      // const res = axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${availability.location}&key=AIzaSyDHEjdq0-VWiBRx2ih2TNuAc-ImURiUdkU`);
+      // const {lat, lng} = res.data.results[0].geometry.location;
+      console.log(availability.address)
+      if(window.navigator.geolocation)
+      {
+        window.navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setAvailability({...availability, ['location']: [lat, lng] })
+          setMap(true)
+          setLoading(false)
+        })
+      }
+    // }
+  }
+
 
   const saveAvailability = (e) => {
     setLoading(true)
@@ -439,7 +492,7 @@ function EditProfile() {
                     <div className="col-md-4">
                       <div className="form-group">
                         <label for="hours" className="form-label mt-4">Available hours in day</label>
-                        <input type="text" className="form-control" id="hours" placeholder="No. of available hours" name="hours" value={availibility.hours} onChange={handleChangeInputAvailability}/>
+                        <input type="text" className="form-control" id="hours" placeholder="No. of available hours" name="hours" value={availability.hours} onChange={handleChangeInputAvailability}/>
                       </div> 
                     </div>
 
@@ -448,10 +501,10 @@ function EditProfile() {
                         <label for="availability-dates" className="form-label mt-4">Availability start and end hours</label>
                         <div class="row">
                           <div class="col">
-                            <input type="time" class="form-control" id="start-date" name="start-date" value={availibility.startDate} onChange={handleChangeInputAvailability}/>
+                            <input type="time" class="form-control" id="start-date" name="startDate" value={availability.startDate} onChange={handleChangeInputAvailability}/>
                           </div>
                           <div class="col">
-                            <input type="time" class="form-control" id="end-date" name="end-date" value={availibility.endDate} onChange={handleChangeInputAvailability}/>
+                            <input type="time" class="form-control" id="end-date" name="endDate" value={availability.endDate} onChange={handleChangeInputAvailability}/>
                           </div>
                         </div>
                       </div>
@@ -465,27 +518,27 @@ function EditProfile() {
                       <label for="days" className="form-label mt-4">Days of the week</label>
                       <div class="d-flex">
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="monday" name="days" value="monday"/>
+                          <input type="checkbox" class="form-check-input" id="monday" name="days" value="monday" onChange={handleChangeCheckbox}/>
                           <label class="form-check-label" for="monday">Monday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday"/>
+                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox}/>
                           <label class="form-check-label" for="tuesday">Tuesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday"/>
+                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox}/>
                           <label class="form-check-label" for="wednesday">Wednesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday"/>
+                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox}/>
                           <label class="form-check-label" for="thursday">Thursday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday"/>
+                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox}/>
                           <label class="form-check-label" for="friday">Friday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday"/>
+                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox}/>
                           <label class="form-check-label" for="saturday">Saturday</label>
                         </div>
                       </div>
@@ -499,15 +552,15 @@ function EditProfile() {
                       <label for="timeslots" className="form-label mt-4">Time slots</label>
                       <div class="d-flex">
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="morning" name="timeslots" value="morning"/>
+                        <input type="checkbox" class="form-check-input" id="morning" name="timeslots" value="morning" onChange={handleChangeCheckbox}/>
                         <label class="form-check-label" for="morning">Morning</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslots" value="afternoon"/>
+                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslots" value="afternoon" onChange={handleChangeCheckbox}/>
                         <label class="form-check-label" for="afternoon">Afternoon</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="evening" name="timeslots" value="evening"/>
+                        <input type="checkbox" class="form-check-input" id="evening" name="timeslots" value="evening" onChange={handleChangeCheckbox}/>
                         <label class="form-check-label" for="evening">Evening</label>
                       </div>
                       </div>
@@ -515,35 +568,36 @@ function EditProfile() {
 
                   </div>
 
-                  <div className="row">
+                  {/* <div className="row">
                     <div class="form-group">
                       <label for="exceptions" className="form-label mt-4">Exceptions</label>
                       <textarea class="form-control" id="exceptions" name="exceptions" rows="3"></textarea>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="row">
                     <div className='col-md-6'>
                       <div class="form-group">
                           <label for="exampleInputName" className="form-label mt-4">Physical Address</label>
                           <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" name="address" value={availability.address} onChange={handleChangeInputAvailability}/> 
-                            <button class="btn btn-primary" type="button" id="button-addon2">verify</button>
+                            <input type="text" class="form-control" placeholder="Enter your complete address" aria-label="Recipient's username" name="address" value={availability.address} onChange={handleChangeInputAvailability}/> 
+                            <button class="btn btn-primary" type="button" id="button-addon2" onClick={getLocation}>Get Location</button>
                           </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="row">
-                    
+                  {
+                    map &&
+                    <div className="row">
                       <div class="my-4">
-                        <MyMapComponent isMarkerShown />
+                        <MyMapComponent lat={availability.location[0]} lng={availability.location[1]} />
                       </div>
-                    
-                  </div>
+                    </div>
+                  }
 
                   <div className='text-center mt-5 p-2'>
-                    <button disabled className="btn btn-primary" onClick={submitProfile}>Submit</button>
+                    <button className="btn btn-primary" onClick={submitProfile}>Submit</button>
                   </div>
 
                 </div>
