@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {login, logout} = require('../controllers/adminController')
+const {login, deleteStudent} = require('../controllers/adminController')
 const {getStudentCount} = require('../controllers/studentController')
 const {getTeacherCount} = require('../controllers/teacherController')
 const {getContactCount} = require('../controllers/contactController')
@@ -20,7 +20,7 @@ router.get('/admin/statistics', async(req, res) => {
 })
 
 router.post('/admin/login', login)
-router.get('/admin/logout',auth, logout)
+router.delete('/admin/student/delete/:id', deleteStudent)
 
 
 module.exports = router;
