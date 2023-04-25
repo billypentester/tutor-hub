@@ -24,7 +24,7 @@ const teacherSchema = new mongoose.Schema({
         type: String
     },
     age:{
-        type: Number
+        type: String
     },
     contactno:{
         type: Number
@@ -40,9 +40,12 @@ const teacherSchema = new mongoose.Schema({
         required: true
     },
     education:{
+        description:String,
         qualification:String,
-        marks:String,
-        confirmation:Boolean
+        major:String,
+        institute:String,
+        passedYear:String,
+        marks:String
     },
     experience:{
         experience:String,
@@ -53,6 +56,7 @@ const teacherSchema = new mongoose.Schema({
         multipleSubject:[String]
     },
     availability:{
+        fee:Number,
         hours:Number,
         startDate:String,
         endDate:String,

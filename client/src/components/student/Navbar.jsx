@@ -42,7 +42,7 @@ function Navbar({student}) {
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span className="mx-2 text-light h-4">Profile</span>
-                <img src={student.profile} alt="avatar" className="img-fluid rounded-circle" style={{width: '20px', height: '20px'}}/>
+                {/* <img src={student.profile} alt="avatar" className="img-fluid rounded-circle" style={{width: '20px', height: '20px'}}/> */}
               </a>
               <div className="dropdown-menu">
                 <Link className="dropdown-item" to="/student/dashboard/view-profile">View Profile</Link>

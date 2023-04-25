@@ -28,6 +28,7 @@ function EditProfile() {
   const [experience, setExperience] = useState('');
   const [availability, setAvailability] = useState('');
   const [map, setMap] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const submitProfile = async() => {
     setLoading(true)
@@ -83,44 +84,6 @@ function EditProfile() {
     }
   }
 
-  const fetchstorage = () => {
-    if(localStorage.getItem('info'))
-    {
-      const {name, username, email, age, gender, address, contactno, profile} = JSON.parse(localStorage.getItem('info'))
-      setTeacher({...teacher, name, username, email, age, gender, address, contactno, profile})
-    }
-    else
-    {
-      const { name, username, email } = JSON.parse(localStorage.getItem('teacher'))
-      setTeacher({...teacher, name, username, email })
-    }
-  
-  }
-
-  const saveInfo = (e) => {
-    setLoading(true)
-    e.preventDefault()
-    localStorage.setItem('info', JSON.stringify(teacher))
-    alert('Saved')
-    setLoading(false)
-  }
-
-  const saveEducation = (e) => {
-    setLoading(true)
-    e.preventDefault()
-    localStorage.setItem('education', JSON.stringify(education))
-    alert('Saved')
-    setLoading(false)
-  }
-
-  const saveExperience = (e) => {
-    setLoading(true)
-    e.preventDefault()
-    localStorage.setItem('experience', JSON.stringify(experience))
-    alert('Saved')
-    setLoading(false)
-  }
-
   const handleChangeSelectMultiple = (e) => {
     const name = e.target.name;
     const value = Array.from(e.target.selectedOptions, option => option.value);
@@ -147,6 +110,56 @@ function EditProfile() {
     })
   }
 
+  const fetchstorage = () => {
+    if(localStorage.getItem('info') && localStorage.getItem('education') && localStorage.getItem('experience') && localStorage.getItem('availability'))
+    {
+      const info = JSON.parse(localStorage.getItem('info'))
+      const education = JSON.parse(localStorage.getItem('education'))
+      const experience = JSON.parse(localStorage.getItem('experience'))
+      const availability = JSON.parse(localStorage.getItem('availability'))
+      setTeacher({...teacher, ...info})
+      setEducation({...education, ...education})
+      setExperience({...experience, ...experience})
+      setAvailability({...availability, ...availability})
+    }
+    else
+    {
+      const data = JSON.parse(localStorage.getItem('teacher'))
+      setTeacher({...teacher, ...data})
+      setEducation({...education, ...data.education})
+      setExperience({...experience, ...data.experience})
+      setAvailability({...availability, ...data.availability})
+    }
+  }
+
+  const saveInfo = (e) => {
+    setLoading(true)
+    e.preventDefault()
+    localStorage.setItem('info', JSON.stringify(teacher))
+    alert('Saved')
+    setActiveIndex(activeIndex + 1)
+    setLoading(false)
+  }
+
+  const saveEducation = (e) => {
+    setLoading(true)
+    e.preventDefault()
+    localStorage.setItem('education', JSON.stringify(education))
+    alert('Saved')
+    setActiveIndex(activeIndex + 1)
+    setLoading(false)
+  }
+
+  const saveExperience = (e) => {
+    setLoading(true)
+    e.preventDefault()
+    localStorage.setItem('experience', JSON.stringify(experience))
+    alert('Saved')
+    setActiveIndex(activeIndex + 1)
+    setLoading(false)
+  }
+
+
   const getLocation = () => {
     // if(availability.address)
     // {
@@ -167,14 +180,6 @@ function EditProfile() {
     // }
   }
 
-
-  const saveAvailability = (e) => {
-    setLoading(true)
-    e.preventDefault()
-    localStorage.setItem('availability', JSON.stringify(availability))
-    alert('Saved')
-    setLoading(false)
-  }
 
   useEffect(()=>{
     fetchstorage();
@@ -207,7 +212,7 @@ function EditProfile() {
                 Basic Information
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div id="collapseOne" class={`accordion-collapse collapse ${ activeIndex === 0 ? 'show' : '' }`} aria-labelledby="headingOne" data-parent="#accordionExample">
               <div class="accordion-body">
 
                 <div className='container px-4'>
@@ -245,7 +250,7 @@ function EditProfile() {
                   <div className="row">
                       <div class="form-group">
                         <label for="formFile" class="form-label mt-4">Profile Pic</label>
-                        <input class="form-control" type="file" accept="image/*" id="formFile" onChange={handleFileChange} />
+                        <input class="form-control" type="file" name="profile" accept="image/*" id="formFile" onChange={handleFileChange} />
                       </div>
                   </div>
 
@@ -287,8 +292,8 @@ function EditProfile() {
                         <div className='col-md-6'>
                           <div class="form-group">
                             <label for="Gender" class="form-label mt-4">Gender</label>
-                            <select className="form-select" id="Gender" name="gender" onChange={handleChangeInput}>
-                              <option selected>Choose...</option>
+                            <select className="form-select" id="Gender" name="gender" value={teacher.gender} onChange={handleChangeInput}>
+                              <option>Choose...</option>
                               <option value="Male">Male</option>
                               <option value="Female">Female</option>
                               <option value="Other">Other</option>
@@ -315,27 +320,64 @@ function EditProfile() {
                 Educational Background
               </button>
             </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div id="collapseTwo" class={`accordion-collapse collapse ${ activeIndex === 1 ? 'show' : '' }`} aria-labelledby="headingTwo" data-parent="#accordionExample">
               <div class="accordion-body">
                 
                 <div className='container px-4'>
 
-                    <div className="row">
-                        <div class="form-group">
-                          <label for="Qualification" class="form-label mt-4">Qualification</label>
-                          <select class="form-select" id="Qualification" name="qualification" onChange={handleChangeInputEducation}>
-                            <option>Select Education</option>
-                            <option value="PhD">PhD</option>
-                            <option value="Masters">Masters</option>
-                            <option value="Bachelors">Bachelors</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Matric">Matric</option>
-                            <option value="High School">High School</option>
-                          </select>
-                        </div>    
+                  <div className="row">              
+                    <div className="form-group">
+                      <label for="exampleFormControlTextarea1" className="form-label mt-4">Short Description about yourself</label>
+                      <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" name="description" value={education.description} onChange={handleChangeInputEducation}></textarea>
                     </div>
+                  </div>
 
-                    <div className="row">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div class="form-group">
+                            <label for="Qualification" class="form-label mt-4">Qualification</label>
+                            <select class="form-select" id="Qualification" name="qualification" value={education.qualification} onChange={handleChangeInputEducation}>
+                              <option>Select Education</option>
+                              <option value="PhD">PhD</option>
+                              <option value="MS">Masters</option>
+                              <option value="BS">Bachelors</option>
+                              <option value="Inter">Intermediate</option>
+                              <option value="Matric">Matric</option>
+                              <option value="High School">High School</option>
+                            </select>
+                          </div> 
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label for="exampleMajor" className="form-label mt-4">Major</label>
+                            <select class="form-select" id="exampleMajor" name="major" value={education.major} onChange={handleChangeInputEducation}>
+                              <option>Select Major</option>
+                              <option value="Computer Science">Computer Science</option>
+                              <option value="Mathematics">Mathematics</option>
+                              <option value="Physics">Physics</option>
+                              <option value="Chemistry">Chemistry</option>
+                              <option value="Biology">Biology</option>
+                              <option value="English">English</option>
+                              <option value="Urdu">Urdu</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label for="exampleInstitute" className="form-label mt-4">Institute Name</label>
+                        <input type="text" className="form-control" id="exampleInstitute" placeholder="Enter your Institute name" name="institute" value={education.institute} onChange={handleChangeInputEducation}/>
+                      </div>
+                    </div>   
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6 ">
+                      <div className="row">
                       <div className="col-md-6">
                         <div className="form-group">
                           <label for="exampleMarks" className="form-label mt-4">Enter Obtained marks / GPA </label>
@@ -343,22 +385,30 @@ function EditProfile() {
                         </div>
                       </div>
                       <div className="col-md-6">
-                        <div class="form-group">
-                          <label for="formFile" class="form-label mt-4">Upload transcript (Marks sheet)</label>
-                          <input class="form-control" type="file" id="formFile"/>
-                        </div> 
+                        <div className="form-group">
+                          <label for="exampleYear" className="form-label mt-4">Passed Year</label>
+                          <input type="number" className="form-control" id="exampleYear" placeholder="E.g 2023" name="passedYear" value={education.passedYear} onChange={handleChangeInputEducation}/>
+                        </div>
+                      </div>
                       </div>
                     </div>
+                    <div className="col-md-6">
+                      <div class="form-group">
+                        <label for="formFile" class="form-label mt-4">Upload transcript (Marks sheet)</label>
+                        <input class="form-control" type="file" id="formFile"/>
+                      </div> 
+                    </div>
+                  </div>
 
-                    <div className="d-flex my-4 align-items-center">
-                      <div className="d-flex align-items-center">
-                          <div className="form-check">
-                              <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                              <label className="form-check-label" for="flexCheckDefault">
-                              I confirm that I've no criminal background or pending case.
-                              </label>
-                          </div>
-                      </div>
+                  <div className="d-flex my-4 align-items-center">
+                    <div className="d-flex align-items-center">
+                        <div className="form-check">
+                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                            <label className="form-check-label" for="flexCheckDefault">
+                            I confirm that I've no criminal background or pending case.
+                            </label>
+                        </div>
+                    </div>
                   </div>
 
                   <div className='text-end my-4'>
@@ -377,7 +427,7 @@ function EditProfile() {
                 Experience
               </button>
             </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+            <div id="collapseThree" class={`accordion-collapse collapse ${ activeIndex === 2 ? 'show' : '' }`} aria-labelledby="headingThree" data-parent="#accordionExample">
               <div class="accordion-body">
                 
                 <div className='container px-4'>
@@ -386,8 +436,8 @@ function EditProfile() {
                       <div className="col-md-6">
                       <div class="form-group">
                         <label for="Experience" class="form-label mt-4">How much experience do you have?</label>
-                        <select class="form-select" id="Experience" name="experience" onChange={handleChangeInputExperience}>
-                          <option selected>Choose...</option>
+                        <select class="form-select" id="Experience" name="experience" value={experience.experience} onChange={handleChangeInputExperience}>
+                          <option>Choose...</option>
                           <option value="professional">Professional (3 years or more)</option>
                           <option value="intermediate">Intermediate (1 year - 3 years)</option>
                           <option value="beginner">Beginner level (6 months - 1 year)</option>
@@ -407,8 +457,8 @@ function EditProfile() {
                       <div className="col-md-4">
                         <div class="form-group">
                           <label for="SubjectType" class="form-label mt-4">Which subject you can taugh better?</label>
-                          <select class="form-select" id="SubjectType" name="subjectType" onChange={handleChangeInputExperience}>
-                            <option selected>Choose...</option>
+                          <select class="form-select" id="SubjectType" name="subjectType"value={experience.subjectType} onChange={handleChangeInputExperience}>
+                            <option>Choose...</option>
                             <option value="Science">Science Subjects</option>
                             <option value="Arts">Arts Subjects</option>
                             <option value="Commerce">Commerce Subjects</option>
@@ -419,8 +469,8 @@ function EditProfile() {
                       <div className="col-md-4">
                         <div class="form-group">
                           <label for="SubjectLevel" class="form-label mt-4">Select level of classes you can teach</label>
-                          <select class="form-select" id="SubjectLevel" name="subjectLevel" onChange={handleChangeInputExperience}>
-                            <option selected>Choose...</option>
+                          <select class="form-select" id="SubjectLevel" name="subjectLevel" value={experience.subjectLevel} onChange={handleChangeInputExperience}>
+                            <option>Choose...</option>
                             <option value="Primary">Primary level</option>
                             <option value="Middle">Middle level</option>
                             <option value="Matriculation">Matriculation / O level</option>
@@ -432,8 +482,8 @@ function EditProfile() {
                       <div className="col-md-4">
                       <div class="form-group">
                           <label for="expertise" class="form-label mt-4">Select subject of expertise</label>
-                          <select class="form-select" id="expertise" name="expertise" onChange={handleChangeInputExperience}>
-                            <option selected>Choose...</option>
+                          <select class="form-select" id="expertise" name="expertise" value={experience.expertise} onChange={handleChangeInputExperience}>
+                            <option>Choose...</option>
                             <option value="Islamic Studies">Islamic Studies</option>
                             <option value="Social Studies">Social Studies</option>
                             <option value="Science">Science (Physics, Chemistry)</option>
@@ -451,8 +501,8 @@ function EditProfile() {
                     <div className="row">
                       <div class="form-group">
                         <label for="MultipleSubject" class="form-label mt-4">Select multiple of subjects that you can taught</label>
-                        <select multiple class="form-select" id="MultipleSubject" name="multipleSubject" onChange={handleChangeSelectMultiple}>
-                          <option selected>Choose...</option>
+                        <select multiple class="form-select" id="MultipleSubject" name="multipleSubject" value={experience.multipleSubject} onChange={handleChangeSelectMultiple}>
+                          <option>Choose...</option>
                           <option value="Islamic Studies">Islamic Studies</option>
                           <option value="Social Studies">Social Studies</option>
                           <option value="Science">Science (Physics, Chemistry)</option>
@@ -482,7 +532,7 @@ function EditProfile() {
                 Availibility
               </button>
             </h2>
-            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+            <div id="collapseFour" class={`accordion-collapse collapse ${ activeIndex === 3 ? 'show' : '' }`} aria-labelledby="headingFour" data-parent="#accordionExample">
               <div class="accordion-body">
                 
                 <div className='container px-4'>
@@ -518,27 +568,27 @@ function EditProfile() {
                       <label for="days" className="form-label mt-4">Days of the week</label>
                       <div class="d-flex">
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="monday" name="days" value="monday" onChange={handleChangeCheckbox}/>
+                          <input type="checkbox" class="form-check-input" id="monday" name="days" value="monday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('monday') : [] }/>
                           <label class="form-check-label" for="monday">Monday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox}/>
+                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('tuesday') : [] }/>
                           <label class="form-check-label" for="tuesday">Tuesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox}/>
+                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('wednesday') : [] }/>
                           <label class="form-check-label" for="wednesday">Wednesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox}/>
+                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('thursday') : [] }/>
                           <label class="form-check-label" for="thursday">Thursday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox}/>
+                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('friday') : [] }/>
                           <label class="form-check-label" for="friday">Friday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox}/>
+                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('saturday') : [] }/>
                           <label class="form-check-label" for="saturday">Saturday</label>
                         </div>
                       </div>
@@ -552,15 +602,15 @@ function EditProfile() {
                       <label for="timeslots" className="form-label mt-4">Time slots</label>
                       <div class="d-flex">
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="morning" name="timeslots" value="morning" onChange={handleChangeCheckbox}/>
+                        <input type="checkbox" class="form-check-input" id="morning" name="timeslot" value="morning" onChange={handleChangeCheckbox} checked={ availability ? availability.timeslot.includes('morning') : [] }/>
                         <label class="form-check-label" for="morning">Morning</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslots" value="afternoon" onChange={handleChangeCheckbox}/>
+                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslot" value="afternoon" onChange={handleChangeCheckbox} checked={ availability ? availability.timeslot.includes('afternoon') : [] }/>
                         <label class="form-check-label" for="afternoon">Afternoon</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="evening" name="timeslots" value="evening" onChange={handleChangeCheckbox}/>
+                        <input type="checkbox" class="form-check-input" id="evening" name="timeslot" value="evening" onChange={handleChangeCheckbox} checked={ availability ? availability.timeslot.includes('evening') : [] }/>
                         <label class="form-check-label" for="evening">Evening</label>
                       </div>
                       </div>
@@ -568,21 +618,20 @@ function EditProfile() {
 
                   </div>
 
-                  {/* <div className="row">
-                    <div class="form-group">
-                      <label for="exceptions" className="form-label mt-4">Exceptions</label>
-                      <textarea class="form-control" id="exceptions" name="exceptions" rows="3"></textarea>
-                    </div>
-                  </div> */}
-
                   <div className="row">
                     <div className='col-md-6'>
                       <div class="form-group">
-                          <label for="exampleInputName" className="form-label mt-4">Physical Address</label>
+                          <label for="exampleLocation" className="form-label mt-4">Physical Address</label>
                           <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Enter your complete address" aria-label="Recipient's username" name="address" value={availability.address} onChange={handleChangeInputAvailability}/> 
+                            <input disabled type="text" class="form-control" placeholder="Enter your complete address" aria-label="Recipient's username" name="address" value={availability.address} onChange={handleChangeInputAvailability}/> 
                             <button class="btn btn-primary" type="button" id="button-addon2" onClick={getLocation}>Get Location</button>
                           </div>
+                      </div>
+                    </div>
+                    <div className='col-md-6'>
+                      <div class="form-group">
+                          <label for="exampleFee" className="form-label mt-4">Expected Mountly fee</label>
+                          <input type="number" class="form-control" id="exampleFee" placeholder="Enter your monthly charges" name="fee" value={availability.fee} onChange={handleChangeInputAvailability}/>
                       </div>
                     </div>
                   </div>
