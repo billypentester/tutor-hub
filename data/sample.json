@@ -1,0 +1,39 @@
+{
+    "name": "Moazzam Ali",
+    "username": "moazzam69",
+    "email": "moazzamgujjar@gmail.com",
+    "city": "Shahdara",
+    "contactno": 369696969,
+    "age": "20",
+    "gender": "Male",
+    "language": "Urdu",
+    "profile": "https://placehold.co/400",
+    "rating": 3.5,
+    "joinedDate": "2021-08-28T14:37:42.972Z",
+    "education": {
+        "description": "your bio will be here about 2-3 lines or short paragraph and this is dummy text. Change it later",
+        "qualification": "Inter",
+        "major": "Computer Science",
+        "institute": "Punjab College",
+        "marks": "950",
+        "passedYear": "2019"
+    },
+    "experience": {
+        "multipleSubject": ["Science","English","Maths","Urdu","Computer"],
+        "experience": "intermediate",
+        "interest": "Math",
+        "subjectType": "Science",
+        "subjectLevel": "Matriculation",
+        "expertise": "Computer"
+    },
+    "availability": {
+        "hours": 2,
+        "startDate": "10:00",
+        "endDate": "14:00",
+        "days": ["monday","tuesday","wednesday","thursday","friday","saturday"],
+        "timeslot": ["afternoon", "evening"],
+        "location": [31.469693,74.2728461],
+        "fee": 5000
+    }
+}
+    

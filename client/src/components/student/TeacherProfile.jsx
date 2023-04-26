@@ -23,6 +23,27 @@ function TeacherProfile() {
         }
     }
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const month = date.toLocaleString('default', { month: 'long' });
+        const day = date.getDate();
+        const year = date.getFullYear();
+        return `${month} ${day}, ${year}`;
+    }
+
+    function formatTime(timeStr) {
+        // Parse hours and minutes from input string
+        let [hours, minutes] = timeStr.split(":").map(Number);
+        
+        // Determine AM/PM and adjust hours if necessary
+        let ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // If hours is 0, set it to 12
+        
+        // Format time as "h:mm AM/PM"
+        return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + ampm;
+    }
+
     useEffect(() => {
         getTeacher()
     }, [])
@@ -80,7 +101,7 @@ function TeacherProfile() {
                                             <i className="mx-3 fas fa-star text-warning"></i>
                                             <span>Rating</span>
                                         </div>
-                                        <span className='mx-3'>4.5</span>
+                                        <span className='mx-3'>{teacher.rating}</span>
                                     </div>
                                     <div className='d-flex justify-content-between mb-2'>
                                         <div className='d-flex align-items-center'>
@@ -108,7 +129,7 @@ function TeacherProfile() {
                                             <i className="mx-3 fas fa-calendar-alt text-success"></i>
                                             <span>Joined</span>
                                         </div>
-                                        <span className='mx-3'>July 2023</span>
+                                        <span className='mx-3'>{formatDate(teacher.joinedDate)}</span>
                                     </div>
                                     <div className='d-flex justify-content-between mb-2'>
                                         <div className='d-flex align-items-center'>
@@ -139,7 +160,7 @@ function TeacherProfile() {
                                     <div className='row'>
                                         <div className='d-flex align-items-center mb-2'>
                                             <i className="mx-3 fas fa-briefcase text-primary"></i>
-                                            <span className='mx-3'>I'm <strong>{teacher.experience.experience}</strong> level tutor having 3-4 years experience.</span>
+                                            <span className='mx-3'>I'm <strong>{teacher.experience.experience}</strong> level tutor having vast experience.</span>
                                         </div>
                                         <div className='d-flex align-items-center mb-2'>
                                             <i className="mx-3 fa-solid fa-heart text-danger"></i>
@@ -174,37 +195,51 @@ function TeacherProfile() {
                                     <div className='row mb-3'>
                                         <h5 className='lead'>Days</h5>
                                         <div className='my-2'>
-                                        <div className='d-flex'>
-                                            {
-                                                teacher.availability.days.map((day, index) => {
-                                                    return (
-                                                        <div key={index}>
-                                                            <div>
-                                                                <span className='p-0 mx-3'>{day}</span>
+                                            <div className='d-flex flex-wrap'>
+                                                {
+                                                    teacher.availability.days.map((day, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                <div className='px-3 py-2 m-2 border rounded-pill text-white bg-info border-1 border-info text-capitalize'>
+                                                                    <span className='p-0 mx-3'>{day}</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>   
+                                                        )
+                                                    })
+                                                }
+                                            </div>   
                                         </div>
                                     </div>
-                                    <div className='row'>
+                                    <div className='row mb-3'>
                                         <h5 className='lead'>Shifts</h5>
                                         <div className='my-2'>
-                                        <div className='d-flex'>
-                                            {
-                                                teacher.availability.timeslot.map((time, index) => {
-                                                    return (
-                                                        <div key={index}>
-                                                            <div>
-                                                                <span className='p-0 mx-3'>{time}</span>
+                                            <div className='d-flex'>
+                                                {
+                                                    teacher.availability.timeslot.map((time, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                <div className='px-3 py-2 m-2 border rounded-pill border-1 border-info text-capitalize text-info'>
+                                                                    <span className='p-0 mx-3'>{time}</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
+                                                        )
+                                                    })
+                                                }
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div className='row mb-3'>
+                                        <h5 className='lead'>Time Range</h5>
+                                        <div className='my-2'>
+                                            <div className='d-flex justify-content-center'>
+                                                <div className='col-7'>
+                                                    <div className='d-flex justify-content-between px-3 py-2 m-2 border border-1 border-end-0 border-start-0 border-info text-capitalize text-info'>
+                                                        <span className='p-0 mx-3 text-start'>{formatTime(teacher.availability.startDate)}</span>
+                                                        <span className='p-0 mx-3 text-center'>to</span>
+                                                        <span className='p-0 mx-3 text-end'>{formatTime(teacher.availability.endDate)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
