@@ -32,7 +32,7 @@ function EditProfile() {
 
   const submitProfile = async() => {
     setLoading(true)
-    const {name, username, email, gender, city, age, contactno, language} = JSON.parse(localStorage.getItem('info'))
+    const {name, username, email, gender, city, age, contactno, language, profile} = JSON.parse(localStorage.getItem('info'))
     const education = JSON.parse(localStorage.getItem('education'))
     const experience = JSON.parse(localStorage.getItem('experience'))
     const result = await axios.post('/api/teacher/update', {
@@ -45,18 +45,29 @@ function EditProfile() {
         city,
         age,
         contactno,
+        profile,
         language,
         education,
         experience,
         availability
       }
     })
+    if(result.status === 200)
+    {
+      localStorage.removeItem('info')
+      localStorage.removeItem('education')
+      localStorage.removeItem('experience')
+      localStorage.removeItem('availability')
+      localStorage.setItem('teacher', JSON.stringify(result.data))
+      alert('Profile Updated')
+    }
     setLoading(false)
     console.log(result)
   }
 
   const handleChangeInput = (e) => {
     const {name, value} = e.target
+    console.log(name, value)
     setTeacher({...teacher, [name]:value})
   }
 
@@ -111,7 +122,7 @@ function EditProfile() {
   }
 
   const fetchstorage = () => {
-    if(localStorage.getItem('info') && localStorage.getItem('education') && localStorage.getItem('experience') && localStorage.getItem('availability'))
+    if(localStorage.getItem('info') || localStorage.getItem('education') || localStorage.getItem('experience') || localStorage.getItem('availability'))
     {
       const info = JSON.parse(localStorage.getItem('info'))
       const education = JSON.parse(localStorage.getItem('education'))
@@ -183,7 +194,7 @@ function EditProfile() {
 
   useEffect(()=>{
     fetchstorage();
-  }, [loading])
+  }, [])
 
 
   return (
@@ -221,7 +232,7 @@ function EditProfile() {
                     <div className="col-md-6">
                       <div className="form-group">
                         <label for="Fullname" className="form-label mt-4">Full Name</label>
-                        <input type="text" className="form-control" id="Fullname" aria-describedby="Fullname" placeholder="Name" name="name" value={teacher.name}/>
+                        <input type="text" className="form-control" id="Fullname" aria-describedby="Fullname" placeholder="Name" name="name" value={teacher.name} onChange={handleChangeInput} />
                       </div>    
                     </div>
                     <div className="col-md-6">
@@ -568,27 +579,27 @@ function EditProfile() {
                       <label for="days" className="form-label mt-4">Days of the week</label>
                       <div class="d-flex">
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="monday" name="days" value="monday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('monday') : [] }/>
+                          <input type="checkbox" class="form-check-input" id="monday" name="days" value="monday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('monday')  }/>
                           <label class="form-check-label" for="monday">Monday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('tuesday') : [] }/>
+                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Tuesday')  }/>
                           <label class="form-check-label" for="tuesday">Tuesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('wednesday') : [] }/>
+                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Wednesday')  }/>
                           <label class="form-check-label" for="wednesday">Wednesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('thursday') : [] }/>
+                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Thursday')  }/>
                           <label class="form-check-label" for="thursday">Thursday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('friday') : [] }/>
+                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Friday')  }/>
                           <label class="form-check-label" for="friday">Friday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox} checked={ availability ? availability.days.includes('saturday') : [] }/>
+                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Saturday')  }/>
                           <label class="form-check-label" for="saturday">Saturday</label>
                         </div>
                       </div>
@@ -602,15 +613,15 @@ function EditProfile() {
                       <label for="timeslots" className="form-label mt-4">Time slots</label>
                       <div class="d-flex">
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="morning" name="timeslot" value="morning" onChange={handleChangeCheckbox} checked={ availability ? availability.timeslot.includes('morning') : [] }/>
+                        <input type="checkbox" class="form-check-input" id="morning" name="timeslot" value="morning" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('Morning') }/>
                         <label class="form-check-label" for="morning">Morning</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslot" value="afternoon" onChange={handleChangeCheckbox} checked={ availability ? availability.timeslot.includes('afternoon') : [] }/>
+                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslot" value="afternoon" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('Afternoon') }/>
                         <label class="form-check-label" for="afternoon">Afternoon</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="evening" name="timeslot" value="evening" onChange={handleChangeCheckbox} checked={ availability ? availability.timeslot.includes('evening') : [] }/>
+                        <input type="checkbox" class="form-check-input" id="evening" name="timeslot" value="evening" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('Evening') }/>
                         <label class="form-check-label" for="evening">Evening</label>
                       </div>
                       </div>

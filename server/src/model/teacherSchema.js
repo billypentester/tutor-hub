@@ -11,7 +11,10 @@ const teacherSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    profile:String,
+    profile:{
+        type: String,
+        default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png'
+    },
     username: {
         type: String,
         required: true
@@ -38,6 +41,22 @@ const teacherSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    isVerified:{
+        type: Boolean,
+        default: false
+    },
+    isProfileComplete:{
+        type: Boolean,
+        default: false
+    },
+    joinedDate:{
+        type: Date,
+        default: Date.now
+    },
+    rating:{
+        type: Number,
+        default: 0
     },
     education:{
         description:String,
