@@ -123,7 +123,31 @@ const getProfile = async(req, res) => {
     }
 }
 
+const searchTeacher = async(req, res) => {
+    try{
+        const teachers = await Teacher.find();
+        const result = teachers.map((obj) => {
+            return {
+                name: obj.name,
+                username: obj.username,
+                profile: obj.profile,
+                city: obj.city,
+                rating: obj.rating,
+                experience: obj.experience.experience,
+                subjectType: obj.experience.subjectType,
+                subjectLevel: obj.experience.subjectLevel,
+                expertise: obj.experience.expertise,
+                fee: obj.availability.fee,
+            }
+        })
+        res.json(result)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile}
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher}
 

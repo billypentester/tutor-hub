@@ -1,28 +1,49 @@
 import React, {useState, useEffect} from 'react'
-import ProfileData from './../../assets/data/teachers.json'
+import { Link } from 'react-router-dom'
 
-function User(props) {
+function User({ name, profile, city, rating, expertise, username}) {
   return (
-    <div className="card border-light bg-light mb-3 py-3">
+    <Link className="card border-light bg-light mb-3 py-2 px-5 text-decoration-none text-black" to={`/student/dashboard/profile/${username}`}>
       <div className="row">
-        <div className="col-4 text-center">
-          <img src="https://via.placeholder.com/150" className="img-fluid rounded-circle" alt="..." />
+        <div className="col-3 text-center">
+          <img src={profile} className="rounded-circle" alt="..."  width="150" height="150"/>
         </div>
-        <div className="col-8">
+        <div className="col-9">
           <div className="card-body">
-            <h5 className="card-title">{props.username}</h5>
-            <div className="d-flex flex-wrap justify-content-between">
-              <p className="card-text">City: {props.city}</p>
-              <p className="card-text">Rating: {props.rating}</p>
-              <p className="card-text">Experience: {props.experience}</p>
-              <p className="card-text">Expertise: {props.expertise}</p>
-              <p className="card-text">Subject Type: {props.subjectType}</p>
-              <p className="card-text">fee:{props.fee}</p>
-            </div>
+            <h4 className="card-title">{name}</h4>
+            <div className="d-flex justify-content-between mt-3">
+              <div className="">
+                <div className="d-flex flex-column">
+                  <p className="card-text lead mb-1">City</p>
+                  <div className="d-flex flex-row align-items-center">
+                    <i class="fa-solid fa-location-dot mx-2"></i>
+                    <p className="card-text">{city}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <div className="d-flex flex-column">
+                  <p className="card-text lead mb-1">Rating</p>
+                  <div className="d-flex flex-row align-items-center">
+                    <i className="fa-solid fa-star mx-2"></i>
+                    <p className="card-text">{rating}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <div className="d-flex flex-column">
+                  <p className="card-text lead mb-1">Expertise</p>
+                  <div className="d-flex flex-row align-items-center">
+                  <i className="fa-solid fa-bolt mx-2"></i>
+                    <p className="card-text">{expertise}</p>
+                  </div>
+                </div>
+              </div>
+            </div> 
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -30,15 +51,15 @@ function UsersList(props) {
   const users = props.users.map((user) => (
     <User
       key={user.username}
+      name={user.name}
       username={user.username}
+      profile={user.profile}
       city={user.city}
       rating={user.rating}
       experience={user.experience}
       expertise={user.expertise}
       subjectType={user.subjectType}
       subjectLevel={user.subjectLevel}
-      days={user.days}
-      timeslot={user.timeslot}
       fee={user.fee}
     />
   ));
@@ -51,16 +72,26 @@ function Finder() {
   const [users, setUsers] = useState([]);
 
   const [filters, setFilters] = useState({
+    name: '',
+    profile: '',
     city: '',
     rating: '',
     username: '',
     expertise: '',
     experience: '',
     subjectType: '',
+    subjectLevel: '',
     fee: ''
   });
 
   const [filteredUsers, setFilteredUsers] = useState(users);
+
+  const fetchUsers = async () => {
+    const response = await fetch("/api/teacher/search");
+    const data = await response.json();
+    setUsers(data);
+    filterUsers(data);
+  };
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -80,8 +111,8 @@ function Finder() {
   };
 
   useEffect(() => {
-    setUsers(ProfileData);
-    setFilteredUsers(ProfileData);
+    fetchUsers();
+    console.log(users);
   }, []);
 
   useEffect(() => {

@@ -55,7 +55,7 @@ function TeacherProfile() {
         }
         {
             teacher === '' ? <h1>Teacher Not Found</h1> : 
-            <div className='row'>
+            <div className='row my-4'>
                 <div className='col-12'>
                     <div className="p-3 mb-3 bg-light rounded">
                         <div className='d-flex justify-content-between'>
