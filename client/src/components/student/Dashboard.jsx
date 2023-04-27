@@ -59,7 +59,7 @@ function StudentDashoard() {
   return (
     <>
       <Navbar student={student}/>
-      <div className="container p-5">
+      <div className="container">
         <Routes>
           <Route path="/" element={ <Statistics student={student} /> } />
           <Route path="/finder" element={ <Finder/> } />
