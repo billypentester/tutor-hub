@@ -1,11 +1,14 @@
 const express = require('express')
 const app = express()
+const http = require('http');
+const server = http.createServer(app);
 require('dotenv').config()
 const session = require('express-session')
 var morgan = require('morgan')
 const cors = require('cors');
-const passport = require('./src/middleware/googleAuth')
+const setupSocket = require('./src/modules/chat')
 
+const passport = require('./src/middleware/googleAuth')
 const student = require('./src/api/student')
 const teacher = require('./src/api/teacher')
 const admin = require('./src/api/admin')
@@ -34,6 +37,8 @@ app.use(admin)
 app.use(contact)
 
 
-app.listen(port, () => {
-    console.log(`Node App listening: http://localhost:${port}`)
+server.listen(port, () => {
+  console.log(`Node App listening: http://localhost:${port}`)
 })
+
+setupSocket(server);
