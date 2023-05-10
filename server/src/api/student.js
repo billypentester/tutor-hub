@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent } = require('../controllers/studentController')
+const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments} = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -13,6 +13,8 @@ router.post('/student/signup', Register, signUp)
 router.post('/student/login', Login, login)
 router.post('/student/details',auth, userPanel)
 router.get('/student/verify/:token', emailVerification)
+router.post('/student/appointment', appointment)
+router.post('/student/appointment/get', getAppointments)
 
 router.get('/student/all', getAllStudents)
 router.get('/student/count', getStudentCount)

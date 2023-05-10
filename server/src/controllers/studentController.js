@@ -1,4 +1,6 @@
 const Student = require('./../model/studentSchema');
+const Appointment =  require('./../model/appointmentSchema')
+const Teacher = require('./../model/teacherSchema')
 const mail = require('./../modules/mail');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -54,7 +56,6 @@ const emailVerification = (req, res) => {
             })
         }
     })
-
 }
     
 
@@ -121,5 +122,37 @@ const updateStudent = async(req, res) => {
 }
 
 
-module.exports = {signUp, login,  emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent}
+const appointment = async(req, res) => {
+    try{
+        const {student, teacher, appointmentDate, appointmentTime, duration, notes} = req.body;
+        const appointment = new Appointment({student, teacher, appointmentDate, appointmentTime, duration, notes})
+        const result = await appointment.save();
+        console.log(result)
+        res.status(200).json({ msg: 'Appointment created successfully'})
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+const getAppointments = async(req, res) => {
+    try{
+        const {student} = req.body;
+        const appointments = await Appointment.find({student: student})
+        if(appointments){
+            const teachers = await Teacher.find({username: {$in: appointments.map((appointment) => appointment.teacher)}})
+            const result = appointments.map((appointment) => {
+                const teacher = teachers.find((teacher) => teacher.username == appointment.teacher)
+                return {...appointment._doc, teacher: {profile: teacher.profile, name: teacher.name, username: teacher.username}}
+            })
+            console.log(result)
+            res.json(result)
+        }
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments}
 

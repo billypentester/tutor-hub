@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import Loader from './../utils/Loader'
 import { Link } from 'react-router-dom'
 
 function User({ name, profile, city, rating, expertise, username}) {
@@ -6,7 +7,7 @@ function User({ name, profile, city, rating, expertise, username}) {
     <Link className="card border-light bg-light mb-3 py-2 px-5 text-decoration-none text-black" to={`/student/dashboard/profile/${username}`}>
       <div className="row">
         <div className="col-3 text-center">
-          <img src={profile} className="rounded-circle" alt="..."  width="150" height="150"/>
+          <img src={profile} className="rounded-circle" alt="..."  width="150" height="150"/>  
         </div>
         <div className="col-9">
           <div className="card-body">
@@ -70,6 +71,8 @@ function UsersList(props) {
 function Finder() {
 
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
     name: '',
@@ -84,13 +87,13 @@ function Finder() {
     fee: ''
   });
 
-  const [filteredUsers, setFilteredUsers] = useState(users);
-
   const fetchUsers = async () => {
+    setLoading(true);
     const response = await fetch("/api/teacher/search");
     const data = await response.json();
     setUsers(data);
-    filterUsers(data);
+    setFilteredUsers(data);
+    setLoading(false);
   };
 
   const handleFilterChange = (event) => {
@@ -100,7 +103,7 @@ function Finder() {
 
   const filterUsers = () => {
     let filteredUsers = users;
-    for (const [key, value] of Object.entries(filters)) {
+    for (const [key, value] of Object.entries(filters)) { 
       if (value) {
         filteredUsers = filteredUsers.filter((user) =>
           key === "rating" || key === "fee" ? user[key] >= value : user[key].toLowerCase().includes(value.toLowerCase())
@@ -198,9 +201,17 @@ function Finder() {
             </div>
             <div className="card border-primary">
               <div className="card-body">
-                <h5 className="card-title">Results</h5>
+                <h5 className="card-title">
+                  <span className="badge bg-light text-dark">{filteredUsers.length}</span>
+                  <span className="badge bg-primary text-light">Results</span>
+                </h5>
                 <div className='my-3'>
-                  <UsersList users={filteredUsers} />
+                  {
+                    loading && <Loader />
+                  }
+                  {
+                    !loading && <UsersList users={filteredUsers} />
+                  }
                 </div>
               </div>
             </div>
