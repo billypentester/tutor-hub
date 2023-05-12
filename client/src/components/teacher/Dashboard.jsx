@@ -8,6 +8,7 @@ import EditProfile from './EditProfile'
 import DeleteProfile from './DeleteProfile'
 import ViewProfile from './ViewProfile'
 import Messages from './Messages'
+import Appointments from './Appointments'
 
 
 function TeacherDashoard() {
@@ -51,13 +52,14 @@ function TeacherDashoard() {
   return (
     <>
       <Navbar />
-      <div className="container p-5">
+      <div className="container">
         <Routes>
           <Route path="/" element={ <Statistics teacher={teacher} /> } />
           <Route path="/edit-profile" element={ <EditProfile teacher={teacher} /> } />
           <Route path="/view-profile" element={ <ViewProfile teacher={teacher} /> } />
           <Route path="/delete-profile" element={ <DeleteProfile/> } />
           <Route path="/messages" element={ <Messages /> } />
+          <Route path="/appointments" element={ <Appointments/> } />
         </Routes>
       </div>
     </>

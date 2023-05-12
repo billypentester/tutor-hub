@@ -189,7 +189,7 @@ function Finder() {
                     </div> 
                     <div className="col-4">
                       <div className='form-group '>
-                        <input type="text" class="form-control" id="username" placeholder="Search by username..." name="search" value={filters.username} onChange={handleFilterChange}/>
+                        <input type="text" class="form-control" id="username" placeholder="Search by username..." name="username" value={filters.username} onChange={handleFilterChange}/>
                       </div>
                     </div> 
                     <div className="col-3">

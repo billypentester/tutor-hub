@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport');
 
-const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher} = require('../controllers/teacherController')
+const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments} = require('../controllers/teacherController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -12,6 +12,7 @@ router.post('/teacher/details', auth, userPanel)
 router.get('/teacher/verify/:token', emailVerification)
 
 router.get('/teacher/search', searchTeacher);
+router.post('/teacher/appointment/get', getAppointments)
 
 router.get('/teacher/profile/:username', getProfile)
 

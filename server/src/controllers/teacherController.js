@@ -1,4 +1,6 @@
 const Teacher = require('../model/teacherSchema')
+const Appointment = require('../model/appointmentSchema')
+const Student = require('../model/studentSchema')
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const mail = require('./../modules/mail');
@@ -116,7 +118,13 @@ const getProfile = async(req, res) => {
     try{
         const { username } = req.params;
         const teacher = await Teacher.findOne({username: username})
-        res.json(teacher)
+        if(!teacher && teacher.isVerified == false && teacher.isProfileComplete == false){
+            res.status(400).json({msg: 'Teacher not found'})
+        }
+        else
+        {
+            res.json(teacher)
+        }
     }
     catch(err){
         res.status(400).json(err.message);
@@ -147,7 +155,31 @@ const searchTeacher = async(req, res) => {
     }
 }
 
+const getAppointments = async(req, res) => {
+    try{
+        const {teacher} = req.body;
+        const appointments = await Appointment.find({teacher: teacher})
+        if(appointments){
+            const students = await Student.find({username: {$in: appointments.map((appointment) => appointment.student)}})
+            console.log(students)
+            const result = appointments.map((appointment) => {
+                const student = students.find((student) => student.username == appointment.student)
+                return {...appointment._doc, student: {profile: student.profile, name: student.name, username: student.username}}
+            })
+            console.log(result)
+            res.json(result)
+        }
+        else{
+            res.status(400).json({msg: 'No appointments found'})
+        }
+    }
+    catch(err){
+        console.log(err)
+        res.status(400).json(err.message);
+    }
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher}
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments}
 

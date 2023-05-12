@@ -44,11 +44,12 @@ function EditProfile() {
         gender,
         city,
         age,
-        contactno,
+        contactno, 
         profile,
         language,
         education,
         experience,
+        isProfileComplete : true,
         availability
       }
     })
@@ -205,7 +206,7 @@ function EditProfile() {
       loading && <Loader loading={loading} />
     }
 
-    <div>
+    <div className="my-4">
 
       <div className='bg-light p-4 rounded-3'>
         <div className='container'> 

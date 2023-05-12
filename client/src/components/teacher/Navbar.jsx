@@ -28,9 +28,6 @@ function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/teacher/dashboard/finder">Finder</Link>
-            </li>
-            <li className="nav-item">
               <Link className="nav-link" to="/teacher/dashboard/classNameroom">Classroom</Link>
             </li>
             <li className="nav-item">
@@ -38,6 +35,9 @@ function Navbar() {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/teacher/dashboard/appointments">Appointments</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/teacher/dashboard/finder">Earnings</Link>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Profile</a>

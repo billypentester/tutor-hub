@@ -1,39 +1,49 @@
 import React, {useEffect, useState} from 'react'
+import axios from 'axios'
+import Empty from '../utils/Empty';
+import Loader from '../utils/Loader';
+import TutorProfile from '../utils/TutorProfile';
 
 function ViewProfile() {
 
     const [teacher, setTeacher] = useState('');
+    const [loading, setLoading] = useState(false)
+    const [myself, setMyself] = useState(false)
 
-    const getProfile = () => {
-        const info = JSON.parse(localStorage.getItem('info'))
-        console.log(info)
-        setTeacher(info)
+    async function getTeacher() {
+        try{
+            setLoading(true)
+            const {username} = JSON.parse(localStorage.getItem('teacher'))
+            console.log(username)
+            const res = await axios.get(`/api/teacher/profile/${username}`)
+            setTeacher(res.data)
+            setMyself(true)
+            setLoading(false)
+        }
+        catch(err) {
+            setTeacher('')
+            console.log(err)
+        }
     }
 
-    useEffect(() => {
-        getProfile()
-    }, [])
+    useEffect(()=>{
+        getTeacher()
+    },[])
+
 
     return (
-        <div className='container p-5'>
-            <div className='row'>
-                <div className='col-md-6'>
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>Name: {teacher.name}</h5>
-                            <h6 className='card-subtitle mb-2 text-muted'>Email: {teacher.email}</h6>
-                            <p className='card-text'>Phone: {teacher.contactno}</p>
-                            <p className='card-text'>Address: {teacher.address}</p>
-                            <p className='card-text'>Age: {teacher.age}</p>
-                            <p className='card-text'>Gender: {teacher.gender}</p>
-                            <p className='card-text'>Image: 
-                                <img src={teacher.profile} alt='profile' />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <>  
+            {
+                loading && <Loader />
+            }
+            {
+                teacher == "" ?
+                <Empty image='https://img.icons8.com/ios/100/teacher.png' title='Personal Profile' subtitle='Complete your profile to get students' />
+                :
+                teacher && 
+                <TutorProfile teacher={teacher} myself={myself} />
+            }
+        </>
     )
 }
 

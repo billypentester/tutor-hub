@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import Loader from './../utils/Loader'
+import Alert from './../utils/Alert'
 
 function EditProfile() {
 
   const [updateProfile, setUpdateProfile] = useState({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [alert, setAlert] = useState({type: '', message: ''})
   
   async function getProfile() {
     const response = localStorage.getItem('student')
@@ -43,7 +45,8 @@ function EditProfile() {
         localStorage.setItem('student', JSON.stringify(res.data))
         setUpdateProfile(res.data)
         setLoading(false)
-        alert('Profile Updated')
+        setAlert({type: 'success', message: 'Profile Updated'})
+        setTimeout(() => setAlert({type: '', message: ''}), 5000);
       }
     }
     catch(err) {
@@ -64,20 +67,14 @@ function EditProfile() {
         loading && <Loader loading={loading} />
       } 
 
-      <div className='d-flex justify-content-center'>
+      <div className='d-flex justify-content-center my-4'>
         <div className='col-10'>
 
-          <div className='d-flex justify-content-center align-items-center px-4 mb-4'>
+          <div className='d-flex justify-content-center align-items-center px-4 my-4'>
             <div>
-              <h1 className='display-5'>Profile</h1>
+              <h1 className='display-5'>Update Profile</h1>
             </div>
           </div>
-
-          {
-            error && <div className='alert alert-danger' role='alert'>
-              {error}
-            </div>
-          }
 
           <div className='d-flex bg-light p-4 mb-4 rounded-3 flex-column'>
             <div className='p-3'>
@@ -93,7 +90,7 @@ function EditProfile() {
                   <div className='col-md-6'>
                     <div class="form-group">
                       <label for="updateUsername" class="form-label mt-4">Username</label>
-                      <input disabled type="text" class="form-control" id="updateUsername" placeholder="Enter username" name="username"  value={updateProfile.username} onChange={inputHandler}/>
+                      <input type="text" class="form-control" id="updateUsername" placeholder="Enter username" name="username"  value={updateProfile.username} onChange={inputHandler}/>
                     </div>
                   </div>
                 </div>
@@ -188,6 +185,11 @@ function EditProfile() {
           </div>
         </div>
       </div>
+
+      {
+        alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
+      }
+
     </>
   )
 }
