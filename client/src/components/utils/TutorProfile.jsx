@@ -44,7 +44,7 @@ function TutorProfile({teacher, myself}) {
                                     </div>
                                     :
                                     <div className='mt-4 mb-3'>
-                                        <button className='btn btn-primary me-2'>Hire Me</button>
+                                        <button className='btn btn-primary me-2' data-toggle="modal" data-target="#payment">Hire Me</button>
                                         <button className='btn btn-outline-primary me-2' data-toggle="modal" data-target="#exampleModal">Set Appointment</button>
                                         <button className='btn btn-outline-primary me-2'>Message</button>
                                     </div>

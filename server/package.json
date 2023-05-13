@@ -26,6 +26,7 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1"
+    "socket.io-client": "^4.6.1",
+    "stripe": "^12.5.0"
   }
 }
