@@ -60,7 +60,7 @@ router.get('/student/payment/', async (req, res) => {
         cancel_url: 'http://localhost:3000/student/dashboard',
     
     });
-    res.redirect(session.url)
+    session.url ? res.send(session.url) : res.send('error')
 });
 
 

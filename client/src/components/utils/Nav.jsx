@@ -109,8 +109,7 @@ function Nav() {
                       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI7Qw8OuaJF3AmX7Fhnlou4EJAx6GpRpQIPg&usqp=CAU" alt="teacher" width="100px" height="100px"/>
                       <br/>
                       <p classNameName="lead">Teacher</p>
-                    </button>
-                    
+                    </button>         
                   </div>
             </fieldset>
           </div>

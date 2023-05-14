@@ -161,12 +161,10 @@ const getAppointments = async(req, res) => {
         const appointments = await Appointment.find({teacher: teacher})
         if(appointments){
             const students = await Student.find({username: {$in: appointments.map((appointment) => appointment.student)}})
-            console.log(students)
             const result = appointments.map((appointment) => {
                 const student = students.find((student) => student.username == appointment.student)
                 return {...appointment._doc, student: {profile: student.profile, name: student.name, username: student.username}}
             })
-            console.log(result)
             res.json(result)
         }
         else{
@@ -179,7 +177,42 @@ const getAppointments = async(req, res) => {
     }
 }
 
+const cancelAppointment = async(req, res) => {
+    try{
+        const {appointment} = req.body;
+        const cancellation = await Appointment.findByIdAndUpdate(appointment, {status: 'Cancelled', notes: 'Appointment cancelled by teacher'}, {new: true})
+        res.json(cancellation)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+const acceptAppointment = async(req, res) => {
+    try{
+        const {appointment, link} = req.body;
+        const updation = await Appointment.findByIdAndUpdate(appointment, {status: 'Accepted', notes: `Please join the meeting using the following link: ${link}`}, {new: true})
+        res.json(updation)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+const modifyAppointment = async(req, res) => {
+    try{
+        const {appointment, date, time} = req.body;
+        console.log(appointment, date, time)
+        const updation = await Appointment.findByIdAndUpdate(appointment, { notes: `Teacher has requested to modify the appointment to ${date} at ${time}`}, {new: true})
+        res.json(updation)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments}
+
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment}
 

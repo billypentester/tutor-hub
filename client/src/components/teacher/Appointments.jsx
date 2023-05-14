@@ -5,6 +5,13 @@ import axios from 'axios'
 
 function Appointments() {
 
+    const [appointments, setAppointments] = useState([])
+    const [link, setLink] = useState('')
+    const [time, setTime] = useState('')
+    const [date, setDate] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [update, setUpdate] = useState(false)
+
     const getAppointments = async () => {
         setLoading(true)
         const {data} = await axios.post('/api/teacher/appointment/get', {teacher: JSON.parse(localStorage.getItem('teacher')).username})
@@ -14,7 +21,7 @@ function Appointments() {
 
     useEffect(() => {
         getAppointments()
-    }, [])
+    }, [update])
 
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -32,8 +39,27 @@ function Appointments() {
         return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + ampm;
     }
 
-    const [appointments, setAppointments] = useState([])
-    const [loading, setLoading] = useState(false)
+    function cancelAppointment(appointment) {
+        setLoading(true)
+        const {data} = axios.post('/api/teacher/appointment/cancel', {appointment})
+        setUpdate(!update)
+        setLoading(false)
+    }
+
+    const acceptAppointment = async (appointment) => {
+        setLoading(true)
+        const {data} = await axios.post('/api/teacher/appointment/accept', {appointment, link})
+        setUpdate(!update)
+        setLoading(false)
+    }
+
+    const modifyAppointment = async (appointment) => {
+        setLoading(true)
+        const {data} = await axios.post('/api/teacher/appointment/modify', {appointment, date, time})
+        console.log(data)
+        setUpdate(!update)
+        setLoading(false)
+    }
 
     return (
         <>
@@ -52,41 +78,102 @@ function Appointments() {
                         appointments.map(appointment => (
                         <div className="col-12 mb-4" key={appointment._id}>
                             <div className="card shadow">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-center">
-                                <div className='d-flex m-3 align-items-center'>
-                                    <img src={appointment.student.profile} alt="profile" className="rounded-circle" style={{width: '100px', height: '100px'}} />
-                                    <div className='d-flex flex-column m-3'>
-                                    <h4 className="card-text">{appointment.student.name}</h4>
-                                    <h5 className="card-text lead">{appointment.student.username}</h5>
+                                <div className="card-body">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className='col-5 d-flex m-3 align-items-center'>
+                                            <img src={appointment.student.profile} alt="profile" className="rounded-circle" style={{width: '100px', height: '100px'}} />
+                                            <div className='d-flex flex-column m-3'>
+                                            <h4 className="card-text">{appointment.student.name}</h4>
+                                            <h5 className="card-text lead">{appointment.student.username}</h5>
+                                            </div>
+                                        </div>
+                                        <div className='d-flex flex-column m-3 align-items-center'>
+                                            <i className="fa-solid fa-calendar fa-2x mb-3"></i>
+                                            <h5 className="card-text">{formatDate(appointment.appointmentDate)}</h5>
+                                        </div>
+                                        <div className='d-flex flex-column m-3 align-items-center'>
+                                            <i className="fa-solid fa-clock fa-2x mb-3"></i>
+                                            <h5 className="card-text">{formatTime(appointment.appointmentTime)}</h5>
+                                        </div>
+                                        <div className='d-flex flex-column m-3 align-items-center'>
+                                            <i className="fa-solid fa-stopwatch fa-2x mb-3"></i>
+                                            <h5 className='card-text'>{appointment.duration} minutes</h5>
+                                        </div>
+                                        <div className='d-flex flex-column m-3 align-items-center'>
+                                            <i className="fa-solid fa-hourglass-start fa-2x mb-3"></i>
+                                            <h5 className="card-text">{appointment.status ? appointment.status : 'Pending'}</h5>
+                                        </div>
                                     </div>
+                                    <hr />
+                                    <div className="d-flex flex-column">
+                                        <div>
+                                            <h5 className="card-text">Notes</h5>
+                                            <p>{appointment.notes}</p>
+                                        </div>
+                                        <div className='row justify-content-center mt-4'>
+                                            <button className="col-3 mx-2 btn btn-warning" data-toggle="modal" data-target="#Modify">Modify</button>
+                                            <button className="col-3 mx-2 btn btn-success" data-toggle="modal" data-target="#acceptAppointment">Approve</button>
+                                            <button className="col-3 mx-2 btn btn-danger" onClick={()=>{cancelAppointment(appointment._id)}}>Cancel</button>
+                                        </div>
+                                    </div>
+
+                                    <div className="modal fade" id="acceptAppointment" tabindex="-1" aria-labelledby="acceptAppointmentLabel" aria-hidden="true">
+                                        <div className="modal-dialog" role="document">
+                                            <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title">Meeting Link</h5>
+                                                <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#acceptAppointment">
+                                                    <span aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                            <div className="modal-body">
+                                                <div className="form-group">
+                                                    <label class="form-label" htmlFor="meetingLink">Meeting Link</label>
+                                                    <input type="text" className="form-control" id="meetingLink" placeholder="Enter Meeting Link" onChange={(e)=>{setLink(e.target.value)}} />
+                                                </div>
+                                                <button type="button" className="btn btn-success mt-4 w-100" data-dismiss="modal" data-toggle="modal" data-target="#acceptAppointment" onClick={()=>{acceptAppointment(appointment._id)}}>Approve</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="modal fade" id="Modify" tabindex="-1" aria-labelledby="ModifyLabel" aria-hidden="true">
+                                        <div className="modal-dialog" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title">Modify Appointment</h5>
+                                                    <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#Modify">
+                                                    <span aria-hidden="true"></span>
+                                                    </button>
+                                                </div>
+                                                <div className="modal-body">
+                                                    <form>
+                                                        <div className="row justify-content-center">
+                                                            <div className='row'>
+                                                                <div className='col-6'>
+                                                                    <div class="form-group">
+                                                                        <label for="MeetingDate" class="form-label">Date</label>
+                                                                        <input type="date" class="form-control" id="MeetingDate" placeholder="Enter Date" name='appointmentDate' onChange={(e)=>{ setDate(e.target.value) }}/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className='col-6'>
+                                                                    <div class="form-group">
+                                                                        <label for="MeetingTime" class="form-label">Time</label>
+                                                                        <input type="time" class="form-control" id="MeetingTime" placeholder="Enter Time" name='appointmentTime' onChange={(e)=>{ setTime(e.target.value) }}/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                    
+                                                            <div className='d-flex justify-content-center'>
+                                                                <button type="button" class="btn btn-primary mt-4 w-75" onClick={modifyAppointment}>Modify Appointment</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div className='d-flex flex-column m-3 align-items-center'>
-                                    <i className="fa-solid fa-calendar fa-2x mb-3"></i>
-                                    <h5 className="card-text">{formatDate(appointment.appointmentDate)}</h5>
-                                </div>
-                                <div className='d-flex flex-column m-3 align-items-center'>
-                                    <i className="fa-solid fa-clock fa-2x mb-3"></i>
-                                    <h5 className="card-text">{formatTime(appointment.appointmentTime)}</h5>
-                                </div>
-                                <div className='d-flex flex-column m-3 align-items-center'>
-                                    <i className="fa-solid fa-stopwatch fa-2x mb-3"></i>
-                                    <h5 className='card-text'>{appointment.duration} minutes</h5>
-                                </div>
-                                <div className='d-flex flex-column m-3 align-items-center'>
-                                    <i className="fa-solid fa-hourglass-start fa-2x mb-3"></i>
-                                    <h5 className="card-text">{appointment.status ? appointment.status : 'Pending'}</h5>
-                                </div>
-                                <div className='d-flex flex-column m-3 align-items-center'>
-                                    {
-                                    appointment.status === 'Completed' ?
-                                    <button className="btn btn-success btn-lg" disabled={appointment.status === 'Cancelled' || appointment.status === 'Completed' ? true : false}>Completed</button>
-                                    :
-                                    <button className="btn btn-danger btn-lg" disabled={appointment.status === 'Cancelled' || appointment.status === 'Completed' ? true : false}>Cancelled</button>
-                                    }
-                                </div>
-                                </div>
-                            </div>
                             </div>
                         </div>
                         ))
