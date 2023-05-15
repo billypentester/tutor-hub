@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Loader from './../utils/Loader'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 function User({ name, profile, city, rating, expertise, username}) {
   return (
@@ -89,8 +90,10 @@ function Finder() {
 
   const fetchUsers = async () => {
     setLoading(true);
-    const response = await fetch("/api/teacher/search");
-    const data = await response.json();
+    const TeacherData = await axios.get("/api/teacher/search");
+    console.log(TeacherData)
+    const {data} = TeacherData;
+    console.log(data);
     setUsers(data);
     setFilteredUsers(data);
     setLoading(false);
@@ -115,7 +118,7 @@ function Finder() {
 
   useEffect(() => {
     fetchUsers();
-    console.log(users);
+    console.log(users); 
   }, []);
 
   useEffect(() => {

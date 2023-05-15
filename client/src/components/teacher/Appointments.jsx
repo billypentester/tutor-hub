@@ -29,7 +29,7 @@ function Appointments() {
         const day = date.getDate();
         const year = date.getFullYear();
         return `${month} ${day}, ${year}`;
-      }
+    }
     
     function formatTime(timeStr) {
         let [hours, minutes] = timeStr.split(":").map(Number);
@@ -54,12 +54,33 @@ function Appointments() {
     }
 
     const modifyAppointment = async (appointment) => {
+        alert(appointment)
         setLoading(true)
-        const {data} = await axios.post('/api/teacher/appointment/modify', {appointment, date, time})
+        const {data} = await axios.post('/api/teacher/appointment/modify', {
+            appointment: appointment,
+            date: date,
+            time: time
+        })
         console.log(data)
         setUpdate(!update)
         setLoading(false)
     }
+
+    function separateLinkAndText(inputString) {
+        const regex = new RegExp(/(https?:\/\/[^\s]+)/g);
+        const match = regex.exec(inputString);
+
+        if(match) {
+            const link = match[0];
+            const text = inputString.replace(link, "").trim();
+            return [link, text];
+        }
+        else {
+            return [null, inputString];
+        }
+    }
+      
+      
 
     return (
         <>
@@ -75,7 +96,7 @@ function Appointments() {
                     <h1 className="display-5 text-center my-5">Appointments</h1>
                     <div className="row">
                     {
-                        appointments.map(appointment => (
+                        appointments.map((appointment, index) => (
                         <div className="col-12 mb-4" key={appointment._id}>
                             <div className="card shadow">
                                 <div className="card-body">
@@ -100,29 +121,56 @@ function Appointments() {
                                             <h5 className='card-text'>{appointment.duration} minutes</h5>
                                         </div>
                                         <div className='d-flex flex-column m-3 align-items-center'>
-                                            <i className="fa-solid fa-hourglass-start fa-2x mb-3"></i>
-                                            <h5 className="card-text">{appointment.status ? appointment.status : 'Pending'}</h5>
+                                            {
+                                                appointment.status === 'Accepted' &&
+                                                <>
+                                                    <i className="fa-solid fa-check fa-2x mb-3"></i>
+                                                    <h5 className="card-text text-success">{appointment.status}</h5>
+                                                </>                                                
+                                            }
+                                            {
+                                                appointment.status === 'Pending' &&
+                                                <>
+                                                    <i className="fa-solid fa-hourglass-start fa-2x mb-3"></i>
+                                                    <h5 className="card-text text-warning">{appointment.status}</h5>
+                                                </>
+                                            }
+                                            {
+                                                appointment.status === 'Cancelled' &&
+                                                <>
+                                                    <i className="fa-solid fa-times fa-2x mb-3"></i>
+                                                    <h5 className="card-text text-danger">{appointment.status}</h5>
+                                                </>
+                                            }
                                         </div>
                                     </div>
                                     <hr />
                                     <div className="d-flex flex-column">
                                         <div>
                                             <h5 className="card-text">Notes</h5>
-                                            <p>{appointment.notes}</p>
+                                            {
+                                                appointment.status !== 'Accepted' ?
+                                                <p className="card-text">{appointment.notes}</p>
+                                                :
+                                                <div className="d-flex">
+                                                    <p className="card-text me-2">{separateLinkAndText(appointment.notes)[1]}</p>
+                                                    <a href="#" className="card-text">{separateLinkAndText(appointment.notes)[0]}</a>
+                                                </div>
+                                            }
                                         </div>
                                         <div className='row justify-content-center mt-4'>
-                                            <button className="col-3 mx-2 btn btn-warning" data-toggle="modal" data-target="#Modify">Modify</button>
-                                            <button className="col-3 mx-2 btn btn-success" data-toggle="modal" data-target="#acceptAppointment">Approve</button>
+                                            <button id={appointment._id} className="col-3 mx-2 btn btn-warning" data-toggle="modal" data-target={`#modifyAppointment${index}`}>Modify</button>
+                                            <button className="col-3 mx-2 btn btn-success" data-toggle="modal" data-target={`#acceptAppointment${index}`}>Accept</button>
                                             <button className="col-3 mx-2 btn btn-danger" onClick={()=>{cancelAppointment(appointment._id)}}>Cancel</button>
                                         </div>
                                     </div>
 
-                                    <div className="modal fade" id="acceptAppointment" tabindex="-1" aria-labelledby="acceptAppointmentLabel" aria-hidden="true">
+                                    <div className="modal fade" id={`acceptAppointment${index}`} tabIndex="-1" aria-labelledby="acceptAppointmentLabel" aria-hidden="true">
                                         <div className="modal-dialog" role="document">
                                             <div className="modal-content">
                                             <div className="modal-header">
                                                 <h5 className="modal-title">Meeting Link</h5>
-                                                <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#acceptAppointment">
+                                                <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target={`#acceptAppointment${index}`}>
                                                     <span aria-hidden="true"></span>
                                                 </button>
                                             </div>
@@ -137,12 +185,12 @@ function Appointments() {
                                         </div>
                                     </div>
 
-                                    <div className="modal fade" id="Modify" tabindex="-1" aria-labelledby="ModifyLabel" aria-hidden="true">
+                                    <div className="modal fade" id={`modifyAppointment${index}`} tabindex="-1" aria-labelledby="modifyAppointmentLabel" aria-hidden="true">
                                         <div className="modal-dialog" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
-                                                    <h5 className="modal-title">Modify Appointment</h5>
-                                                    <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#Modify">
+                                                    <h5 className="modal-title">modify Appointment</h5>
+                                                    <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target={`#modifyAppointment${index}`}>
                                                     <span aria-hidden="true"></span>
                                                     </button>
                                                 </div>
@@ -164,7 +212,7 @@ function Appointments() {
                                                                 </div>
                                                             </div>                                    
                                                             <div className='d-flex justify-content-center'>
-                                                                <button type="button" class="btn btn-primary mt-4 w-75" onClick={modifyAppointment}>Modify Appointment</button>
+                                                                <button type="button" class="btn btn-primary mt-4 w-75" onClick={()=>{modifyAppointment(appointment._id)}}>Modify Appointment</button>
                                                             </div>
                                                         </div>
                                                     </form>

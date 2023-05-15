@@ -145,7 +145,9 @@ const getAppointments = async(req, res) => {
                 const teacher = teachers.find((teacher) => teacher.username == appointment.teacher)
                 return {...appointment._doc, teacher: {profile: teacher.profile, name: teacher.name, username: teacher.username}}
             })
-            console.log(result)
+            result.sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt)
+            })
             res.json(result)
         }
     }

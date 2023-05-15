@@ -40,6 +40,7 @@ router.get('/student/payment/', async (req, res) => {
         multipleSubjects: JSON.parse(req.query.multipleSubjects),
         quantity: JSON.parse(req.query.multipleSubjects).length
     }
+    console.log(data)
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: data.multipleSubjects.map((subject) => {
@@ -60,7 +61,8 @@ router.get('/student/payment/', async (req, res) => {
         cancel_url: 'http://localhost:3000/student/dashboard',
     
     });
-    session.url ? res.send(session.url) : res.send('error')
+    console.log(session)
+    res.redirect(session.url)
 });
 
 

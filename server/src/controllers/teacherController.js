@@ -165,6 +165,9 @@ const getAppointments = async(req, res) => {
                 const student = students.find((student) => student.username == appointment.student)
                 return {...appointment._doc, student: {profile: student.profile, name: student.name, username: student.username}}
             })
+            result.sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt)
+            })
             res.json(result)
         }
         else{
@@ -199,11 +202,27 @@ const acceptAppointment = async(req, res) => {
     }
 }
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'long' });
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+}
+
+function formatTime(timeStr) {
+    let [hours, minutes] = timeStr.split(":").map(Number);
+    let ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + ampm;
+}
+
 const modifyAppointment = async(req, res) => {
     try{
         const {appointment, date, time} = req.body;
         console.log(appointment, date, time)
-        const updation = await Appointment.findByIdAndUpdate(appointment, { notes: `Teacher has requested to modify the appointment to ${date} at ${time}`}, {new: true})
+        const updation = await Appointment.findByIdAndUpdate(appointment, { notes: `Teacher has requested to modify the appointment to <strong>${formatDate(date)}</strong> at <strong>${formatTime(time)}</strong>`}, {new: true})
         res.json(updation)
     }
     catch(err){
