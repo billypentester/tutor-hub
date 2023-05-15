@@ -93,7 +93,7 @@ function TutorProfile({teacher, myself}) {
                                         <i className="mx-3 fas fa-clock text-success"></i>
                                         <span>Availibility</span>
                                     </div>
-                                    <span className='mx-3'>{teacher.availability.hours} hours</span>
+                                    <span className='mx-3'>{teacher.availability.hour} hours</span>
                                 </div>
                                 <div className='d-flex justify-content-between mb-2'>
                                     <div className='d-flex align-items-center'>

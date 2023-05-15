@@ -39,6 +39,9 @@ function Navbar({student}) {
             <li className="nav-item">
               <Link className="nav-link" to="/student/dashboard/appointments">Appointments</Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/student/dashboard/orders">Orders</Link>
+            </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span className="mx-2 text-light h-4">Profile</span>

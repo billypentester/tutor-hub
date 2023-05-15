@@ -4,6 +4,7 @@ import axios from 'axios'
 import Loader from './../utils/Loader'
 import TutorProfile from './../utils/TutorProfile'
 import  {useNavigate} from 'react-router-dom'
+import Alert from './../utils/Alert'
 
 function TeacherProfile() {
 
@@ -14,6 +15,7 @@ function TeacherProfile() {
     const [appointment, setAppointment] = useState('')
     const [payment, setPayment] = useState('')
     const [loading, setLoading] = useState(true)
+    const [alert, setAlert] = useState({type: '', message: ''})
 
     const handlePayment = (e) => {
         const name = e.target.name;
@@ -46,8 +48,9 @@ function TeacherProfile() {
             appointment.teacher = teacher.username
             appointment.student = await JSON.parse(localStorage.getItem('student')).username
             const res = await axios.post('/api/student/appointment', appointment)
-            console.log(res.data)
+            setAlert({type: 'success', message: 'Appointment Booked'})
             setLoading(false)
+            setTimeout(() => setAlert({type: '', message: ''}), 5000);
         }
         catch(err) {
             console.log(err)
@@ -104,7 +107,7 @@ function TeacherProfile() {
                                 </div>
                                 <div className='row'>
                                     <div class="form-group">
-                                        <label for="duration" class="form-label mt-4">Meeting duration (hours)</label>
+                                        <label for="duration" class="form-label mt-4">Meeting duration (minutes)</label>
                                         <input type="number" class="form-control" id="duration" placeholder="How much will it take?" name='duration' value={appointment.duration} onChange={handleChanges}/>
                                     </div>
                                 </div>
@@ -115,7 +118,7 @@ function TeacherProfile() {
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-center'>
-                                    <button type="button" class="btn btn-primary mt-4 w-75" onClick={BookAppointment}>Arrange Appointment</button>
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={BookAppointment}>Book Appointment</button> 
                                 </div>
                             </div>
                         </form>
@@ -185,6 +188,10 @@ function TeacherProfile() {
                 </div>
             </div>
         </div>
+
+        {
+            alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
+        }
         
         </>
     )

@@ -2,6 +2,7 @@ const Student = require('./../model/studentSchema');
 const Appointment =  require('./../model/appointmentSchema')
 const Teacher = require('./../model/teacherSchema')
 const mail = require('./../modules/mail');
+const stripe = require('stripe')('sk_test_51JollnA5bS3TR9OlwjYRegDHSBYnVRFPjtiMw8nNZ9E29RhPRS8UFyq0BcrWU9v50WlwzirpHIjDdJgDU0rC7cFN00yCeBC18u');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -148,6 +149,7 @@ const getAppointments = async(req, res) => {
             result.sort((a, b) => {
                 return new Date(b.createdAt) - new Date(a.createdAt)
             })
+            console.log(result)
             res.json(result)
         }
     }
@@ -156,5 +158,75 @@ const getAppointments = async(req, res) => {
     }
 }
 
-module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments}
+const deleteAppointment = async(req, res) => {
+    try{
+        const {appointment} = req.body;
+        const result = await Appointment.findOneAndDelete({_id: appointment})
+        res.json(result)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'long' });
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+}
+
+function formatTime(timeStr) {
+    let [hours, minutes] = timeStr.split(":").map(Number);
+    let ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + ampm;
+}
+
+const updateAppointment = async(req, res) => {
+    try{
+        const {appointment, date, time} = req.body;
+        const result = await Appointment.findOneAndUpdate({_id: appointment}, {appointmentDate: date, appointmentTime: time, notes: `Student updated the appointment on ${formatDate(date)} at ${formatTime(time)}`}, {new: true})
+        res.json(result)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+const payment = async (req, res) => {
+    const data = {
+        fee: req.query.fee,
+        teacher: req.query.teacher,
+        student: req.query.student,
+        multipleSubjects: JSON.parse(req.query.multipleSubjects),
+        quantity: JSON.parse(req.query.multipleSubjects).length
+    }
+    console.log(data)
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: data.multipleSubjects.map((subject) => {
+            return {
+                price_data: {
+                    currency: 'pkr',
+                    product_data: {
+                        name: subject,
+                        images: ['https://i.imgur.com/EHyR2nP.png'],
+                    },
+                    unit_amount: data.fee * 100
+                },
+                quantity: 1
+            }
+        }),
+        mode: 'payment',
+        success_url: 'http://localhost:3000/student/dashboard/orders',
+        cancel_url: 'http://localhost:3000/student/dashboard',
+    
+    });
+    res.redirect(session.url)
+}
+
+module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment}
 

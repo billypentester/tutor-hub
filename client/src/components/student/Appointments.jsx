@@ -6,7 +6,6 @@ import axios from 'axios'
 function Appointments() {
 
   const [appointments, setAppointments] = useState([])
-  const [link, setLink] = useState('')
   const [time, setTime] = useState('')
   const [date, setDate] = useState('')
   const [loading, setLoading] = useState(false)
@@ -35,9 +34,20 @@ function Appointments() {
       return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + ampm;
   }
 
-  function cancelAppointment(appointment) {
+  function deleteAppointment(appointment) {
     setLoading(true)
-    const {data} = axios.post('/api/teacher/appointment/cancel', {appointment})
+    const {data} = axios.post('/api/student/appointment/delete', {appointment})
+    setUpdate(!update)
+    setLoading(false)
+  }
+
+  function modifyAppointment(appointment) {
+    setLoading(true)
+    const {data} = axios.post('/api/student/appointment/update', {
+      appointment: appointment,
+      time: time,
+      date: date
+    })
     setUpdate(!update)
     setLoading(false)
   }
@@ -81,10 +91,10 @@ function Appointments() {
                       <div className="card-body">
                         <div className="d-flex justify-content-between align-items-center">
                           <div className='d-flex m-3 align-items-center'>
-                            <img src={appointment.student.profile} alt="profile" className="rounded-circle" style={{width: '100px', height: '100px'}} />
+                            <img src={appointment.teacher.profile} alt="profile" className="rounded-circle" style={{width: '100px', height: '100px'}} />
                             <div className='d-flex flex-column m-3'>
-                              <h4 className="card-text">{appointment.student.name}</h4>
-                              <h5 className="card-text lead">{appointment.student.username}</h5>
+                              <h4 className="card-text">{appointment.teacher.name}</h4>
+                              <h5 className="card-text lead">{appointment.teacher.username}</h5>
                             </div>
                           </div>
                           <div className='d-flex flex-column m-3 align-items-center'>
@@ -124,7 +134,7 @@ function Appointments() {
                           </div> 
                           <div className='d-flex flex-column m-3 align-items-center'>
                             <button id={appointment._id} className="mb-2 btn btn-warning" data-toggle="modal" data-target={`#modifyAppointment${index}`}>Modify</button>
-                            <button className="btn btn-danger" onClick={()=>{cancelAppointment(appointment._id)}}>Cancel</button>
+                            <button className="btn btn-danger" onClick={()=>{deleteAppointment(appointment._id)}}>Cancel</button>
                           </div>
 
                         </div>
@@ -160,7 +170,7 @@ function Appointments() {
                                         <label class="form-label" htmlFor="meetingLink">Meeting Link</label>
                                         <input type="text" className="form-control" id="meetingLink" placeholder="Enter Meeting Link" onChange={(e)=>{setLink(e.target.value)}} />
                                     </div>
-                                    <button type="button" className="btn btn-success mt-4 w-100" data-dismiss="modal" data-toggle="modal" data-target="#acceptAppointment" onClick={()=>{acceptAppointment(appointment._id)}}>Approve</button>
+                                    <button type="button" className="btn btn-success mt-4 w-100" data-dismiss="modal" data-toggle="modal" data-target={`#acceptAppointment${index}`} onClick={()=>{acceptAppointment(appointment._id)}}>Approve</button>
                                 </div>
                                 </div>
                             </div>
@@ -193,7 +203,7 @@ function Appointments() {
                                                     </div>
                                                 </div>                                    
                                                 <div className='d-flex justify-content-center'>
-                                                    <button type="button" class="btn btn-primary mt-4 w-75" onClick={()=>{modifyAppointment(appointment._id)}}>Modify Appointment</button>
+                                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" data-toggle="modal" data-target={`#modifyAppointment${index}`} onClick={()=>{modifyAppointment(appointment._id)}}>Modify Appointment</button>
                                                 </div>
                                             </div>
                                         </form>

@@ -109,7 +109,9 @@ function Finder() {
     for (const [key, value] of Object.entries(filters)) { 
       if (value) {
         filteredUsers = filteredUsers.filter((user) =>
-          key === "rating" || key === "fee" ? user[key] >= value : user[key].toLowerCase().includes(value.toLowerCase())
+          key === "rating" ? user[key] >= value : 
+          key === "fee" ? user[key] <= value : 
+          user[key].toLowerCase().includes(value.toLowerCase())
         );
       }
     }
@@ -187,7 +189,7 @@ function Finder() {
                   <div className="row">
                     <div className="col-5">
                       <div className='form-group '>
-                        <input type="text" class="form-control" id="expertise" placeholder="Search for Subject" name="search" value={filters.expertise} onChange={handleFilterChange}/>
+                        <input type="text" class="form-control" id="expertise" placeholder="Search for Subject" name="expertise" value={filters.expertise} onChange={handleFilterChange}/>
                       </div>
                     </div> 
                     <div className="col-4">
