@@ -16,12 +16,14 @@ function ViewProfile() {
             const {username} = JSON.parse(localStorage.getItem('teacher'))
             console.log(username)
             const res = await axios.get(`/api/teacher/profile/${username}`)
+            console.log(res.data)
             setTeacher(res.data)
             setMyself(true)
             setLoading(false)
         }
         catch(err) {
             setTeacher('')
+            setLoading(false)
             console.log(err)
         }
     }

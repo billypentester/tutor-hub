@@ -118,13 +118,7 @@ const getProfile = async(req, res) => {
     try{
         const { username } = req.params;
         const teacher = await Teacher.findOne({username: username})
-        if(!teacher && teacher.isVerified == false && teacher.isProfileComplete == false){
-            res.status(400).json({msg: 'Teacher not found'})
-        }
-        else
-        {
-            res.json(teacher)
-        }
+        teacher.isVerified == false || teacher.isProfileComplete == false ? res.status(400).json({msg: 'Teacher not found'}) : res.json(teacher)
     }
     catch(err){
         res.status(400).json(err.message);
@@ -134,20 +128,22 @@ const getProfile = async(req, res) => {
 const searchTeacher = async(req, res) => {
     try{
         const teachers = await Teacher.find();
-        const result = teachers.map((obj) => {
-            return {
-                name: obj.name,
-                username: obj.username,
-                profile: obj.profile,
-                city: obj.city,
-                rating: obj.rating,
-                experience: obj.experience.experience,
-                subjectType: obj.experience.subjectType,
-                subjectLevel: obj.experience.subjectLevel,
-                expertise: obj.experience.expertise,
-                fee: obj.availability.fee,
-            }
-        })
+        const result = teachers
+                                .filter((obj) => obj.isProfileComplete === true)
+                                .map((obj) => {
+                                    return {
+                                        name: obj.name,
+                                        username: obj.username,
+                                        profile: obj.profile,
+                                        city: obj.city,
+                                        rating: obj.rating,
+                                        experience: obj.experience.experience,
+                                        subjectType: obj.experience.subjectType,
+                                        subjectLevel: obj.experience.subjectLevel,
+                                        expertise: obj.experience.expertise,
+                                        fee: obj.availability.fee,
+                                    }
+                                })
         res.json(result)
     }
     catch(err){
