@@ -53,7 +53,7 @@ const emailVerification = (req, res) => {
             Student.findOne({email: decoded.email}).then((student) => {
                 student.isVerified = true
                 student.save()
-                res.redirect(`http://localhost:5173/signup/verify/student/${student.isVerified}`)
+                res.redirect(`http://localhost:3000/verify/student/${student.isVerified}`)
             })
         }
     })

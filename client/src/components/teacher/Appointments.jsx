@@ -54,7 +54,6 @@ function Appointments() {
     }
 
     const modifyAppointment = async (appointment) => {
-        alert(appointment)
         setLoading(true)
         const {data} = await axios.post('/api/teacher/appointment/modify', {
             appointment: appointment,
@@ -212,7 +211,7 @@ function Appointments() {
                                                                 </div>
                                                             </div>                                    
                                                             <div className='d-flex justify-content-center'>
-                                                                <button type="button" class="btn btn-primary mt-4 w-75" onClick={()=>{modifyAppointment(appointment._id)}}>Modify Appointment</button>
+                                                                <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={()=>{modifyAppointment(appointment._id)}}>Modify Appointment</button>
                                                             </div>
                                                         </div>
                                                     </form>

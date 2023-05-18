@@ -5,6 +5,7 @@ const {login, deleteStudent} = require('../controllers/adminController')
 const {getStudentCount} = require('../controllers/studentController')
 const {getTeacherCount} = require('../controllers/teacherController')
 const {getContactCount} = require('../controllers/contactController')
+const Appointment = require('./../model/appointmentSchema')
 const auth = require('../middleware/auth')
 
 router.get('/admin/statistics', async(req, res) => {
@@ -13,6 +14,16 @@ router.get('/admin/statistics', async(req, res) => {
         const teacherCount = await getTeacherCount();
         const contactCount = await getContactCount();
         res.json({studentCount, teacherCount, contactCount})
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+})
+
+router.get('/appointment/all', async(req, res) => {
+    try{
+        const appointments = await Appointment.find();
+        res.json(appointments)
     }
     catch(err){
         res.status(400).json(err.message);

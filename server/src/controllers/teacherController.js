@@ -52,7 +52,7 @@ const emailVerification = (req, res) => {
             Teacher.findOne({email: decoded.email}).then((teacher) => {
                 teacher.isVerified = true
                 teacher.save()
-                res.redirect(`http://localhost:5173/verify/student/${teacher.isVerified}`)
+                res.redirect(`http://localhost:3000/verify/student/${teacher.isVerified}`)
             })
         }
     })
@@ -118,7 +118,7 @@ const getProfile = async(req, res) => {
     try{
         const { username } = req.params;
         const teacher = await Teacher.findOne({username: username})
-        teacher.isVerified == false || teacher.isProfileComplete == false ? res.status(400).json({msg: 'Teacher not found'}) : res.json(teacher)
+        teacher.isProfileComplete == false ? res.status(400).json({msg: 'Teacher not found'}) : res.json(teacher)
     }
     catch(err){
         res.status(400).json(err.message);
@@ -218,7 +218,7 @@ const modifyAppointment = async(req, res) => {
     try{
         const {appointment, date, time} = req.body;
         console.log(appointment, date, time)
-        const updation = await Appointment.findByIdAndUpdate(appointment, { notes: `Teacher has requested to modify the appointment to <strong>${formatDate(date)}</strong> at <strong>${formatTime(time)}</strong>`}, {new: true})
+        const updation = await Appointment.findByIdAndUpdate(appointment, { notes: `Teacher has requested to modify the appointment to ${formatDate(date)} at ${formatTime(time)}`}, {new: true})
         res.json(updation)
     }
     catch(err){
