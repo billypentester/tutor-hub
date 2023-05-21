@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "client":"cd client && npm run dev",
-    "server":"cd server && npm run dev"
+    "install-client":"cd client && npm install --force && cd ..",
+    "install-server":"cd server && npm install && cd ..",
+    "install":"npm run install-client && npm run install-server",
+    "start-client": "cd client && npm run dev && cd ..",
+    "start-server": "cd server && npm run dev && cd ..",
+    "start": "npm run start-client && npm run start-server"
   },
   "keywords": [],
   "author": "",
