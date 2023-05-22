@@ -13,10 +13,10 @@ function Navbar({student}) {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link className="navbar-brand" href="#">Tutor Hub</Link>
-        <form className="d-flex">
+        {/* <form className="d-flex">
           <input className="form-control me-sm-2" type="search" placeholder="Search"/>
           <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        </form> */}
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -38,9 +38,6 @@ function Navbar({student}) {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/student/dashboard/appointments">Appointments</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/orders">Orders</Link>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

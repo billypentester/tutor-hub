@@ -49,9 +49,9 @@ function Nav() {
             <li className="nav-item">
               <button type="button" className="btn btn-info" data-toggle="modal" data-target="#exampleModal">Join Us</button>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to="/faq">FAQs</Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

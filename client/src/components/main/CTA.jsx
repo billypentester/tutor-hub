@@ -12,7 +12,7 @@ function CTA() {
             <p className="lead">Find Your Perfect Tutor!</p>
             <div className="my-3">
                 <button href="/signup" className="btn btn-primary mx-2" data-toggle="modal" data-target="#exampleModal">Get Started</button>
-                <button href="/learnmore" className="btn btn-outline-primary mx-2">Learn More</button>
+                {/* <button href="/learnmore" className="btn btn-outline-primary mx-2">Learn More</button> */}
             </div>
             </div>
         </div>

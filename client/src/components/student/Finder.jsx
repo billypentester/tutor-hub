@@ -1,7 +1,72 @@
 import React, {useState, useEffect} from 'react'
 import Loader from './../utils/Loader'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { compose, withProps } from "recompose";
+import {withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps";
+
+const getDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radius of the earth in kilometers
+  const dLat = (lat2 - lat1) * (Math.PI / 180); // Convert degrees to radians
+  const dLon = (lon2 - lon1) * (Math.PI / 180); // Convert degrees to radians
+
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = Math.floor(R * c); // Distance in km
+  return distance;
+};
+
+const MyMapComponent = compose(
+  withProps({
+    googleMapURL:"https://maps.googleapis.com/maps/api/js?&v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: `400px` }} />,
+    mapElement: <div style={{ height: `100%` }} />
+  }),
+  withScriptjs,
+  withGoogleMap
+)
+(({ searcherLocation, itemLocations }) => {
+  
+  const navigate = useNavigate();
+
+  const handleMarkerClick = (username) => {
+    navigate(`/student/dashboard/profile/${username}`);
+  };
+  
+  return(
+    <GoogleMap defaultZoom={12} defaultCenter={{ lat: searcherLocation.latitude, lng: searcherLocation.longitude }}>
+    <Marker position={{lat: searcherLocation.latitude, lng: searcherLocation.longitude}} />
+    {
+      itemLocations.map((itemLocation, index) => {
+        const distance = getDistance(searcherLocation.latitude, searcherLocation.longitude, itemLocation.location.lat, itemLocation.location.lng);
+        if (distance < 5){
+          return (
+            <Marker key={index} position={{lat: itemLocation.location.lat, lng: itemLocation.location.lng}} label={`${distance} km`} 
+              onClick={() => {
+                handleMarkerClick(itemLocation.username);
+              }}
+            >
+              <InfoWindow>
+                <div>
+                  <h6>{itemLocation.name}</h6>
+                  <p>{itemLocation.fee}</p>
+                  <p>{itemLocation.rating}</p> 
+                  <p>{itemLocation.username}</p>                 
+                </div>
+              </InfoWindow>
+            </Marker>
+          )
+        }
+
+        return null;
+
+      })
+    }
+    </GoogleMap>
+
+  )
+})
 
 function User({ name, profile, city, rating, expertise, username}) {
   return (
@@ -74,6 +139,8 @@ function Finder() {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [position, setPosition] = useState(null);
+  const [location, setLocation] = useState([]);
 
   const [filters, setFilters] = useState({
     name: '',
@@ -91,7 +158,6 @@ function Finder() {
   const fetchUsers = async () => {
     setLoading(true);
     const TeacherData = await axios.get("/api/teacher/search");
-    console.log(TeacherData)
     const {data} = TeacherData;
     console.log(data);
     setUsers(data);
@@ -102,6 +168,21 @@ function Finder() {
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters({ ...filters, [name]: value });
+  };
+
+  const getLocation = async(event) => {
+    event.preventDefault();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setPosition({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      });
+    } 
+    else {
+      alert("Geolocation is not supported by this browser.");
+    }
   };
 
   const filterUsers = () => {
@@ -118,9 +199,11 @@ function Finder() {
     setFilteredUsers(filteredUsers);
   };
 
+  
+
   useEffect(() => {
     fetchUsers();
-    console.log(users); 
+    
   }, []);
 
   useEffect(() => {
@@ -198,7 +281,7 @@ function Finder() {
                       </div>
                     </div> 
                     <div className="col-3">
-                      <button type="submit" className="btn btn-primary w-100">Search by location</button>
+                      <button type="submit" className="btn btn-primary w-100" onClick={getLocation}>Search by location</button>
                     </div>
                   </div>
                 </form>  
@@ -215,7 +298,35 @@ function Finder() {
                     loading && <Loader />
                   }
                   {
-                    !loading && <UsersList users={filteredUsers} />
+                    !loading && position == null && 
+                    <UsersList users={filteredUsers} />
+                  } 
+                  {
+                    !loading && position &&
+                    <div>
+                      {
+                        <MyMapComponent
+                          containerElement={<div style={{ height: '100%' }} />}
+                          mapElement={<div style={{ height: '100%' }} />}
+                          searcherLocation={position}
+                          itemLocations={
+                            filteredUsers.map((user) => {
+                              return {
+                                name: user.username,
+                                username: user.username,
+                                location: {
+                                  lat: user.location[0],
+                                  lng: user.location[1],
+                                },
+                                rating: user.rating,
+                                fee: user.fee,
+                                subjectType: user.subjectType,
+                              };
+                            })
+                          }
+                        />
+                      }
+                    </div>
                   }
                 </div>
               </div>

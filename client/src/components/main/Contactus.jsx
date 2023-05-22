@@ -1,15 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
+import Loader from './../utils/Loader'
+import Alert from './../utils/Alert'
 
 function Contactus() {
 
-    const [contact, setContact] = useState({
-        name: '',
-        email: '',
-        message: ''
-    })
-
-    const [errors, setErrors] = useState({})
+    const [contact, setContact] = useState({name: '', email: '', message: ''})
+    const [loading, setLoading] = useState(false)
+    const [alert, setAlert] = useState({type: '', message: ''})
 
     const inputHandler = (e) => {
         setContact({...contact, [e.target.name]: e.target.value})
@@ -17,10 +15,16 @@ function Contactus() {
 
     const sendMessage = async() => {
         try{
+            setLoading(true)
             const res = await axios.post('/api/contactus', contact)
             console.log(res)
             if(res.status === 200){
-                alert('Message sent successfully!')
+                setLoading(false)
+                setAlert({type: 'success', message: 'Message sent successfully'})
+                setTimeout(function() {
+                    setAlert({type: '', message: ''})
+                }
+                , 5000);
             }
         }
         catch(err){
@@ -31,6 +35,9 @@ function Contactus() {
 
     return (
         <section id="contactus">
+            {
+                loading && <Loader />
+            }
             <div className="bg-light py-5 py-xl-6">
                 <div className="container my-5 mb-md-6">
                     <div className="row justify-content-md-center">
@@ -61,7 +68,9 @@ function Contactus() {
                     </div>
                 </div>
             </div>
-
+            {
+                alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
+            }
         </section>
     )
 }

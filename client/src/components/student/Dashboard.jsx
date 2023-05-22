@@ -12,7 +12,6 @@ import Appointments from './Appointments'
 import ViewProfile from './ViewProfile'
 import EditProfile from './EditProfile'
 import DeleteProfile from './DeleteProfile'
-import Orders from './Orders'
 import TeacherProfile from './TeacherProfile'
 
 
@@ -65,7 +64,6 @@ function StudentDashoard() {
           <Route path="/finder" element={ <Finder/> } />
           <Route path="/classroom" element={ <Classroom/> } />
           <Route path="/messages" element={ <Messages/> } />
-          <Route path="orders" element={ <Orders/> } />
           <Route path="/appointments" element={ <Appointments/> } />
           <Route path="/profile/:username" element={ <TeacherProfile/> } />
           <Route path="/view-profile" element={ <ViewProfile/> } />

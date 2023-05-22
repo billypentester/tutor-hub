@@ -142,6 +142,7 @@ const searchTeacher = async(req, res) => {
                                         subjectLevel: obj.experience.subjectLevel,
                                         expertise: obj.experience.expertise,
                                         fee: obj.availability.fee,
+                                        location: obj.availability.location,
                                     }
                                 })
         res.json(result)

@@ -1,17 +1,18 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import Loader from './../utils/Loader'
+import Alert from './../utils/Alert'
 
 function Appointments() {
 
     const [appointment, setAppointment] = useState([])
     const [loading, setLoading] = useState(false)
+    const [alert, setAlert] = useState({type: '', message: ''})
 
     const fetchAppointment = async () => {
       setLoading(true)
       const res = await axios.get('/api/appointment/all')
       setAppointment(res.data)
-      console.log(res.data)
       setLoading(false)
     }
 
@@ -31,6 +32,16 @@ function Appointments() {
         return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + ampm;
     }
 
+    const searchAppointment = async (e) => {   
+        const {value} = e.target
+        if(value.length > 0) {
+            setAppointment(appointment.filter(appointment => appointment.name.toLowerCase().includes(value.toLowerCase())))
+        }
+        else {
+            fetchAppointment()
+        }
+    }
+
     useEffect(() => {
         fetchAppointment()
     }, [])
@@ -38,10 +49,10 @@ function Appointments() {
     return (
         <div>
             <h1 className="display-4 mt-2 mb-5 text-center">Appointment</h1>
-            <div className="d-flex justify-content-between align-items-center">
-                <button type="button" className="btn btn-primary">Add Appointment</button>
+            <div className="d-flex justify-content-end align-items-center">
+                {/* <button type="button" className="btn btn-primary">Add Appointment</button> */}
                 <form className="d-flex">
-                    <input className="form-control me-sm-2" type="search" placeholder="Enter student name"/>
+                    <input className="form-control me-sm-2" type="search" placeholder="Enter student name" name="search" onChange={searchAppointment} aria-label="Search" />
                     <button className="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
@@ -60,8 +71,10 @@ function Appointments() {
             </thead>
             <tbody>  
                 {
-                    loading ? <Loader /> : 
-                    appointment.map((appointment, index) => (
+                    loading && <Loader />
+                }
+                {
+                    (appointment.length > 0) ? appointment.map((appointment, index) => (
                         <tr key={appointment._id} class="table-secondary text-center">
                             <th scope="row">{index + 1}</th>
                             <td>{appointment.student}</td>
@@ -76,13 +89,20 @@ function Appointments() {
                               }
                             </td>
                             <td>
-                                <button type="button" class="mx-2 btn btn-warning">Update</button>
+                                {/* <button type="button" class="mx-2 btn btn-warning">Update</button> */}
                                 <button type="button" class="mx-2 btn btn-danger">Delete</button>
                             </td>
                         </tr>
                     ))
+                    :
+                    <tr class="table-secondary text-center">
+                        <td colSpan="7">No Appointment Found</td>
+                    </tr>
                 }
             </tbody>
+            {
+                alert.message && <Alert type={alert.type} message={alert.message} />
+            }
             </table>
         </div>
     )
