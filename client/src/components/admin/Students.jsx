@@ -43,10 +43,6 @@ function Students() {
         }
     }
 
-    const createStudent = async (e) => {
-        e.preventDefault()
-    }
-
     useEffect(() => {
         fetchStudents()
     }, [])
@@ -54,8 +50,8 @@ function Students() {
     return (
         <div>
             <h1 className="display-4 mt-2 mb-5 text-center">Students</h1>
-            <div className="d-flex justify-content-between align-items-center">
-                <button type="button" className="btn btn-primary" onClick={createStudent}>Add Student</button>
+            <div className="d-flex justify-content-end align-items-center">
+                {/* <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#createStudent">Add Student</button> */}
                 <form className="d-flex">
                     <input className="form-control me-sm-2" type="search" placeholder="Search student name" name="search" onChange={searchStudent} aria-label="Search" />
                     <button className="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
@@ -84,7 +80,7 @@ function Students() {
                                 <td>{student.email}</td>
                                 <td>{student.username}</td>
                                 <td>
-                                    <button type="button" class="mx-2 btn btn-warning">Update</button>
+                                    {/* <button type="button" class="mx-2 btn btn-warning" data-toggle="modal" data-target="#updateStudent">Update</button> */}
                                     <button type="button" class="mx-2 btn btn-danger" onClick={deleteStudent}>Delete</button>
                                 </td>
                             </tr>
@@ -99,6 +95,7 @@ function Students() {
                     alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
                 }
             </table>
+
         </div>
     )
 }

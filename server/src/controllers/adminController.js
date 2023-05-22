@@ -40,6 +40,18 @@ const deleteStudent = async(req, res) => {
     }
 }
 
+// delete teacher
+const deleteTeacher = async(req, res) => {
+    const {id} = req.params;
+    try{
+        const result = await Teacher.findByIdAndDelete(id);
+        res.json(result);
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
 // get all teachers
 const getAllTeachers = async(req, res) => {
     const teachers = await Teacher.find();
@@ -50,5 +62,5 @@ const getAllTeachers = async(req, res) => {
 
 
 
-module.exports = {login, getAllStudents, getAllTeachers, deleteStudent}
+module.exports = {login, getAllStudents, getAllTeachers, deleteStudent, deleteTeacher}
 

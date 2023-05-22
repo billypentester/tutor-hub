@@ -35,7 +35,10 @@ function Navbar({student}) {
             <li className="nav-item">
               <Link className="nav-link" to="/admin/dashboard/appointments">Appointments</Link>
             </li>
-            <li className="nav-item dropdown">
+            <li className='nav-item'>
+              <button className="dropdown-item nav-link" onClick={logout}>Logout</button>
+            </li>
+            {/* <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Profile</a>
               <div className="dropdown-menu">
                 <Link className="dropdown-item" to="/admin/dashboard/profile">View Profile</Link>
@@ -44,7 +47,7 @@ function Navbar({student}) {
                 <div className="dropdown-divider"></div>
                 <button className="dropdown-item" onClick={logout}>Logout</button>
               </div>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
