@@ -221,10 +221,9 @@ const payment = async (req, res) => {
             }
         }),
         mode: 'payment',
-        success_url: `http://localhost:5000/payment/success/`,
+        success_url: `http://localhost:5000/payment/success?teacher=${data.teacher}&student=${data.student}&multipleSubjects=${data.multipleSubjects}`,
         cancel_url: `http://localhost:5000/payment/cancel/`
     });
-    console.log(session)
     res.redirect(session.url)
 }
 

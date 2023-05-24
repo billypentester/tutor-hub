@@ -5,6 +5,9 @@ import Loader from './../utils/Loader'
 import TutorProfile from './../utils/TutorProfile'
 import  {useNavigate} from 'react-router-dom'
 import Alert from './../utils/Alert'
+import { io } from 'socket.io-client';
+
+const socket = io('');
 
 function TeacherProfile() {
 
@@ -16,6 +19,32 @@ function TeacherProfile() {
     const [payment, setPayment] = useState('')
     const [loading, setLoading] = useState(true)
     const [alert, setAlert] = useState({type: '', message: ''})
+
+    console.log(JSON.parse(localStorage.getItem('student')).username)
+
+    const [text, setText] = useState({
+        text: ''
+    })
+
+    const sendMessage = () => {
+        const message = {
+            participants : [
+                {
+                    username: JSON.parse(localStorage.getItem('student')).username,
+                    name: JSON.parse(localStorage.getItem('student')).name,
+                    profile: JSON.parse(localStorage.getItem('student')).profile
+                },
+                {
+                    username: username,
+                    name: teacher.name,
+                    profile: teacher.profile
+                }
+            ],
+            sender: JSON.parse(localStorage.getItem('student')).username,
+            text: text.text
+        }
+        socket.emit("newMessage", message);
+    };
 
     const handlePayment = (e) => {
         const name = e.target.name;
@@ -181,6 +210,34 @@ function TeacherProfile() {
                                 </div>
                                 <div className='d-flex justify-content-center'>
                                     <button type="button" class="btn btn-primary mt-4 w-75" onClick={sendPayment}>Go to Checkout</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div className="modal fade" id="message" tabindex="-1" aria-labelledby="messageLabel" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Send Message</h5>
+                        <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#message">
+                        <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <form>
+                            <div className="row justify-content-center">
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="MeetingDescription" class="form-label">Write your message below</label>
+                                        <textarea class="form-control" id="MeetingDescription" rows="3" name='text' value={setText.text} onChange={(e) => setText({...setText, text: e.target.value})}></textarea>
+                                    </div>
+                                </div>
+                                <div className='d-flex justify-content-center'>
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={sendMessage}>Send Message</button> 
                                 </div>
                             </div>
                         </form>

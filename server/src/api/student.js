@@ -37,7 +37,10 @@ router.get('/auth/google/student/callback', passport.authenticate('student', { f
 
 const saveData = async(req, res, next) => {
 
-    const multipleSubjects = JSON.parse(req.query.multipleSubjects)
+    console.log(req.query)
+
+    // convert req.query.multipleSubjects from string into an array
+    const multipleSubjects = req.query.multipleSubjects.split(',')
     const subjects = multipleSubjects.map(subject => ({ name: subject }))
 
     const data = {

@@ -41,7 +41,6 @@ function EditProfile() {
         token: token
       })
       if(res.status === 200) {
-        console.log(res.data)
         localStorage.setItem('student', JSON.stringify(res.data))
         setUpdateProfile(res.data)
         setLoading(false)

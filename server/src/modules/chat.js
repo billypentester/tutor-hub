@@ -6,6 +6,7 @@ function setupSocket(server) {
   const io = socketIO(server);
 
   io.on('connection', (socket) => {
+    
     console.log('A new user connected');
   
     socket.on('disconnect', () => {
@@ -13,6 +14,7 @@ function setupSocket(server) {
     });
   
     socket.on('newMessage', async(data) => {
+
       const { sender, participants, text } = data;
 
       const participant1 = participants[0].username;
@@ -48,29 +50,29 @@ function setupSocket(server) {
         await newChat.save();
       }
 
-      const messages = await Chat.findOne({
+      const messages = await Chat.find({
         $or: [
-          { "participants.0.username": participant1, "participants.1.username": participant2 },
-          { "participants.0.username": participant2, "participants.1.username": participant1 }
+          { "participants.0.username": sender },
+          { "participants.1.username": sender }
         ]
       });
 
       socket.emit('syncMessages', messages);
-
       
     });
 
     socket.on('getMessages', async(data) => {
       
-      const participant1 = data.participants[0].username;
-      const participant2 = data.participants[1].username;
+      const participant = data.participants
 
-      const messages = await Chat.findOne({
+      const messages = await Chat.find({
         $or: [
-          { "participants.0.username": participant1, "participants.1.username": participant2 },
-          { "participants.0.username": participant2, "participants.1.username": participant1 }
+          { "participants.0.username": participant },
+          { "participants.1.username": participant }
         ]
       });
+
+      console.log(messages);
 
       socket.emit('syncMessages', messages);
       

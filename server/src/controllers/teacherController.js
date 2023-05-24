@@ -1,6 +1,7 @@
 const Teacher = require('../model/teacherSchema')
 const Appointment = require('../model/appointmentSchema')
 const Student = require('../model/studentSchema')
+const Classroom = require('../model/classroomSchema')
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const mail = require('./../modules/mail');
@@ -227,8 +228,18 @@ const modifyAppointment = async(req, res) => {
     }
 }
 
+const getClassrooms = async(req, res) => {
+    try{
+        console.log(req.body)
+        const classrooms = await Classroom.find({teacher: req.body.username})
+        res.status(200).json(classrooms)
+    }
+    catch(err)
+    {
+        res.status(400).json(err.message);
+    }
+}
 
 
-
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment}
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms}
 

@@ -28,7 +28,7 @@ function ViewProfile() {
         profile &&
         <div className='d-flex justify-content-center my-4'>
           <div className='col-6'>
-            <div className='d-flex justify-content-between align-items-center px-4 mb-4'>
+            <div className='d-flex justify-content-between align-items-center px-4 mb-3'>
               <div>
                 <h1 className='mb-0'>{profile.name}</h1>
               </div>
@@ -36,7 +36,7 @@ function ViewProfile() {
                 <img src={profile.profile} alt='profile' className='rounded-circle' width={'100px'} height={'100px'} />
               </div>
             </div>
-            <div className='d-flex justify-content-between align-items-center bg-light p-4 mb-4 rounded-3'>
+            <div className='d-flex justify-content-between align-items-center bg-light p-4 mb-2 rounded-3'>
               <div>
                 { 
                   profile.email &&
@@ -114,23 +114,35 @@ function ViewProfile() {
               </div>
             </div>
 
-            <div className='d-flex justify-content-between align-items-center bg-light p-4 mb-4 rounded-3'>
-              <div className='d-flex align-items-center mb-3'>
-                <img src='https://img.icons8.com/color/256/verified-badge.png' alt='graduation' className='img-fluid' width={'50px'} />
-              </div>
-              <div>
-                <div className='d-flex align-items-center'>
-                  <div className='mx-4'>
-                    <h5>Verification</h5>
-                    <p className='text-dark'>Your account is verified. You can now search and hire tutors.</p>
+            {
+              <div className='d-flex justify-content-between align-items-center bg-light p-4 mb-2 rounded-3'>
+                <div className='col-2 d-flex align-items-center justify-content-center mb-3'>
+                  <img src='https://img.icons8.com/color/256/verified-badge.png' alt='graduation' className='img-fluid' width={'50px'} />
+                </div>
+                <div className='col-10'>
+                  <div className='d-flex align-items-center'>
+                    <div className='mx-4'>
+                      {
+                        profile.isVerified ?
+                        <>
+                          <h5>Your Profile is verified</h5>
+                          <p className='text-dark'>Your account is verified. You can now search and hire tutors.</p>
+                        </>
+                        :
+                        <>
+                          <h5>Your Profile is not verified</h5>
+                          <p className='text-dark'>Your account is not verified. Please verify your account to search and hire tutors.</p>
+                        </>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }
 
             {
               profile.name && profile.profile && profile.email && profile.username && profile.contactno && profile.city && profile.gender && profile.language && profile.dob ?
-              <div className='d-flex align-items-center bg-light p-4 mb-4 rounded-3'>
+              <div className='d-flex align-items-center bg-light p-4 mb-3 rounded-3'>
                 <div className='col-2 mb-3'>
                   <img src='https://img.icons8.com/color/256/graduation-cap.png' alt='graduation' className='img-fluid' width={'170px'} />
                 </div>

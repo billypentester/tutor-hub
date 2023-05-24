@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport');
 
-const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment} = require('../controllers/teacherController')
+const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms} = require('../controllers/teacherController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -19,10 +19,10 @@ router.post('/teacher/appointment/accept', acceptAppointment)
 router.post('/teacher/appointment/modify', modifyAppointment)
 
 router.get('/teacher/profile/:username', getProfile)
-
 router.get('/teacher/all', getAllTeachers)
-
 router.post('/teacher/update',auth, updateProfile)
+
+router.post('/teacher/getclassrooms', getClassrooms)
 
 router.get('/teacher/createGoogle', passport.authenticate('teacher', {  scope: ['profile', 'email'] }))
 router.get('/auth/google/teacher/callback', passport.authenticate('teacher', { failureRedirect: '/teacher/login' }), (req, res) => {
