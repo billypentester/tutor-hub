@@ -79,7 +79,7 @@ function Statistics() {
                   <i className="fas fa-calendar-alt display-5 text-white"></i>
                 </div>
                 <div>
-                  <h1 className="display-6 text-center text-white">0</h1>
+                  <h1 className="display-6 text-center text-white">{statistics.appointmentCount}</h1>
                   <h5 className='my-2 text-center text-white'>Appointments</h5>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 const Student = require('./../model/studentSchema');
 const Appointment =  require('./../model/appointmentSchema')
 const Teacher = require('./../model/teacherSchema')
+const Classroom = require('./../model/classroomSchema')
 const mail = require('./../modules/mail');
 const stripe = require('stripe')('sk_test_51JollnA5bS3TR9OlwjYRegDHSBYnVRFPjtiMw8nNZ9E29RhPRS8UFyq0BcrWU9v50WlwzirpHIjDdJgDU0rC7cFN00yCeBC18u');
 const jwt = require("jsonwebtoken");
@@ -204,7 +205,6 @@ const payment = async (req, res) => {
         multipleSubjects: JSON.parse(req.query.multipleSubjects),
         quantity: JSON.parse(req.query.multipleSubjects).length
     }
-    console.log(data)
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: data.multipleSubjects.map((subject) => {
@@ -215,16 +215,16 @@ const payment = async (req, res) => {
                         name: subject,
                         images: ['https://i.imgur.com/EHyR2nP.png'],
                     },
-                    unit_amount: data.fee * 100
+                    unit_amount: parseInt(data.fee) * 100
                 },
                 quantity: 1
             }
         }),
         mode: 'payment',
-        success_url: 'http://localhost:3000/student/dashboard/orders',
-        cancel_url: 'http://localhost:3000/student/dashboard',
-    
+        success_url: `http://localhost:5000/payment/success/`,
+        cancel_url: `http://localhost:5000/payment/cancel/`
     });
+    console.log(session)
     res.redirect(session.url)
 }
 

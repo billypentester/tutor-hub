@@ -16,6 +16,7 @@ router.get('/admin/statistics', async(req, res) => {
         const studentCount = await getStudentCount();
         const teacherCount = await getTeacherCount();
         const contactCount = await getContactCount();
+        const appointmentCount = await Appointment.countDocuments();
         const teachers = await Teacher.find();
         const city = teachers.reduce((acc, curr) => {
             const city = curr.city;
@@ -40,7 +41,7 @@ router.get('/admin/statistics', async(req, res) => {
             }
             return acc;
         }, {completed: 0, notCompleted: 0})
-        res.json({studentCount, teacherCount, contactCount, city, completion})
+        res.json({studentCount, teacherCount, contactCount, appointmentCount, city, completion})
     }
     catch(err){
         res.status(400).json(err.message);

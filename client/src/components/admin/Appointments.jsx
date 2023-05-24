@@ -34,8 +34,9 @@ function Appointments() {
 
     const searchAppointment = async (e) => {   
         const {value} = e.target
+        console.log(value)
         if(value.length > 0) {
-            setAppointment(appointment.filter(appointment => appointment.name.toLowerCase().includes(value.toLowerCase())))
+            setAppointment(appointment.filter(appointment => appointment.student.toLowerCase().includes(value.toLowerCase())))
         }
         else {
             fetchAppointment()

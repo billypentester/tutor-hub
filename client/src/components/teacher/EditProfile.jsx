@@ -592,23 +592,23 @@ function EditProfile() {
                           <label class="form-check-label" for="monday">Monday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Tuesday')  }/>
+                          <input type="checkbox" class="form-check-input" id="tuesday" name="days" value="tuesday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('tuesday')  }/>
                           <label class="form-check-label" for="tuesday">Tuesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Wednesday')  }/>
+                          <input type="checkbox" class="form-check-input" id="wednesday" name="days" value="wednesday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('wednesday')  }/>
                           <label class="form-check-label" for="wednesday">Wednesday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Thursday')  }/>
+                          <input type="checkbox" class="form-check-input" id="thursday" name="days" value="thursday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('thursday')  }/>
                           <label class="form-check-label" for="thursday">Thursday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Friday')  }/>
+                          <input type="checkbox" class="form-check-input" id="friday" name="days" value="friday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('friday')  }/>
                           <label class="form-check-label" for="friday">Friday</label>
                         </div>
                         <div class="form-check me-3">
-                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('Saturday')  }/>
+                          <input type="checkbox" class="form-check-input" id="saturday" name="days" value="saturday" onChange={handleChangeCheckbox} checked={ availability && availability.days && availability.days.includes('saturday')  }/>
                           <label class="form-check-label" for="saturday">Saturday</label>
                         </div>
                       </div>
@@ -622,15 +622,15 @@ function EditProfile() {
                       <label for="timeslots" className="form-label mt-4">Time slots</label>
                       <div class="d-flex">
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="morning" name="timeslot" value="morning" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('Morning') }/>
+                        <input type="checkbox" class="form-check-input" id="morning" name="timeslot" value="morning" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('morning') }/>
                         <label class="form-check-label" for="morning">Morning</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslot" value="afternoon" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('Afternoon') }/>
+                        <input type="checkbox" class="form-check-input" id="afternoon" name="timeslot" value="afternoon" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('afternoon') }/>
                         <label class="form-check-label" for="afternoon">Afternoon</label>
                       </div>
                       <div class="form-check me-3">
-                        <input type="checkbox" class="form-check-input" id="evening" name="timeslot" value="evening" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('Evening') }/>
+                        <input type="checkbox" class="form-check-input" id="evening" name="timeslot" value="evening" onChange={handleChangeCheckbox} checked={ availability && availability.timeslot && availability.timeslot.includes('evening') }/>
                         <label class="form-check-label" for="evening">Evening</label>
                       </div>
                       </div>

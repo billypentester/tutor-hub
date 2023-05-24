@@ -16,6 +16,11 @@ const login = async(req, res) => {
                 message: 'Login successful'
             })
         }
+        else{
+            res.status(400).json({
+                message: 'Invalid credentials'
+            })
+        }
     }
     catch(err){
         res.status(400).json(err.message);
