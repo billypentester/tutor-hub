@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { io } from 'socket.io-client';
 import Loader from './../utils/Loader'
+import Empty from './../utils/Empty'
 
 const socket = io('');
 
@@ -10,7 +11,6 @@ function Messages() {
   const [loading, setLoading] = useState(true)
   const [person, setPerson] = useState('')
   const [participants, setParticipants] = useState('')
-  const [update, setUpdate] = useState(false)
 
   const {username, name, profile} = JSON.parse(localStorage.getItem('student'))
   const [text, setText] = useState({text: ''})
@@ -32,31 +32,52 @@ function Messages() {
       sender: username,
       text: text.text
     }
+    setPerson([...person, message])
     socket.emit("newMessage", message)
-    setText({text: ''})
-    setUpdate(!update)
+    setText({ text: '' });
   };
+
+  useEffect(() => {
+    socket.emit("getMessages", {participants : username})
+    socket.on('receiveMessages', (data) => {
+      setConversation(data)
+      setLoading(false)
+    })
+    return () => {
+      socket.off('receiveMessages')
+    }
+  }, [])
 
   useEffect(() => {
 
     socket.on('syncMessages', (data) => {
-      console.log(data)
-      setConversation(data)
-    })
-
-    socket.emit("getMessages", {participants : username})
+      setConversation(prevConversation => {
+        const updatedConversation = prevConversation.map(msg => {
+          if (msg._id === data._id) {
+            return data;
+          }
+          return msg;
+        });
+        return updatedConversation;
+      });
+      setPerson(data.messages)
+    });
 
     return () => {
       socket.off('syncMessages')
     }
 
-  }, [update])
+  }, [])
 
   return (
-        
+    <>
+      {
+        conversation && conversation.length === 0 ?
+        <Empty image='https://img.icons8.com/ios/100/000000/nothing-found.png' title='No Chats' subtitle={`You don't have any chats`} />
+        :
         <section className="my-4 text-center">
-
           <div className="d-flex" style={{height: '85vh'}}>
+
             <div className="col-3 bg-light rounded-start">
               <h3 className="text-center p-3 border-bottom border-1 mb-0 border-dark">Chats</h3>
               <div className="d-flex flex-column overflow-auto" style={{height: '80vh'}}>
@@ -77,12 +98,12 @@ function Messages() {
                           <div className="d-flex justify-content-between align-items-center">
                             <img src={msg.participants[1].profile} alt="profile" className="rounded-circle" style={{height: '50px', width: '50px'}} />
                             <div className="d-flex flex-column">
-                              <h5>
+                              <h5 className='text-end'>
                               {
                                 msg.participants[0].username === username ? msg.participants[1].name : msg.participants[0].name
                               }
                               </h5>
-                              <p className='mb-0'>{msg.messages[msg.messages.length-1].text}</p>
+                              <p className='mb-0 text-end'>{msg.messages[msg.messages.length-1].text}</p>
                             </div>
                           </div>
                         </div>
@@ -99,14 +120,16 @@ function Messages() {
                 }
               </div>
             </div>
+
             <div className="col-9 bg-dark rounded-end">
               {
                 person === '' ?
-                <div className="d-flex justify-content-center align-items-center" >
+                <div className="d-flex justify-content-center align-items-center" style={{height: '85vh'}}>
                   <h2 className="text-center text-white">Select the Chat to show here</h2>
                 </div>
                 :
-                <div className="d-flex flex-column justify-content-between">
+                <div className="d-flex flex-column justify-content-between" style={{height: '85vh'}}>
+                  
                   <div className="d-flex flex-column overflow-auto p-3">
                     {
                       person.map((msg, index) => {
@@ -131,16 +154,20 @@ function Messages() {
                       })
                     }
                   </div>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <textarea className="form-control m-3" id="message" rows="1" placeholder="Message" required="required" data-validation-required-message="Please enter a message." name="text" onChange={(e) => setText({...text, text: e.target.value})}></textarea>
+
+                  <div className="d-flex justify-content-between align-items-center" style={{height: '10vh'}}>
+                    <textarea className="form-control m-3" id="message" rows="1" placeholder="Message" required="required" data-validation-required-message="Please enter a message." name="text" value={text.text} onChange={(e) => setText({text: e.target.value})}></textarea>
                     <button className="btn btn-primary btn-xl m-3" id="sendMessageButton" type="submit" onClick={sendMessage}>Send</button>
                   </div>
+
                 </div>
               }
             </div>
-          </div>
 
+          </div>
         </section>
+      }
+    </>
   )
 }
 

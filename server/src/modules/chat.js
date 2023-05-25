@@ -50,14 +50,16 @@ function setupSocket(server) {
         await newChat.save();
       }
 
-      const messages = await Chat.find({
+      const messages = await Chat.findOne({
         $or: [
-          { "participants.0.username": sender },
-          { "participants.1.username": sender }
+          { "participants.0.username": participant1, "participants.1.username": participant2 },
+          { "participants.0.username": participant2, "participants.1.username": participant1 }
         ]
       });
 
-      socket.emit('syncMessages', messages);
+      console.log(messages.messages[messages.messages.length - 1]);
+
+      io.emit('syncMessages', messages);
       
     });
 
@@ -72,9 +74,7 @@ function setupSocket(server) {
         ]
       });
 
-      console.log(messages);
-
-      socket.emit('syncMessages', messages);
+      socket.emit('receiveMessages', messages);
       
     });
     

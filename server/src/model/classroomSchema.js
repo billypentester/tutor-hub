@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 require('../database/connection')
 
 const classroomSchema = new mongoose.Schema({
+    name: String,
     student: String,
     teacher: String,
     schedule: {
-        time: String,
-        day: [String]
+        startTime: String,
+        endTime: String
     },
     subjects: [
         {

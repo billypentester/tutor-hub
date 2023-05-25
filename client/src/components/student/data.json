@@ -1,0 +1,106 @@
+[
+    {
+        "source": {
+        "id": "bbc-news",
+        "name": "BBC News"
+        },
+        "author": "https://www.facebook.com/bbcnews",
+        "title": "Timbertop: The Australian bush campus that educated King Charles",
+        "description": "King Charles has described his time at Timbertop in 1966 as \"by far the best part\" of his education.",
+        "url": "https://www.bbc.co.uk/news/world-australia-64113876",
+        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/6DFA/production/_128145182_gettyimages-1450433106.jpg",
+        "publishedAt": "2023-04-29T01:54:18Z",
+        "content": "As the coronation approaches, there is a lifetime of moments to look back on which prepared King Charles for his role as monarch - including the time spent in what he has described as \"by far the bes… [+6632 chars]"
+    },
+    {
+        "source": {
+        "id": "engadget",
+        "name": "Engadget"
+        },
+        "author": "Andrew Tarantola",
+        "title": "White House reveals its next steps towards 'responsible' AI development",
+        "description": "The White House has made responsible AI development a focus of this administration in recent months, releasing a Blueprint AI Bill of Rights, developing a risk management framework, committing $140 million to found seven new National Academies dedicated to AI…",
+        "url": "https://www.engadget.com/white-house-reveals-its-next-steps-towards-responsible-ai-development-190636857.html",
+        "urlToImage": "https://s.yimg.com/uu/api/res/1.2/wY_rnwyWu85Rp9_L3skd2w--~B/Zmk9ZmlsbDtoPTYzMDtweW9mZj0wO3c9MTIwMDthcHBpZD15dGFjaHlvbg--/https://media-mbst-pub-ue1.s3.amazonaws.com/creatr-uploaded-images/2023-03/1d499910-d3b4-11ed-bfbf-97ae859b8383.cf.jpg",
+        "publishedAt": "2023-05-23T19:06:36Z",
+        "content": "The White House has made responsible AI development a focus of this administration in recent months, releasing a Blueprint AI Bill of Rights, developing a risk management framework, committing $140 m… [+2679 chars]"
+    },
+    {
+        "source": {
+        "id": "business-insider",
+        "name": "Business Insider"
+        },
+        "author": "Dana Miranda",
+        "title": "As a personal finance writer, I have mixed feelings about financial literacy",
+        "description": "Financial education in America focuses almost entirely on personal responsibility. For many marginalized people, I worry that advice is harmful.",
+        "url": "https://www.businessinsider.com/personal-finance/personal-finance-writer-mixed-feelings-financial-literacy-2023-4",
+        "urlToImage": "https://i.insider.com/63c025f933ffb700180f73f3?width=1200&format=jpeg",
+        "publishedAt": "2023-04-26T20:05:37Z",
+        "content": "Our experts choose the best products and services to help make smart decisions with your money (here's how). In some cases, we receive a commission from our partners; however, our opinions are our ow… [+5563 chars]"
+    },
+    {
+        "source": {
+        "id": "business-insider",
+        "name": "Business Insider"
+        },
+        "author": "kniemeyer@insider.com (Kenneth Niemeyer)",
+        "title": "Florida is trying to oust an elected school superintendent who publicly criticized DeSantis",
+        "description": "The state's education department is investigating the superintendent after Moms for Liberty sent DeSantis a letter stamped with \"Let's go Brandon.\"",
+        "url": "https://www.businessinsider.com/florida-desantis-superintendent-dont-say-gay-bill-moms-for-liberty-2023-4",
+        "urlToImage": "https://i.insider.com/644eb39c74e9330018efaff9?width=1200&format=jpeg",
+        "publishedAt": "2023-04-30T18:44:35Z",
+        "content": "Florida is threatening to remove an elected school superintendent who has been critical of Gov. Ron DeSantis.\r\nLeon County Schools Superintendent Rocky Hanna publicly criticized DeSantis for the gove… [+2585 chars]"
+    },
+    {
+        "source": {
+        "id": null,
+        "name": "The Guardian"
+        },
+        "author": "Editorial",
+        "title": "The Guardian view on technical education: Manchester can blaze a trail | Editorial",
+        "description": "Proposals unveiled by Andy Burnham could transform vocational learning for the betterWell over half of young people do not go on to university after leaving school, and our education system is letting many of them down. Further education colleges and sixth fo…",
+        "url": "https://www.theguardian.com/commentisfree/2023/may/17/the-guardian-view-on-technical-education-manchester-can-blaze-a-trail",
+        "urlToImage": "https://i.guim.co.uk/img/media/47eb721b6ba6ead32b72e56f6e2d947ca9a19d48/0_74_5245_3147/master/5245.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctb3BpbmlvbnMucG5n&enable=upscale&s=45e499c9b5088b49303bc1e0a1b35f4d",
+        "publishedAt": "2023-05-17T17:37:44Z",
+        "content": "Well over half of young people do not go on to university after leaving school, and our education system is letting many of them down. Further education colleges and sixth forms offering technical pa… [+3264 chars]"
+    },
+    {
+        "source": {
+        "id": null,
+        "name": "The Guardian"
+        },
+        "author": "Richard Adams Education editor",
+        "title": "Labour has no easy options over student loans, say education leaders",
+        "description": "Warning comes after party ditched its promise to abolish university tuition fees in England<ul><li>UK politics live – latest updates</li></ul>Keir Starmer has been warned that he has “no easy options” over student loans and higher education financing, after t…",
+        "url": "https://www.theguardian.com/education/2023/may/05/labour-student-loans-university-tuition-fees-education-leaders-keir-starmer",
+        "urlToImage": "https://i.guim.co.uk/img/media/2fbfc222a14093779c6e6d1dedf99aa3774bd307/0_338_5760_3458/master/5760.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=bc81b45c0b0f6b8eb77161fd9e968894",
+        "publishedAt": "2023-05-05T11:57:07Z",
+        "content": "Keir Starmer has been warned that he has no easy options over student loans and higher education financing, after the Labour leaders decision to scrap an earlier policy of abolishing tuition fees in … [+9513 chars]"
+    },
+    {
+        "source": {
+        "id": "time",
+        "name": "Time"
+        },
+        "author": "Elizabeth Millard",
+        "title": "How Nutrition Education for Doctors Is Evolving",
+        "description": "Although research indicates that nutrition training is limited in scope and duration at many medical schools, there are indications that attitudes—and in some cases, curriculum—may be changing.",
+        "url": "https://time.com/6282404/nutrition-education-doctors/",
+        "urlToImage": "https://api.time.com/wp-content/uploads/2023/05/GettyImages-1472789178-1.jpg?quality=85&w=1200&h=628&crop=1",
+        "publishedAt": "2023-05-24T18:26:01Z",
+        "content": "Dr. Jaclyn Albin still recalls learning about nutritional biochemistry while she was a student at The George Washington University School of Medicine &amp; Health Sciences. But by the time she gradua… [+11731 chars]"
+    },
+    {
+        "source": {
+        "id": "the-verge",
+        "name": "The Verge"
+        },
+        "author": "Emma Roth",
+        "title": "Google Meet finally supports 1080p video calls",
+        "description": "Google Meet has finally added support for 1080p video calls, but it’s only available for select Workspace and Google One users. The feature is available on the web-based version of Meet for now.",
+        "url": "https://www.theverge.com/2023/4/26/23699733/google-meet-1080p-video-calls-hd",
+        "urlToImage": "https://cdn.vox-cdn.com/thumbor/EaScurH_lVme4X1artA78Qh3lpo=/0x0:2040x1360/1200x628/filters:focal(1020x680:1021x681)/cdn.vox-cdn.com/uploads/chorus_asset/file/24016888/STK093_Google_01.jpg",
+        "publishedAt": "2023-04-26T22:08:13Z",
+        "content": "Google Meet finally supports 1080p video calls\r\nGoogle Meet finally supports 1080p video calls\r\n / The feature is only available to select Workspace and Google One subscribers, though.\r\nByEmma Roth\r\n… [+1354 chars]"
+    }
+]

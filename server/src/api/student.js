@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Classroom = require('./../model/classroomSchema')
+const Teacher = require('./../model/teacherSchema')
 
 const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment} = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
@@ -38,17 +39,23 @@ router.get('/auth/google/student/callback', passport.authenticate('student', { f
 const saveData = async(req, res, next) => {
 
     console.log(req.query)
-
-    // convert req.query.multipleSubjects from string into an array
     const multipleSubjects = req.query.multipleSubjects.split(',')
     const subjects = multipleSubjects.map(subject => ({ name: subject }))
 
+    const count = await Classroom.countDocuments()
+    const result =  await Teacher.findOne({username: req.query.teacher})
+
     const data = {
+        name: `Classroom ${count+1}`,
         teacher: req.query.teacher,
         student: req.query.student,
         subjects: subjects,
+        schedule:{
+            startTime: result.availability.startDate,
+            endTime: result.availability.endDate,
+        }
     }
-    console.log(data)
+
     const classroom = new Classroom(data)
     console.log(classroom)
     await classroom.save()
