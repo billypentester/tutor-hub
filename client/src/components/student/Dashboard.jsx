@@ -5,7 +5,8 @@ import axios from 'axios'
 import Navbar from './Navbar'
 import Statistics from './Statistics'
 import Finder from './Finder'
-import Classroom from './Classroom'
+import Classrooms from './Classrooms'
+import Class from './Class'
 import Messages from './Messages'
 import Appointments from './Appointments'
 
@@ -60,7 +61,8 @@ function StudentDashoard() {
         <Routes>
           <Route path="/" element={ <Statistics student={student} /> } />
           <Route path="/finder" element={ <Finder/> } />
-          <Route path="/classroom" element={ <Classroom/> } />
+          <Route path="/classrooms" element={ <Classrooms/> } />
+          <Route path="/class/:id" element={ <Class/> } />
           <Route path="/messages" element={ <Messages/> } />
           <Route path="/appointments" element={ <Appointments/> } />
           <Route path="/profile/:username" element={ <TeacherProfile/> } />

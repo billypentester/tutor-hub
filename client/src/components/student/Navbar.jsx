@@ -31,7 +31,7 @@ function Navbar({student}) {
               <Link className="nav-link" to="/student/dashboard/finder">Finder</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/classroom">Classroom</Link>
+              <Link className="nav-link" to="/student/dashboard/classrooms">Classrooms</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/student/dashboard/messages">Messages</Link>
