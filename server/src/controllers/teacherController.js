@@ -231,7 +231,7 @@ const modifyAppointment = async(req, res) => {
 const getClassrooms = async(req, res) => {
     try{
         console.log(req.body)
-        const classrooms = await Classroom.find({teacher: req.body.username})
+        const classrooms = await Classroom.find({'teacher.username': req.body.username})
         res.status(200).json(classrooms)
     }
     catch(err)

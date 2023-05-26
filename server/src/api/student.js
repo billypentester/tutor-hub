@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router()
 const Classroom = require('./../model/classroomSchema')
 const Teacher = require('./../model/teacherSchema')
+const Student = require('./../model/studentSchema')
 
-const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment} = require('../controllers/studentController')
+const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment, getClassrooms} = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -25,6 +26,7 @@ router.get('/student/all', getAllStudents)
 router.get('/student/count', getStudentCount)
 router.post('/student/delete', auth, deleteStudent)
 router.post('/student/update', auth, updateStudent)
+router.post('/student/getclassrooms', getClassrooms)
 
 router.get('/student/createGoogle', passport.authenticate('student', { scope: ['profile', 'email'] }))
 router.get('/auth/google/student/callback', passport.authenticate('student', { failureRedirect: '/student/signup' }), (req, res) => {
@@ -38,17 +40,25 @@ router.get('/auth/google/student/callback', passport.authenticate('student', { f
 
 const saveData = async(req, res, next) => {
 
-    console.log(req.query)
     const multipleSubjects = req.query.multipleSubjects.split(',')
     const subjects = multipleSubjects.map(subject => ({ name: subject }))
 
     const count = await Classroom.countDocuments()
     const result =  await Teacher.findOne({username: req.query.teacher})
+    const result2 = await Student.findOne({username: req.query.student})
 
     const data = {
         name: `Classroom ${count+1}`,
-        teacher: req.query.teacher,
-        student: req.query.student,
+        teacher: {
+            name: result.name,
+            username: result.username,
+            profile: result.profile,
+        },
+        student: {
+            name: result2.name,
+            username: result2.username,
+            profile: result2.profile,
+        },
         subjects: subjects,
         schedule:{
             startTime: result.availability.startDate,
@@ -57,7 +67,6 @@ const saveData = async(req, res, next) => {
     }
 
     const classroom = new Classroom(data)
-    console.log(classroom)
     await classroom.save()
     next()
 }

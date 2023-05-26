@@ -3,8 +3,16 @@ require('../database/connection')
 
 const classroomSchema = new mongoose.Schema({
     name: String,
-    student: String,
-    teacher: String,
+    student: {
+        name: String,
+        username: String,
+        profile: String,
+    },
+    teacher: {
+        name: String,
+        username: String,
+        profile: String,
+    },
     schedule: {
         startTime: String,
         endTime: String

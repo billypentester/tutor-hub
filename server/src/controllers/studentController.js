@@ -227,5 +227,17 @@ const payment = async (req, res) => {
     res.redirect(session.url)
 }
 
-module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment}
+const getClassrooms = async(req, res) => {
+    try{
+        console.log(req.body)
+        const classrooms = await Classroom.find({'student.username': req.body.username})
+        res.status(200).json(classrooms)
+    }
+    catch(err)
+    {
+        res.status(400).json(err.message);
+    }
+}
+
+module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment, getClassrooms}
 
