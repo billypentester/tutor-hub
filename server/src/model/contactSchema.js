@@ -13,6 +13,14 @@ const contactSchema = new mongoose.Schema({
     message: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        default: "Pending"
+    },
+    reply: {
+        type: String,
+        default: ""
     }
 });
 

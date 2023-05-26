@@ -29,6 +29,42 @@ function Statistics() {
     return `${month} ${day}, ${year}`;
   }
 
+  function getWelcomeMessage() {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+  
+    let welcomeMessage;
+  
+    if (currentHour >= 5 && currentHour < 12) {
+      welcomeMessage = 'Good morning!';
+    } else if (currentHour >= 12 && currentHour < 18) {
+      welcomeMessage = 'Good afternoon!';
+    } else {
+      welcomeMessage = 'Good evening!';
+    }
+  
+    return welcomeMessage;
+  }
+
+  function getWelcomeImage(){
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    let welcomeImage;
+
+    if (currentHour >= 5 && currentHour < 12) {
+      welcomeImage = 'https://media.istockphoto.com/id/531253600/photo/sunrise.jpg?s=612x612&w=0&k=20&c=gdlZaKWcTjW1hmTRN8veqYIV25O4OfN4MhNx2H5Rgnk=';
+    }
+    else if (currentHour >= 12 && currentHour < 18) {
+      welcomeImage = 'https://c1.wallpaperflare.com/preview/695/893/139/sunrise-sunset-twilight-morning-light-afternoon.jpg';
+    }
+    else {
+      welcomeImage = 'https://cdn.theatlantic.com/thumbor/vxo76h5WbTZcxwEmNX11Fu8cwLo=/6x371:3257x2078/960x504/media/img/mt/2015/06/blue_period_view_from_my_bedroom_window/original.jpg';
+    }
+
+    return welcomeImage;
+  }
+
   const calculateProfileCompletion = () => {
     let completedWeight = 0;
   
@@ -52,6 +88,19 @@ function Statistics() {
     <div className='my-5'>
 
       <section className='mb-4'>
+        <div className='d-flex justify-content-between align-items-center bg-light  rounded shadow-lg'>
+          <div className='col-6 p-4'>
+            <h3 className=''>Welcome {student.name}</h3>
+            <p className='lead mb-3'>{getWelcomeMessage()}</p>
+            <h5 className='mb-3'>Today is <strong>{formatDate(new Date())}</strong></h5>
+          </div>
+          <div className='col-6 d-flex justify-content-end'>
+            <img src={getWelcomeImage()} alt='welcome' className='img-fluid rounded-end' style={{width: '100%', height: '260px', objectFit: 'cover', objectPosition: 'center'}} />
+          </div>
+        </div>
+      </section>
+
+      <section className='mb-5'>
         <div className='row flex-row justify-content-between align-items-stretch'>
 
           <div className='col-6'>

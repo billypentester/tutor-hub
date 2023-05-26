@@ -8,12 +8,34 @@ function Messages() {
     const [contacts, setcontacts] = useState([])
     const [loading, setLoading] = useState(false)
     const [alert, setAlert] = useState({type: '', message: ''})
+    const [person, setPerson] = useState('')
 
     const fetchcontacts = async () => {
         setLoading(true)
         const res = await axios.get('/api/contact/all')
         setcontacts(res.data)
         setLoading(false)
+    }
+
+    const sendEmail = async () => {
+        try{
+            setLoading(true)
+            const res = await axios.post('/api/admin/message/send', person)
+            setLoading(false)
+            setAlert({type: 'success', message: 'Email sent successfully'})
+            setTimeout(function() {
+                setAlert({type: '', message: ''})
+            }
+            , 5000);
+        }
+        catch(err) {
+            console.log(err)
+        }
+    }
+
+    const handleChanges = (e) => {
+        const {name, value} = e.target
+        setPerson({...person, [name]: value})
     }
 
     const searchContact = async (e) => {   
@@ -62,7 +84,7 @@ function Messages() {
                             <td>{contact.email}</td>
                             <td>{contact.message}</td>
                             <td>
-                                <button type="button" class="mx-2 btn btn-info">Send Email</button>
+                                <button type="button" class="mx-2 btn btn-info" data-toggle="modal" data-target="#sendEmail" onClick={() => setPerson(contact)}>Send Email</button>
                             </td>
                         </tr>
                     ))
@@ -76,6 +98,48 @@ function Messages() {
                 alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
             }
             </table>
+
+            <div className="modal fade" id="sendEmail" tabindex="-1" aria-labelledby="sendEmailLabel" aria-hidden="true">
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Email</h5>
+                        <button type="button" className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#sendEmail">
+                        <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <form>
+                            <div className="row justify-content-center">
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="message" class="form-label">Message</label>
+                                        <input type="text" class="form-control" id="message" placeholder="Message here" name='message' value={person.message} onChange={handleChanges}/>
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="subject" class="form-label mt-4">Subject</label>
+                                        <input type="text" class="form-control" id="subject" placeholder="Write headline for email" name='subject' value={person.subject} onChange={handleChanges}/>
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="reply" class="form-label mt-4">Reply</label>
+                                        <textarea type="text" class="form-control" id="reply" placeholder="Write email for reply" name='reply' value={person.reply} onChange={handleChanges}></textarea>
+                                    </div>
+                                </div>
+                                <div className='d-flex justify-content-center'>
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={sendEmail}>Send Email</button> 
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     )
 }

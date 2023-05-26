@@ -1,7 +1,9 @@
 const Student = require('./../model/studentSchema');
 const Teacher = require('./../model/teacherSchema');
 const Admin = require('./../model/adminSchema');
+const Contact = require('./../model/contactSchema');
 const jwt = require("jsonwebtoken");
+const sendMail = require('./../modules/mail');
 require('dotenv').config();
 
 
@@ -63,9 +65,18 @@ const getAllTeachers = async(req, res) => {
     res.json(teachers);
 }
 
+const sendEmail = async(req, res) => {
+    const {email, subject, message, reply} = req.body;
+    try{
+        await sendMail({ from: process.env.email, to: email, subject: subject, text: `Message: ${message} \n\n Reply: ${reply}`}) 
+        const update = await Contact.findOneAndUpdate({email: email}, {status: 'Replied', reply: reply});
+        res.status(200).json({msg: 'Email sent successfully'});
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
 
 
-
-
-module.exports = {login, getAllStudents, getAllTeachers, deleteStudent, deleteTeacher}
+module.exports = {login, getAllStudents, getAllTeachers, deleteStudent, deleteTeacher, sendEmail}
 

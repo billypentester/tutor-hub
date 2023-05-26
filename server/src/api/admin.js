@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {login, deleteStudent, deleteTeacher} = require('../controllers/adminController')
+const {login, deleteStudent, deleteTeacher, sendEmail} = require('../controllers/adminController')
 const {getStudentCount} = require('../controllers/studentController')
 const {getTeacherCount} = require('../controllers/teacherController')
 const {getContactCount} = require('../controllers/contactController')
@@ -10,6 +10,8 @@ const Teacher = require('./../model/teacherSchema')
 const auth = require('../middleware/auth')
 
 // count teachers by city
+
+router.post('/admin/message/send', sendEmail)
 
 router.get('/admin/statistics', async(req, res) => {
     try{
