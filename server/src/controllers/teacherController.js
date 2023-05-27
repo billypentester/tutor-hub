@@ -240,6 +240,24 @@ const getClassrooms = async(req, res) => {
     }
 }
 
+const classroomAnnouncement = async(req, res) => {
+    try{
+        console.log(req.body)
+        const {classroom, announcement} = req.body;
+        const update = await Classroom.findByIdAndUpdate(classroom, { $push: { announcements: announcement } }, {new: true})
+        // set announcements in descending order
+        update.announcements.sort((a, b) => {
+            return new Date(b.createdAt) - new Date(a.createdAt)
+        })
+        res.status(200).json(update)
+    }
+    catch(err)
+    {
+        res.status(400).json(err.message);
+    }
+}
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms}
+
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement}
 

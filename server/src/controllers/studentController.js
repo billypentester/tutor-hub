@@ -239,5 +239,17 @@ const getClassrooms = async(req, res) => {
     }
 }
 
-module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment, getClassrooms}
+const getClass = async(req, res) => {
+    try{
+        const {id} = req.params;
+        console.log(id)
+        const result = await Classroom.findOne({_id: id})
+        res.status(200).json(result)
+    }
+    catch(err){
+        res.status(400).json(err.message);
+    }
+}
+
+module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment, getClassrooms, getClass}
 

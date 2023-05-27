@@ -43,10 +43,9 @@ const classroomSchema = new mongoose.Schema({
     announcements: [
         {
             title: String,
-            content: String,
+            description: String,
             time: {
                 type: Date,
-                required: true,
                 default: Date.now()
             }
         }

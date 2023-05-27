@@ -7,7 +7,8 @@ import Statistics from './Statistics'
 import EditProfile from './EditProfile'
 import DeleteProfile from './DeleteProfile'
 import ViewProfile from './ViewProfile'
-import Classroom from './Classroom'
+import Classrooms from './Classrooms'
+import Class from './Class'
 import Messages from './Messages'
 import Appointments from './Appointments'
 
@@ -59,7 +60,8 @@ function TeacherDashoard() {
           <Route path="/edit-profile" element={ <EditProfile teacher={teacher} /> } />
           <Route path="/view-profile" element={ <ViewProfile teacher={teacher} /> } />
           <Route path="/delete-profile" element={ <DeleteProfile/> } />
-          <Route path="/classroom" element={ <Classroom/> } />
+          <Route path="/classrooms" element={ <Classrooms/> } />
+          <Route path="/class/:id" element={ <Class/> } />
           <Route path="/messages" element={ <Messages /> } />
           <Route path="/appointments" element={ <Appointments/> } />
         </Routes>

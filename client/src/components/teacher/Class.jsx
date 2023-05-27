@@ -1,24 +1,45 @@
 import React, {useState, useEffect} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import Loader from '../utils/Loader'
+import Alert from '../utils/Alert'
 import axios from 'axios'
 
 function Class() {
 
     const [classroom, setClassroom] = useState('')
     const [loading, setLoading] = useState(false)
+    const [alert, setAlert] = useState({type: '', message: ''})
     const [subject, setSubject] = useState('')
     const [announcement, setAnnouncement] = useState('')
+    const [addAnnouncement, setAddAnnouncement] = useState('')
     const [show, setShow] = useState(false)
     const params = useParams()
 
     const getClassroom = async() => {
         try{
             setLoading(true)
-            const {id} = params
             const response = await axios.get('/api/student/getclass/' + params.id)
             setClassroom(response.data)
             setLoading(false)
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
+
+    const announcementHandler = async() => {
+        try{
+            setLoading(true)
+            const response = await axios.post('/api/teacher/classroom/update', {classroom: classroom._id, announcement: addAnnouncement})
+            console.log(response.data)
+            setAnnouncement(response.data.announcements)
+            setAddAnnouncement('')
+            setAlert({type: 'success', message: 'Announcement added successfully'})
+            setLoading(false)
+            setTimeout(() => {
+                setAlert({type: '', message: ''})
+            }
+            , 4000)
         }
         catch(error){
             console.log(error)
@@ -31,6 +52,11 @@ function Class() {
         const day = date.getDate();
         const year = date.getFullYear();
         return `${month} ${day}, ${year}`;
+    }
+
+    const announcementHandleChange = (e) => {
+        const {name, value} = e.target
+        setAddAnnouncement({...addAnnouncement, [name]: value})
     }
 
     useEffect(() => {
@@ -55,7 +81,7 @@ function Class() {
 
                                     <div className='bg-info p-3  w-100 text-center text-white'>
                                         <h3 className='text-white'>{classroom.name}</h3>
-                                        <p className='mb-0 lead'>{classroom.teacher.name}</p>
+                                        <p className='mb-0 lead'>{classroom.student.name}</p>
                                     </div>
 
                                     <div className='my-1 text-start text-white'>
@@ -159,13 +185,16 @@ function Class() {
                                                 </div>
                                             }
                                         </div>
-                                        <div class="tab-pane fade" id="notes" role="tabpanel">
+                                        <div class="tab-pane fade position-relative" id="notes" role="tabpanel" style={{height:'70vh'}}>
+                                            <div className='m-3' style={{position:'absolute', bottom:'0%', right:'0%', zIndex:999}}>
+                                                <button className='btn btn-primary rounded-circle' data-toggle='modal' data-target='#addNotes'>+</button>
+                                            </div> 
                                             {
                                                 subject.notes.length==0 ?
                                                 <div className='d-flex justify-content-center align-items-center'>
-                                                    <div className='bg-light p-3 rounded-3 shadow-lg w-100'>
+                                                    <div className='bg-light border border-info p-3 rounded-3 shadow-lg w-100'>
                                                         <h3 className='text-center'>No Notes</h3>
-                                                        <p className='lead text-center'>No notes have been added yet</p>
+                                                        <p className='lead text-center mb-0'>No notes have been added yet</p>
                                                     </div>
                                                 </div>
                                                 :
@@ -182,7 +211,6 @@ function Class() {
                                                         ))
                                                     }
                                                 </div>
-
                                             }
                                         </div>
                                     </div>
@@ -191,8 +219,9 @@ function Class() {
                                 show=='announcement' ?
                                 <>
                                     <div className='p-3'>
-                                        <div className='d-flex justify-content-start align-items-center'>
+                                        <div className='d-flex justify-content-between align-items-center'>
                                             <h3 className='text-center mb-0'>Announcements</h3>
+                                            <button className='btn btn-success mx-3' data-toggle='modal' data-target='#addAnnouncementModal'>Add Announcement</button>
                                         </div>
                                         <hr className='' />
                                         {
@@ -233,7 +262,79 @@ function Class() {
                         </div>
                     </div>
                 </div>
+
+                {/* Announcement Modal */}
+
+                <div className="modal fade" id="addAnnouncementModal" tabindex="-1" aria-labelledby="addAnnouncementModalLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Add Announcement</h5>
+                            <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#addAnnouncementModal">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <form>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="announcementName" className='form-label'>Name</label>
+                                        <input type="text" className="form-control" id="announcementName" placeholder="Enter Announcement Name" name='title' value={addAnnouncement.title} onChange={announcementHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="announcementDescription" className='form-label mt-4'>Description</label>
+                                        <textarea className="form-control" id="announcementDescription" rows="3" placeholder="Enter Announcement Description" name='description' value={addAnnouncement.description} onChange={announcementHandleChange}></textarea>
+                                    </div>
+                                </div>
+                                <div className='d-flex justify-content-center'>
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={announcementHandler}>Add</button> 
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Notes Modal */}
+
+                <div className="modal fade" id="addNotes" tabindex="-1" aria-labelledby="addNotesLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Add Announcement</h5>
+                            <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#addNotes">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <form>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="announcementName" className='form-label'>Name</label>
+                                        <input type="text" className="form-control" id="announcementName" placeholder="Enter Announcement Name" name='title' value={addAnnouncement.title} onChange={announcementHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="announcementDescription" className='form-label mt-4'>Description</label>
+                                        <textarea className="form-control" id="announcementDescription" rows="3" placeholder="Enter Announcement Description" name='description' value={addAnnouncement.description} onChange={announcementHandleChange}></textarea>
+                                    </div>
+                                </div>
+                                <div className='d-flex justify-content-center'>
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={announcementHandler}>Add</button> 
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        }
+        {
+            alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
         }
         </>
     )

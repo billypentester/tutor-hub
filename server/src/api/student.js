@@ -4,7 +4,7 @@ const Classroom = require('./../model/classroomSchema')
 const Teacher = require('./../model/teacherSchema')
 const Student = require('./../model/studentSchema')
 
-const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment, getClassrooms} = require('../controllers/studentController')
+const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment, getClassrooms, getClass} = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -27,6 +27,7 @@ router.get('/student/count', getStudentCount)
 router.post('/student/delete', auth, deleteStudent)
 router.post('/student/update', auth, updateStudent)
 router.post('/student/getclassrooms', getClassrooms)
+router.get('/student/getclass/:id', getClass)
 
 router.get('/student/createGoogle', passport.authenticate('student', { scope: ['profile', 'email'] }))
 router.get('/auth/google/student/callback', passport.authenticate('student', { failureRedirect: '/student/signup' }), (req, res) => {

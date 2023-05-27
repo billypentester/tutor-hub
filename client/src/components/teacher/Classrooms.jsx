@@ -1,9 +1,10 @@
-import React, {useState ,useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
+import {Link} from 'react-router-dom'
 import Empty from '../utils/Empty'
 import Loader from '../utils/Loader'
 import axios from 'axios'
 
-function Classroom() {
+function Classrooms() {
 
   const [classrooms, setClassrooms] = useState([])
   const [loading, setLoading] = useState(false)
@@ -12,7 +13,6 @@ function Classroom() {
     try {
       setLoading(true)
       const {username} = JSON.parse(localStorage.getItem('teacher'))
-      console.log(username)
       const response = await axios.post('/api/teacher/getclassrooms', {username})
       setClassrooms(response.data)
       setLoading(false)
@@ -48,7 +48,7 @@ function Classroom() {
         {
           !loading && classrooms.length > 0 && 
           classrooms.map(classroom => (
-            <div className='col-4 m-2 bg-light border-secondary shadow-lg rounded-3 p-0'>
+            <Link className='col-4 m-2 bg-light border-secondary shadow-lg rounded-3 p-0 text-dark' style={{textDecoration: 'none'}} to={`/teacher/dashboard/class/${classroom._id}`} key={classroom._id}>
               <div className='d-flex justify-content-between align-items-center p-3 bg-info text-white rounded-top'>
                 <div className='d-flex flex-column'>
                   <h3 className='text-white mb-1'>{classroom.name}</h3>
@@ -67,7 +67,7 @@ function Classroom() {
               <div className='d-flex flex-column p-4'>
                 <span className="subject">Class Timing : <strong>{formatTime(classroom.schedule.startTime)} - {formatTime(classroom.schedule.endTime)}</strong></span>
               </div>
-            </div>
+            </Link>
           ))
         }
         </div>
@@ -77,4 +77,4 @@ function Classroom() {
   )
 }
 
-export default Classroom
+export default Classrooms
