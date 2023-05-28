@@ -12,8 +12,17 @@ function Class() {
     const [subject, setSubject] = useState('')
     const [announcement, setAnnouncement] = useState('')
     const [addAnnouncement, setAddAnnouncement] = useState('')
+    const [addNotes, setAddNotes] = useState('')
     const [show, setShow] = useState(false)
     const params = useParams()
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const month = date.toLocaleString('default', { month: 'long' });
+        const day = date.getDate();
+        const year = date.getFullYear();
+        return `${month} ${day}, ${year}`;
+    }
 
     const getClassroom = async() => {
         try{
@@ -24,6 +33,25 @@ function Class() {
         }
         catch(error){
             console.log(error)
+        }
+    }
+
+    const announcementHandleChange = (e) => {
+        const {name, value} = e.target
+        setAddAnnouncement({...addAnnouncement, [name]: value})
+    }
+
+    const notesHandleChange = (e) => {
+        const {name, value} = e.target
+        setAddNotes({...addNotes, [name]: value})
+    }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setAddNotes({...addNotes, content: reader.result})
         }
     }
 
@@ -46,17 +74,23 @@ function Class() {
         }
     }
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const month = date.toLocaleString('default', { month: 'long' });
-        const day = date.getDate();
-        const year = date.getFullYear();
-        return `${month} ${day}, ${year}`;
-    }
-
-    const announcementHandleChange = (e) => {
-        const {name, value} = e.target
-        setAddAnnouncement({...addAnnouncement, [name]: value})
+    const notesHandler = async() => {
+        try{
+            setLoading(true)
+            const response = await axios.post('/api/teacher/classroom/notes', {classroom: classroom._id, notes: addNotes})
+            console.log(response.data)
+            setSubject(response.data)
+            setAddNotes('')
+            setAlert({type: 'success', message: 'Notes added successfully'})
+            setLoading(false)
+            setTimeout(() => {
+                setAlert({type: '', message: ''})
+            }
+            , 4000)
+        }
+        catch(error){
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -187,7 +221,9 @@ function Class() {
                                         </div>
                                         <div class="tab-pane fade position-relative" id="notes" role="tabpanel" style={{height:'70vh'}}>
                                             <div className='m-3' style={{position:'absolute', bottom:'0%', right:'0%', zIndex:999}}>
-                                                <button className='btn btn-primary rounded-circle' data-toggle='modal' data-target='#addNotes'>+</button>
+                                                <button className='btn btn-primary ' data-toggle='modal' data-target='#addNotes'>
+                                                    <i className='fa fa-plus'></i>
+                                                </button>
                                             </div> 
                                             {
                                                 subject.notes.length==0 ?
@@ -303,7 +339,7 @@ function Class() {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Add Announcement</h5>
+                            <h5 className="modal-title">Add Notes</h5>
                             <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#addNotes">
                             <span aria-hidden="true"></span>
                             </button>
@@ -312,18 +348,30 @@ function Class() {
                             <form>
                                 <div className='row'>
                                     <div className="form-group">
-                                        <label for="announcementName" className='form-label'>Name</label>
-                                        <input type="text" className="form-control" id="announcementName" placeholder="Enter Announcement Name" name='title' value={addAnnouncement.title} onChange={announcementHandleChange} />
+                                        <label for="notesTitle" className='form-label'>Title</label>
+                                        <input type="text" className="form-control" id="notesTitle" placeholder="Enter Notes title" name='title' value={addNotes.title} onChange={notesHandleChange} />
                                     </div>
                                 </div>
                                 <div className='row'>
                                     <div className="form-group">
-                                        <label for="announcementDescription" className='form-label mt-4'>Description</label>
-                                        <textarea className="form-control" id="announcementDescription" rows="3" placeholder="Enter Announcement Description" name='description' value={addAnnouncement.description} onChange={announcementHandleChange}></textarea>
+                                        <label for="notesDescription" className='form-label mt-4'>Description</label>
+                                        <textarea className="form-control" id="notesDescription" rows="3" placeholder="Enter Notes Description" name='description' value={addNotes.description} onChange={notesHandleChange}></textarea>
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                   <div className="form-group">
+                                        <label for="notesLink" className='form-label mt-4'>Link (optional)</label>
+                                        <input type="text" className="form-control" id="notesLink" placeholder="Type here link" name='link' value={addNotes.link} onChange={notesHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="formFile" class="form-label mt-4">Upload File</label>
+                                        <input class="form-control" type="file" name="content" accept="image/*" id="formFile" onChange={handleFileChange} />
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-center'>
-                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={announcementHandler}>Add</button> 
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={notesHandler}>Add</button> 
                                 </div>
                             </form>
                         </div>

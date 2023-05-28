@@ -5,6 +5,8 @@ const Classroom = require('../model/classroomSchema')
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const mail = require('./../modules/mail');
+const path = require('path')
+const fs = require('fs')
 
 
 const signUp = async(req, res) => {
@@ -257,7 +259,45 @@ const classroomAnnouncement = async(req, res) => {
     }
 }
 
+function getFileExtensionFromBase64(base64Data) {
+    const matches = base64Data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
+    if (matches && matches.length === 2) {
+      const mimeType = matches[1];
+      const mimeTypeParts = mimeType.split('/');
+      if (mimeTypeParts.length === 2) {
+        return mimeTypeParts[1]; // The second part is the extension without the dot
+      }
+    }
+    return null; // No extension found
+}
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement}
+const classroomNotes = async(req, res) => {
+    try{
+        const { classroom, notes } = req.body;
+        const fileExtension = getFileExtensionFromBase64(notes.content);
+        const fileName = `${classroom}-${notes.title}.${fileExtension}`;
+        const filePath = path.join(__dirname, `../public/uploads/${fileName}`);
+
+        const base64DataWithoutPrefix = notes.content.replace(/^data:image\/\w+;base64,/, '');
+        const fileData = Buffer.from(base64DataWithoutPrefix, 'base64');
+        fs.writeFile(filePath, fileData, (error) => {
+            if (error) {
+            console.error('Error saving file:', error);
+            } else {
+            console.log('File saved successfully!');
+            }
+        });
+        
+        res.status(200).json({msg: 'File uploaded successfully'})
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(400).json(err.message);
+    }
+}
+
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes}
 

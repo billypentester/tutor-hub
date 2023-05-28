@@ -1,8 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport');
+const multer = require('multer')
+const path = require('path')
 
-const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement} = require('../controllers/teacherController')
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes} = require('../controllers/teacherController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -24,6 +29,7 @@ router.post('/teacher/update',auth, updateProfile)
 
 router.post('/teacher/getclassrooms', getClassrooms)
 router.post('/teacher/classroom/update', classroomAnnouncement)
+router.post('/teacher/classroom/notes', upload.single('content'), classroomNotes)
 
 router.get('/teacher/createGoogle', passport.authenticate('teacher', {  scope: ['profile', 'email'] }))
 router.get('/auth/google/teacher/callback', passport.authenticate('teacher', { failureRedirect: '/teacher/login' }), (req, res) => {
