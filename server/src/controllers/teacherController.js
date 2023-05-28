@@ -259,37 +259,35 @@ const classroomAnnouncement = async(req, res) => {
     }
 }
 
-function getFileExtensionFromBase64(base64Data) {
-    const matches = base64Data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-    if (matches && matches.length === 2) {
-      const mimeType = matches[1];
-      const mimeTypeParts = mimeType.split('/');
-      if (mimeTypeParts.length === 2) {
-        return mimeTypeParts[1]; // The second part is the extension without the dot
-      }
-    }
-    return null; // No extension found
-}
-
-
 const classroomNotes = async(req, res) => {
     try{
-        const { classroom, notes } = req.body;
-        const fileExtension = getFileExtensionFromBase64(notes.content);
-        const fileName = `${classroom}-${notes.title}.${fileExtension}`;
-        const filePath = path.join(__dirname, `../public/uploads/${fileName}`);
+        const {classroom, subject, title, description, link} = req.body
+        const {filename} = req.file 
 
-        const base64DataWithoutPrefix = notes.content.replace(/^data:image\/\w+;base64,/, '');
-        const fileData = Buffer.from(base64DataWithoutPrefix, 'base64');
-        fs.writeFile(filePath, fileData, (error) => {
-            if (error) {
-            console.error('Error saving file:', error);
-            } else {
-            console.log('File saved successfully!');
+        console.log(classroom, subject, title, description, link, filename)
+
+        // update classroom.subjects.notes using classroom and subject id
+        const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
+            'subjects.$.notes': {
+                title: title,
+                description: description,
+                link: link,
+                content: `/api/public/${filename}` 
             }
-        });
-        
-        res.status(200).json({msg: 'File uploaded successfully'})
+        }}, {new: true})
+
+        // const update = await Classroom.findByIdAndUpdate(classroom, { $push: { 
+        //     'subjects[0].notes': {
+        //         title: title,
+        //         description: description,
+        //         link: link,
+        //         content: `/api/public/${filename}` 
+        //     }
+        // }}, {new: true})
+
+        console.log(update)
+
+        res.status(200).json(update)
     }
     catch(err)
     {

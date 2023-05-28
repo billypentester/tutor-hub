@@ -4,7 +4,15 @@ const passport = require('passport');
 const multer = require('multer')
 const path = require('path')
 
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+    destination: './src/public/uploads/',
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const fileExtension = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
+    }
+});
+
 const upload = multer({ storage });
 
 const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes} = require('../controllers/teacherController')

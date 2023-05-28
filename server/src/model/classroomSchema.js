@@ -34,8 +34,10 @@ const classroomSchema = new mongoose.Schema({
             ],
             notes: [
                 {
-                    name: String,
-                    link: String,
+                    title:String,
+                    description:String,
+                    link:String,
+                    content:String
                 }
             ]
         }

@@ -6,15 +6,16 @@ import axios from 'axios'
 
 function Class() {
 
-    const [classroom, setClassroom] = useState('')
     const [loading, setLoading] = useState(false)
     const [alert, setAlert] = useState({type: '', message: ''})
+    const params = useParams()
+
+    const [classroom, setClassroom] = useState('')
     const [subject, setSubject] = useState('')
     const [announcement, setAnnouncement] = useState('')
     const [addAnnouncement, setAddAnnouncement] = useState('')
     const [addNotes, setAddNotes] = useState('')
     const [show, setShow] = useState(false)
-    const params = useParams()
 
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -47,12 +48,8 @@ function Class() {
     }
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            setAddNotes({...addNotes, content: reader.result})
-        }
+        const {name, files} = e.target
+        setAddNotes({...addNotes, [name]: files[0]})
     }
 
     const announcementHandler = async() => {
@@ -77,16 +74,27 @@ function Class() {
     const notesHandler = async() => {
         try{
             setLoading(true)
-            const response = await axios.post('/api/teacher/classroom/notes', {classroom: classroom._id, notes: addNotes})
-            console.log(response.data)
-            setSubject(response.data)
+            const formData = new FormData()
+            formData.append('classroom', classroom._id)
+            formData.append('subject', subject._id)
+            formData.append('title', addNotes.title)
+            formData.append('description', addNotes.description)
+            formData.append('link', addNotes.link)
+            formData.append('content', addNotes.content)
+
+            console.log(formData)
+
+            const {data} = await axios.post('/api/teacher/classroom/notes', formData)
+            data.subjects.map((SubjectList) => {
+                if(SubjectList._id==subject._id){
+                    setSubject(SubjectList)
+                }
+            })
+
             setAddNotes('')
             setAlert({type: 'success', message: 'Notes added successfully'})
             setLoading(false)
-            setTimeout(() => {
-                setAlert({type: '', message: ''})
-            }
-            , 4000)
+            setTimeout(() => {setAlert({type: '', message: ''})}, 4000)
         }
         catch(error){
             console.log(error)
@@ -234,15 +242,34 @@ function Class() {
                                                     </div>
                                                 </div>
                                                 :
-                                                <div className='d-flex flex-column'>
+                                                <div className='d-flex flex-column overflow-auto' style={{height:'70vh'}}>
                                                     {
                                                         subject.notes.map((note, index) => (
                                                             <div className='bg-light p-3 rounded-3 shadow-lg w-100 my-2'>
-                                                                <h3 className='text-center'>{note.name}</h3>
+                                                                <h3 className='text-center'>{note.title}</h3>
                                                                 <p className='lead text-center'>{note.description}</p>
-                                                                <div className='d-flex justify-content-center align-items-center'>
-                                                                    <Link to={'/student/note/' + note._id} className='btn btn-info'>View Note</Link>
-                                                                </div>
+                                                                <p className='lead text-center mb-0'>Uploaded by {note.link}</p>
+                                                                {
+                                                                    note.content.split('/')[note.content.split('/').length-1].split('.')[1]=='pdf' ?
+                                                                    <a target='_blank' href={note.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='m-2'/>
+                                                                        {note.content.split('/')[note.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    note.content.split('/')[note.content.split('/').length-1].split('.')[1]=='docx' ?
+                                                                    <a target='_blank' href={note.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='m-2'/>
+                                                                        {note.content.split('/')[note.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    note.content.split('/')[note.content.split('/').length-1].split('.')[1]=='pptx' ?
+                                                                    <a target='_blank' href={note.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='m-2'/>
+                                                                        {note.content.split('/')[note.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    <></>
+                                                                }
                                                             </div>
                                                         ))
                                                     }
@@ -367,7 +394,7 @@ function Class() {
                                 <div className='row'>
                                     <div class="form-group">
                                         <label for="formFile" class="form-label mt-4">Upload File</label>
-                                        <input class="form-control" type="file" name="content" accept="image/*" id="formFile" onChange={handleFileChange} />
+                                        <input class="form-control" type="file" name="content" id="formFile" onChange={handleFileChange} />
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-center'>
