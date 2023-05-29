@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes} = require('../controllers/teacherController')
+const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes, classroomAssignments, classroomQuizzes} = require('../controllers/teacherController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -38,6 +38,8 @@ router.post('/teacher/update',auth, updateProfile)
 router.post('/teacher/getclassrooms', getClassrooms)
 router.post('/teacher/classroom/update', classroomAnnouncement)
 router.post('/teacher/classroom/notes', upload.single('content'), classroomNotes)
+router.post('/teacher/classroom/assignment', upload.single('content'), classroomAssignments)
+router.post('/teacher/classroom/quiz', upload.single('content'), classroomQuizzes)
 
 router.get('/teacher/createGoogle', passport.authenticate('teacher', {  scope: ['profile', 'email'] }))
 router.get('/auth/google/teacher/callback', passport.authenticate('teacher', { failureRedirect: '/teacher/login' }), (req, res) => {

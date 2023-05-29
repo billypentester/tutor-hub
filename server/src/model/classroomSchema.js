@@ -22,14 +22,30 @@ const classroomSchema = new mongoose.Schema({
             name: String,
             quizzes: [
                 {
-                    name: String,
-                    link: String,
+                    title:String,
+                    description:String,
+                    link:String,
+                    content:String,
+                    answer: String,
+                    createdAt:{
+                        type:Date,
+                        default:Date.now()
+                    },
+                    dueDate:String,
                 }
             ],
             assignments: [
                 {
-                    name: String,
-                    link: String,
+                    title:String,
+                    description:String,
+                    link:String,
+                    content:String,
+                    answer: String,
+                    createdAt:{
+                        type:Date,
+                        default:Date.now()
+                    },
+                    dueDate:Date
                 }
             ],
             notes: [
@@ -37,7 +53,11 @@ const classroomSchema = new mongoose.Schema({
                     title:String,
                     description:String,
                     link:String,
-                    content:String
+                    content:String,
+                    date:{
+                        type:Date,
+                        default:Date.now()
+                    }
                 }
             ]
         }

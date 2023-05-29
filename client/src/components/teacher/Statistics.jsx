@@ -6,7 +6,7 @@ import data from './data.json'
 function Statistics() {
 
   const [news, setNews] = useState(data)
-  const [teacher, setTeacher] = useState({})
+  const [teacher, setTeacher] = useState('')
 
   const profileFields = [
     { field: 'name', weight: 10 },
@@ -87,71 +87,77 @@ function Statistics() {
   return (
     <div className='my-5'>
 
-      <section className='mb-4'>
-        <div className='d-flex justify-content-between align-items-center bg-light  rounded shadow-lg'>
-          <div className='col-6 p-4'>
-            <h3 className=''>Welcome {teacher.name}</h3>
-            <p className='lead mb-3'>{getWelcomeMessage()}</p>
-            <h5 className='mb-3'>Today is <strong>{formatDate(new Date())}</strong></h5>
-          </div>
-          <div className='col-6 d-flex justify-content-end'>
-            <img src={getWelcomeImage()} alt='welcome' className='img-fluid rounded-end' style={{width: '100%', height: '260px', objectFit: 'cover', objectPosition: 'center'}} />
-          </div>
-        </div>
-      </section>
+      {
 
-      <section className='mb-5'>
-        <div className='row flex-row justify-content-between align-items-stretch'>
+        teacher &&   
+        <>
+          <section className='mb-4'>
+            <div className='d-flex justify-content-between align-items-center bg-light  rounded shadow-lg'>
+              <div className='col-6 p-4'>
+                <h3 className=''>Welcome {teacher.name}</h3>
+                <p className='lead mb-3'>{getWelcomeMessage()}</p>
+                <h5 className='mb-3'>Today is <strong>{formatDate(new Date())}</strong></h5>
+              </div>
+              <div className='col-6 d-flex justify-content-end'>
+                <img src={getWelcomeImage()} alt='welcome' className='img-fluid rounded-end' style={{width: '100%', height: '260px', objectFit: 'cover', objectPosition: 'center'}} />
+              </div>
+            </div>
+          </section>
+          <section className='mb-5'>
+            <div className='row flex-row justify-content-between align-items-stretch'>
 
-          <div className='col-6'>
-            <div className='bg-light p-3 rounded shadow-lg'>
-                <h3 className='mb-4'>Profile Completion</h3>
-                <div className='d-flex justify-content-around align-items-center'>
-                  <img src={teacher.profile} alt={teacher.name} className='rounded-circle' width='80' />
-                  <div className='col-9 d-flex flex-column'>
-                    <h4 className='mb-2 lead text-center'>{teacher.name}</h4>
-                    <div className='progress w-100'>
-                      <div className='progress-bar' role='progressbar' style={{width: `${calculateProfileCompletion()}%`}} aria-valuenow='25' aria-valuemin='0' aria-valuemax='100'>{calculateProfileCompletion()}%</div>
+              <div className='col-6'>
+                <div className='bg-light p-3 rounded shadow-lg'>
+                    <h3 className='mb-4'>Profile Completion</h3>
+                    <div className='d-flex justify-content-around align-items-center'>
+                      <img src={teacher.profile} alt={teacher.name} className='rounded-circle' width='80' />
+                      <div className='col-9 d-flex flex-column'>
+                        <h4 className='mb-2 lead text-center'>{teacher.name}</h4>
+                        <div className='progress w-100'>
+                          <div className='progress-bar' role='progressbar' style={{width: `${calculateProfileCompletion()}%`}} aria-valuenow='25' aria-valuemin='0' aria-valuemax='100'>{calculateProfileCompletion()}%</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='mt-4 col-12 text-center'>
+                      <Link to="/" className='btn btn-outline-primary'>Add more information to your profile</Link>
+                    </div>
+                </div>  
+              </div>
+
+              <div className='col-6'>
+                <div className='bg-light p-3 rounded shadow-lg h-100'>
+                <h3 className='mb-4'>Account Verification</h3>
+                <div className='d-flex justify-content-between align-items-center'>
+                  <div className='col-2 d-flex align-items-center justify-content-center mb-3'>
+                    <img src='https://img.icons8.com/color/256/verified-badge.png' alt='graduation' className='img-fluid' width={'50px'} />
+                  </div>
+                  <div className='col-10'>
+                    <div className='d-flex align-items-center'>
+                      <div className='mx-4'>
+                        {
+                          teacher.isVerified ?
+                          <>
+                            <h5>Your Profile is verified</h5>
+                            <p className='text-dark'>Your account is verified. You can now search and hire tutors.</p>
+                          </>
+                          :
+                          <>
+                            <h5>Your Profile is not verified</h5>
+                            <p className='text-dark'>Your account is not verified. Please verify your account to search and hire tutors.</p>
+                          </>
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className='mt-4 col-12 text-center'>
-                  <Link to="/" className='btn btn-outline-primary'>Add more information to your profile</Link>
-                </div>
-            </div>  
-          </div>
-
-          <div className='col-6'>
-            <div className='bg-light p-3 rounded shadow-lg h-100'>
-            <h3 className='mb-4'>Account Verification</h3>
-            <div className='d-flex justify-content-between align-items-center'>
-              <div className='col-2 d-flex align-items-center justify-content-center mb-3'>
-                <img src='https://img.icons8.com/color/256/verified-badge.png' alt='graduation' className='img-fluid' width={'50px'} />
-              </div>
-              <div className='col-10'>
-                <div className='d-flex align-items-center'>
-                  <div className='mx-4'>
-                    {
-                      teacher.isVerified ?
-                      <>
-                        <h5>Your Profile is verified</h5>
-                        <p className='text-dark'>Your account is verified. You can now search and hire tutors.</p>
-                      </>
-                      :
-                      <>
-                        <h5>Your Profile is not verified</h5>
-                        <p className='text-dark'>Your account is not verified. Please verify your account to search and hire tutors.</p>
-                      </>
-                    }
-                  </div>
                 </div>
               </div>
-            </div>
-            </div>
-          </div>
 
-        </div>
-      </section>
+            </div>
+          </section>
+        </>
+
+      }
 
       <section className='mb-4'>
         <h3 className='mb-3'>Educational News</h3>

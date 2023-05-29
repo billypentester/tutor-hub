@@ -15,6 +15,8 @@ function Class() {
     const [announcement, setAnnouncement] = useState('')
     const [addAnnouncement, setAddAnnouncement] = useState('')
     const [addNotes, setAddNotes] = useState('')
+    const [addQuiz, setAddQuiz] = useState('')
+    const [addAssignment, setAddAssignment] = useState('')
     const [show, setShow] = useState(false)
 
     function formatDate(dateString) {
@@ -37,9 +39,14 @@ function Class() {
         }
     }
 
-    const announcementHandleChange = (e) => {
+    const assignmentHandleChange = (e) => {
         const {name, value} = e.target
-        setAddAnnouncement({...addAnnouncement, [name]: value})
+        setAddAssignment({...addAssignment, [name]: value})
+    }
+
+    const quizHandleChange = (e) => {
+        const {name, value} = e.target
+        setAddQuiz({...addQuiz, [name]: value})
     }
 
     const notesHandleChange = (e) => {
@@ -47,24 +54,80 @@ function Class() {
         setAddNotes({...addNotes, [name]: value})
     }
 
-    const handleFileChange = (e) => {
+    const announcementHandleChange = (e) => {
+        const {name, value} = e.target
+        setAddAnnouncement({...addAnnouncement, [name]: value})
+    }
+
+    const AssignmenthandleFileChange = (e) => {
+        const {name, files} = e.target
+        setAddAssignment({...addAssignment, [name]: files[0]})
+    }
+
+    const QuizhandleFileChange = (e) => {
+        const {name, files} = e.target
+        setAddQuiz({...addQuiz, [name]: files[0]})
+    }
+
+    const NoteshandleFileChange = (e) => {
         const {name, files} = e.target
         setAddNotes({...addNotes, [name]: files[0]})
     }
 
-    const announcementHandler = async() => {
+    const assignmentHandler = async() => {
         try{
             setLoading(true)
-            const response = await axios.post('/api/teacher/classroom/update', {classroom: classroom._id, announcement: addAnnouncement})
-            console.log(response.data)
-            setAnnouncement(response.data.announcements)
-            setAddAnnouncement('')
-            setAlert({type: 'success', message: 'Announcement added successfully'})
+            const formData = new FormData()
+            formData.append('classroom', classroom._id)
+            formData.append('subject', subject._id)
+            formData.append('title', addAssignment.title)
+            formData.append('description', addAssignment.description)
+            formData.append('link', addAssignment.link)
+            formData.append('content', addAssignment.content)
+            formData.append('dueDate', addAssignment.dueDate)
+
+            const {data} = await axios.post('/api/teacher/classroom/assignment', formData)
+
+            data.subjects.map((SubjectList) => {
+                if(SubjectList._id==subject._id){
+                    setSubject(SubjectList)
+                }
+            })
+
+            setAddAssignment('')
+            setAlert({type: 'success', message: 'Assignment added successfully'})
             setLoading(false)
-            setTimeout(() => {
-                setAlert({type: '', message: ''})
-            }
-            , 4000)
+            setTimeout(() => {setAlert({type: '', message: ''})}, 4000)
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
+
+    const quizHandler = async() => {
+        try{
+            setLoading(true)
+            const formData = new FormData()
+            formData.append('classroom', classroom._id)
+            formData.append('subject', subject._id)
+            formData.append('title', addQuiz.title)
+            formData.append('description', addQuiz.description)
+            formData.append('link', addQuiz.link)
+            formData.append('content', addQuiz.content)
+            formData.append('dueDate', addQuiz.dueDate)
+
+            const {data} = await axios.post('/api/teacher/classroom/quiz', formData)
+
+            data.subjects.map((SubjectList) => {
+                if(SubjectList._id==subject._id){
+                    setSubject(SubjectList)
+                }
+            })
+
+            setAddQuiz('')
+            setAlert({type: 'success', message: 'Quiz added successfully'})
+            setLoading(false)
+            setTimeout(() => {setAlert({type: '', message: ''})}, 4000)
         }
         catch(error){
             console.log(error)
@@ -82,9 +145,8 @@ function Class() {
             formData.append('link', addNotes.link)
             formData.append('content', addNotes.content)
 
-            console.log(formData)
-
             const {data} = await axios.post('/api/teacher/classroom/notes', formData)
+
             data.subjects.map((SubjectList) => {
                 if(SubjectList._id==subject._id){
                     setSubject(SubjectList)
@@ -95,6 +157,25 @@ function Class() {
             setAlert({type: 'success', message: 'Notes added successfully'})
             setLoading(false)
             setTimeout(() => {setAlert({type: '', message: ''})}, 4000)
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
+
+    const announcementHandler = async() => {
+        try{
+            setLoading(true)
+            const response = await axios.post('/api/teacher/classroom/update', {classroom: classroom._id, announcement: addAnnouncement})
+            console.log(response.data)
+            setAnnouncement(response.data.announcements)
+            setAddAnnouncement('')
+            setAlert({type: 'success', message: 'Announcement added successfully'})
+            setLoading(false)
+            setTimeout(() => {
+                setAlert({type: '', message: ''})
+            }
+            , 4000)
         }
         catch(error){
             console.log(error)
@@ -176,14 +257,19 @@ function Class() {
                                         </li>
                                     </ul>
                                     <hr className='m-0' />
-                                    <div id="myTabContent" class="tab-content p-3">
-                                        <div class="tab-pane fade active show" id="assignments" role="tabpanel">
+                                    <div id="myTabContent" class="tab-content">
+                                        <div class="tab-pane fade active show position-relative" id="assignments" role="tabpanel" style={{height: '75vh'}}>
+                                            <div className='m-5 p-3' style={{position:'absolute', bottom:'0%', right:'0%', zIndex:999}}>
+                                                <button className='btn btn-success shadow-lg' data-toggle='modal' data-target='#addAssignment'>
+                                                    <i className='fa fa-plus fa-1x'></i>
+                                                </button>
+                                            </div> 
                                             {
                                                 subject.assignments.length==0 ?
-                                                <div className='d-flex justify-content-center align-items-center'>
-                                                    <div className='bg-light p-3 rounded-3 shadow-lg w-100'>
-                                                        <h3 className='text-center'>No Assignments</h3>
-                                                        <p className='lead text-center'>No assignments have been added yet</p>
+                                                <div className='d-flex justify-content-center align-items-center p-3'>
+                                                    <div className='bg-ino border border-info p-3 rounded-3 shadow-lg w-100'>
+                                                        <h3 className='text-center'>No Assignment</h3>
+                                                        <p className='lead text-center mb-0'>No assignment have been added yet</p>
                                                     </div>
                                                 </div>
                                                 :
@@ -202,13 +288,18 @@ function Class() {
                                                 </div>   
                                             }
                                         </div>
-                                        <div class="tab-pane fade" id="quizzes" role="tabpanel">
+                                        <div class="tab-pane fade position-relative" id="quizzes" role="tabpanel" style={{height: '75vh'}}>
+                                            <div className='m-5 p-3' style={{position:'absolute', bottom:'0%', right:'0%', zIndex:999}}>
+                                                <button className='btn btn-success shadow-lg' data-toggle='modal' data-target='#addQuiz'>
+                                                    <i className='fa fa-plus fa-1x'></i>
+                                                </button>
+                                            </div> 
                                             {
                                                 subject.quizzes.length==0 ?
-                                                <div className='d-flex justify-content-center align-items-center'>
-                                                    <div className='bg-light p-3 rounded-3 shadow-lg w-100'>
-                                                        <h3 className='text-center'>No Quizzes</h3>
-                                                        <p className='lead text-center'>No quizzes have been added yet</p>
+                                                <div className='d-flex justify-content-center align-items-center p-3'>
+                                                    <div className='bg-ino border border-info p-3 rounded-3 shadow-lg w-100'>
+                                                        <h3 className='text-center'>No Quiz</h3>
+                                                        <p className='lead text-center mb-0'>No quiz have been added yet</p>
                                                     </div>
                                                 </div>
                                                 :
@@ -227,44 +318,58 @@ function Class() {
                                                 </div>
                                             }
                                         </div>
-                                        <div class="tab-pane fade position-relative" id="notes" role="tabpanel" style={{height:'70vh'}}>
-                                            <div className='m-3' style={{position:'absolute', bottom:'0%', right:'0%', zIndex:999}}>
-                                                <button className='btn btn-primary ' data-toggle='modal' data-target='#addNotes'>
-                                                    <i className='fa fa-plus'></i>
+                                        <div class="tab-pane fade position-relative" id="notes" role="tabpanel" style={{height: '75vh'}}>
+                                            <div className='m-5 p-3' style={{position:'absolute', bottom:'0%', right:'0%', zIndex:999}}>
+                                                <button className='btn btn-success shadow-lg' data-toggle='modal' data-target='#addNotes'>
+                                                    <i className='fa fa-plus fa-1x'></i>
                                                 </button>
                                             </div> 
                                             {
                                                 subject.notes.length==0 ?
-                                                <div className='d-flex justify-content-center align-items-center'>
-                                                    <div className='bg-light border border-info p-3 rounded-3 shadow-lg w-100'>
+                                                <div className='d-flex justify-content-center align-items-center p-3'>
+                                                    <div className='bg-ino border border-info p-3 rounded-3 shadow-lg w-100'>
                                                         <h3 className='text-center'>No Notes</h3>
                                                         <p className='lead text-center mb-0'>No notes have been added yet</p>
                                                     </div>
                                                 </div>
                                                 :
-                                                <div className='d-flex flex-column overflow-auto' style={{height:'70vh'}}>
+                                                <div className='d-flex flex-column py-3 align-items-center overflow-auto' style={{height:'75vh'}}>
                                                     {
                                                         subject.notes.map((note, index) => (
-                                                            <div className='bg-light p-3 rounded-3 shadow-lg w-100 my-2'>
-                                                                <h3 className='text-center'>{note.title}</h3>
-                                                                <p className='lead text-center'>{note.description}</p>
-                                                                <p className='lead text-center mb-0'>Uploaded by {note.link}</p>
+                                                            <div className='col-11 bg-light border border-muted p-4 rounded-3 shadow-lg mb-3'>
+                                                                <div className='d-flex justify-content-between align-items-center'>
+                                                                    <span className='badge bg-info'># {index+1}</span>
+                                                                    <span className=''>May 12, 2023</span>
+                                                                </div>
+                                                                <div className='d-flex flex-column'>
+                                                                    <h3 className='mt-3 mb-1'>{note.title}</h3>
+                                                                    <p className='lead'>{note.description}</p>
+                                                                    {
+                                                                        note.link == "undefined" ? null :
+                                                                        <div className='d-flex text-dark my-3'>
+                                                                            <strong className='me-2'>Link:</strong>
+                                                                            <a target='_blank' href={note.link}>
+                                                                                {note.link}
+                                                                            </a>
+                                                                        </div>
+                                                                    }
+                                                                </div>
                                                                 {
                                                                     note.content.split('/')[note.content.split('/').length-1].split('.')[1]=='pdf' ?
                                                                     <a target='_blank' href={note.content} className='btn btn-outline-info'>
-                                                                        <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='m-2'/>
+                                                                        <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='me-2'/>
                                                                         {note.content.split('/')[note.content.split('/').length-1]}
                                                                     </a>
                                                                     :
                                                                     note.content.split('/')[note.content.split('/').length-1].split('.')[1]=='docx' ?
                                                                     <a target='_blank' href={note.content} className='btn btn-outline-info'>
-                                                                        <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='m-2'/>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='me-2'/>
                                                                         {note.content.split('/')[note.content.split('/').length-1]}
                                                                     </a>
                                                                     :
                                                                     note.content.split('/')[note.content.split('/').length-1].split('.')[1]=='pptx' ?
                                                                     <a target='_blank' href={note.content} className='btn btn-outline-info'>
-                                                                        <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='m-2'/>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='me-2'/>
                                                                         {note.content.split('/')[note.content.split('/').length-1]}
                                                                     </a>
                                                                     :
@@ -331,9 +436,43 @@ function Class() {
                 <div className="modal fade" id="addAnnouncementModal" tabindex="-1" aria-labelledby="addAnnouncementModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add Announcement</h5>
+                                <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#addAnnouncementModal">
+                                <span aria-hidden="true"></span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className='row'>
+                                        <div className="form-group">
+                                            <label for="announcementName" className='form-label'>Name</label>
+                                            <input type="text" className="form-control" id="announcementName" placeholder="Enter Announcement Name" name='title' value={addAnnouncement.title} onChange={announcementHandleChange} />
+                                        </div>
+                                    </div>
+                                    <div className='row'>
+                                        <div className="form-group">
+                                            <label for="announcementDescription" className='form-label mt-4'>Description</label>
+                                            <textarea className="form-control" id="announcementDescription" rows="3" placeholder="Enter Announcement Description" name='description' value={addAnnouncement.description} onChange={announcementHandleChange}></textarea>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-center'>
+                                        <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={announcementHandler}>Add</button> 
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Assignment Modal */}
+
+                <div className="modal fade" id="addAssignment" tabindex="-1" aria-labelledby="AssignmentLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Add Announcement</h5>
-                            <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#addAnnouncementModal">
+                            <h5 className="modal-title">Add Assignment</h5>
+                            <button type="button" className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#Assignment">
                             <span aria-hidden="true"></span>
                             </button>
                         </div>
@@ -341,18 +480,88 @@ function Class() {
                             <form>
                                 <div className='row'>
                                     <div className="form-group">
-                                        <label for="announcementName" className='form-label'>Name</label>
-                                        <input type="text" className="form-control" id="announcementName" placeholder="Enter Announcement Name" name='title' value={addAnnouncement.title} onChange={announcementHandleChange} />
+                                        <label for="assignmentTitle" className='form-label'>Title</label>
+                                        <input type="text" className="form-control" id="assignmentTitle" placeholder="Enter Assignment title" name='title' value={addAssignment.title} onChange={assignmentHandleChange} />
                                     </div>
                                 </div>
                                 <div className='row'>
                                     <div className="form-group">
-                                        <label for="announcementDescription" className='form-label mt-4'>Description</label>
-                                        <textarea className="form-control" id="announcementDescription" rows="3" placeholder="Enter Announcement Description" name='description' value={addAnnouncement.description} onChange={announcementHandleChange}></textarea>
+                                        <label for="assignmentDescription" className='form-label mt-4'>Description</label>
+                                        <textarea className="form-control" id="assignmentDescription" rows="3" placeholder="Enter Quiz Description" name='description' value={addAssignment.description} onChange={assignmentHandleChange}></textarea>
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                   <div className="form-group">
+                                        <label for="assignmentLink" className='form-label mt-4'>Link (optional)</label>
+                                        <input type="text" className="form-control" id="assignmentLink" placeholder="Type here link" name='link' value={addAssignment.link} onChange={assignmentHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="formFile" class="form-label mt-4">Upload File</label>
+                                        <input class="form-control" type="file" name="content" id="formFile" onChange={AssignmenthandleFileChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="assignmentDueDate" className='form-label mt-4'>Due Date</label>
+                                        <input type="date" className="form-control" id="assignmentDueDate" placeholder="Enter Assignment Due Date" name='dueDate' value={addAssignment.dueDate} onChange={assignmentHandleChange} />
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-center'>
-                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={announcementHandler}>Add</button> 
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={assignmentHandler}>Add</button> 
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Quiz Modal */}
+
+                <div className="modal fade" id="addQuiz" tabindex="-1" aria-labelledby="addQuizLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Add Quiz</h5>
+                            <button type="button"  className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#addQuiz">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <form>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="quizTitle" className='form-label'>Title</label>
+                                        <input type="text" className="form-control" id="quizTitle" placeholder="Enter Quiz title" name='title' value={addQuiz.title} onChange={quizHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="quizDescription" className='form-label mt-4'>Description</label>
+                                        <textarea className="form-control" id="quizDescription" rows="3" placeholder="Enter Quiz Description" name='description' value={addQuiz.description} onChange={quizHandleChange}></textarea>
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                   <div className="form-group">
+                                        <label for="quizLink" className='form-label mt-4'>Link (optional)</label>
+                                        <input type="text" className="form-control" id="quizLink" placeholder="Type here link" name='link' value={addQuiz.link} onChange={quizHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div class="form-group">
+                                        <label for="formFile" class="form-label mt-4">Upload File</label>
+                                        <input class="form-control" type="file" name="content" id="formFile" onChange={QuizhandleFileChange} />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className="form-group">
+                                        <label for="assignmentDueDate" className='form-label mt-4'>Due Date</label>
+                                        <input type="date" className="form-control" id="assignmentDueDate" placeholder="Enter Assignment Due Date" name='dueDate' value={addQuiz.dueDate} onChange={quizHandleChange} />
+                                    </div>
+                                </div>
+                                <div className='d-flex justify-content-center'>
+                                    <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={quizHandler}>Add</button> 
                                 </div>
                             </form>
                         </div>
@@ -394,7 +603,7 @@ function Class() {
                                 <div className='row'>
                                     <div class="form-group">
                                         <label for="formFile" class="form-label mt-4">Upload File</label>
-                                        <input class="form-control" type="file" name="content" id="formFile" onChange={handleFileChange} />
+                                        <input class="form-control" type="file" name="content" id="formFile" onChange={NoteshandleFileChange} />
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-center'>

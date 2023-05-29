@@ -259,14 +259,59 @@ const classroomAnnouncement = async(req, res) => {
     }
 }
 
+const classroomAssignments = async(req, res) => {
+    try{
+        const {classroom, subject, title, description, link, dueDate} = req.body
+        const {filename} = req.file 
+
+        const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
+            'subjects.$.assignments': {
+                title: title,
+                description: description,
+                link: link,
+                content: `/api/public/${filename}` ,
+                dueDate: dueDate
+            }
+        }}, {new: true})
+
+        res.status(200).json(update)
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(400).json(err.message);
+    }
+}
+
+const classroomQuizzes = async(req, res) => {
+    try{
+        const {classroom, subject, title, description, link, dueDate} = req.body
+        const {filename} = req.file 
+
+        const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
+            'subjects.$.quizzes': {
+                title: title,
+                description: description,
+                link: link,
+                content: `/api/public/${filename}` ,
+                dueDate: dueDate
+            }
+        }}, {new: true})
+
+        res.status(200).json(update)
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(400).json(err.message);
+    }
+}
+
 const classroomNotes = async(req, res) => {
     try{
         const {classroom, subject, title, description, link} = req.body
         const {filename} = req.file 
 
-        console.log(classroom, subject, title, description, link, filename)
-
-        // update classroom.subjects.notes using classroom and subject id
         const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
             'subjects.$.notes': {
                 title: title,
@@ -275,17 +320,6 @@ const classroomNotes = async(req, res) => {
                 content: `/api/public/${filename}` 
             }
         }}, {new: true})
-
-        // const update = await Classroom.findByIdAndUpdate(classroom, { $push: { 
-        //     'subjects[0].notes': {
-        //         title: title,
-        //         description: description,
-        //         link: link,
-        //         content: `/api/public/${filename}` 
-        //     }
-        // }}, {new: true})
-
-        console.log(update)
 
         res.status(200).json(update)
     }
@@ -297,5 +331,7 @@ const classroomNotes = async(req, res) => {
 }
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes}
+
+
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes, classroomAssignments, classroomQuizzes}
 
