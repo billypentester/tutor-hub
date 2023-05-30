@@ -3,8 +3,21 @@ const router = express.Router()
 const Classroom = require('./../model/classroomSchema')
 const Teacher = require('./../model/teacherSchema')
 const Student = require('./../model/studentSchema')
+const multer = require('multer')
+const path = require('path')
 
-const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment, getClassrooms, getClass} = require('../controllers/studentController')
+const storage = multer.diskStorage({
+    destination: './src/public/uploads/',
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const fileExtension = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
+    }
+});
+
+const upload = multer({ storage });
+
+const {signUp, login, userPanel, emailVerification, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, deleteAppointment, updateAppointment, payment, getClassrooms, getClass, uploadAssignment, uploadQuiz} = require('../controllers/studentController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -26,8 +39,11 @@ router.get('/student/all', getAllStudents)
 router.get('/student/count', getStudentCount)
 router.post('/student/delete', auth, deleteStudent)
 router.post('/student/update', auth, updateStudent)
+
 router.post('/student/getclassrooms', getClassrooms)
 router.get('/student/getclass/:id', getClass)
+router.post('/student/upload/assignment', upload.single('content'), uploadAssignment)
+router.post('/student/upload/quiz', upload.single('content'), uploadQuiz)
 
 router.get('/student/createGoogle', passport.authenticate('student', { scope: ['profile', 'email'] }))
 router.get('/auth/google/student/callback', passport.authenticate('student', { failureRedirect: '/student/signup' }), (req, res) => {

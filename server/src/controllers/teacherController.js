@@ -262,17 +262,27 @@ const classroomAnnouncement = async(req, res) => {
 const classroomAssignments = async(req, res) => {
     try{
         const {classroom, subject, title, description, link, dueDate} = req.body
-        const {filename} = req.file 
+        const filename = req.file == undefined ? '' : req.file.filename
 
-        const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
-            'subjects.$.assignments': {
-                title: title,
-                description: description,
-                link: link,
-                content: `/api/public/${filename}` ,
-                dueDate: dueDate
+        const update = await Classroom.findOneAndUpdate(
+            {
+                _id: classroom, 
+                'subjects._id': subject
             }
-        }}, {new: true})
+            , 
+            { 
+                $push: {
+                    'subjects.$.assignments': {
+                        title: title,
+                        description: description,
+                        link: link,
+                        content: `/api/public/${filename}` ,
+                        dueDate: dueDate
+                    }
+                }
+            }, 
+            {new: true}
+        )
 
         res.status(200).json(update)
     }
@@ -286,7 +296,7 @@ const classroomAssignments = async(req, res) => {
 const classroomQuizzes = async(req, res) => {
     try{
         const {classroom, subject, title, description, link, dueDate} = req.body
-        const {filename} = req.file 
+        const filename = req.file == undefined ? '' : req.file.filename
 
         const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
             'subjects.$.quizzes': {
@@ -310,7 +320,7 @@ const classroomQuizzes = async(req, res) => {
 const classroomNotes = async(req, res) => {
     try{
         const {classroom, subject, title, description, link} = req.body
-        const {filename} = req.file 
+        const filename = req.file == undefined ? '' : req.file.filename
 
         const update = await Classroom.findOneAndUpdate({_id: classroom, 'subjects._id': subject}, { $push: {
             'subjects.$.notes': {

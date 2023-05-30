@@ -32,6 +32,7 @@ const classroomSchema = new mongoose.Schema({
                         default:Date.now()
                     },
                     dueDate:String,
+                    uploadDate:String
                 }
             ],
             assignments: [
@@ -45,7 +46,8 @@ const classroomSchema = new mongoose.Schema({
                         type:Date,
                         default:Date.now()
                     },
-                    dueDate:Date
+                    dueDate:Date,
+                    uploadDate:String
                 }
             ],
             notes: [

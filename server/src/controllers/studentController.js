@@ -251,5 +251,58 @@ const getClass = async(req, res) => {
     }
 }
 
-module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment, getClassrooms, getClass}
+const uploadAssignment = async(req, res) => {
+    try{
+        const {classroom, subject, assignment, link} = req.body;
+        const filename = req.file == undefined ? '' : req.file.filename;
+        const result = await Classroom.findOne({_id: classroom})
+        if(result){
+            const sub = result.subjects.find((sub) => sub._id == subject)
+            const assesment = sub.assignments.find((assesment) => assesment._id == assignment)
+            assesment.link = link;
+            assesment.answer = filename == '' ? '' : `/api/public/${filename}`
+            assesment.uploadDate = new Date();
+            await result.save();
+            const newClassroom = await Classroom.findOne({_id: classroom})
+            res.status(200).json(newClassroom)
+        }
+        else{
+            res.status(400).json({msg: 'Classroom not found'})
+        }   
+    }
+    catch(err){
+        console.log(err)
+        res.status(400).json(err.message);
+    }
+}
+
+const uploadQuiz = async(req, res) => {
+    try{
+        console.log(req.body)
+        console.log(req.file)
+        const {classroom, subject, quiz, link} = req.body;
+        const filename = req.file == undefined ? '' : req.file.filename;
+        const result = await Classroom.findOne({_id: classroom})
+        if(result){
+            const sub = result.subjects.find((sub) => sub._id == subject)
+            const assesment = sub.quizzes.find((assesment) => assesment._id == quiz)
+            assesment.link = link;
+            assesment.answer = filename == '' ? '' : `/api/public/${filename}`
+            assesment.uploadDate = new Date();
+            await result.save();
+            const newClassroom = await Classroom.findOne({_id: classroom})
+            res.status(200).json(newClassroom)
+        }
+        else{
+            res.status(400).json({msg: 'Classroom not found'})
+        }   
+    }
+    catch(err){
+        console.log(err)
+        res.status(400).json(err.message);
+    }
+}
+
+
+module.exports = {signUp, login, emailVerification, userPanel, getAllStudents, getStudentCount, deleteStudent, updateStudent, appointment, getAppointments, updateAppointment, deleteAppointment, payment, getClassrooms, getClass, uploadAssignment, uploadQuiz}
 

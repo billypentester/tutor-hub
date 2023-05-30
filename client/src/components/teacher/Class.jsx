@@ -273,14 +273,93 @@ function Class() {
                                                     </div>
                                                 </div>
                                                 :
-                                                <div className='d-flex flex-column'>
+                                                <div className='d-flex flex-column py-3 align-items-center overflow-auto' style={{height:'75vh'}}>
                                                     {
                                                         subject.assignments.map((assignment, index) => (
-                                                            <div className='bg-light p-3 rounded-3 shadow-lg w-100 my-2'>
-                                                                <h3 className='text-center'>{assignment.name}</h3>
-                                                                <p className='lead text-center'>{assignment.description}</p>
-                                                                <div className='d-flex justify-content-center align-items-center'>
-                                                                    <Link to={'/student/assignment/' + assignment._id} className='btn btn-info'>View Assignment</Link>
+                                                            <div className='col-11 bg-light border border-muted p-4 rounded-3 shadow-lg mb-3'>
+                                                                <div className='d-flex justify-content-between align-items-center'>
+                                                                    <span className='badge bg-info'># {index+1}</span>
+                                                                    <span className=''>May 12, 2023</span>
+                                                                </div>
+                                                                <div className='d-flex flex-column'>
+                                                                    <h3 className='mt-3 mb-1'>{assignment.title}</h3>
+                                                                    <p className='lead'>{assignment.description}</p>
+                                                                    <div className='d-flex text-dark my-3'>
+                                                                        <strong className='me-2 text-danger'>Deadline:</strong>
+                                                                        <span>{formatDate(assignment.dueDate)}</span>
+                                                                    </div>
+                                                                    {
+                                                                        assignment.link == "undefined" ? null :
+                                                                        <div className='d-flex text-dark my-3'>
+                                                                            <strong className='me-2'>Link:</strong>
+                                                                            <a target='_blank' href={assignment.link}>
+                                                                                {assignment.link}
+                                                                            </a>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                                {
+                                                                    assignment.content.split('/')[assignment.content.split('/').length-1].split('.')[1]=='pdf' ?
+                                                                    <a target='_blank' href={assignment.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='me-2'/>
+                                                                        {assignment.content.split('/')[assignment.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    assignment.content.split('/')[assignment.content.split('/').length-1].split('.')[1]=='docx' ?
+                                                                    <a target='_blank' href={assignment.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='me-2'/>
+                                                                        {assignment.content.split('/')[assignment.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    assignment.content.split('/')[assignment.content.split('/').length-1].split('.')[1]=='pptx' ?
+                                                                    <a target='_blank' href={assignment.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='me-2'/>
+                                                                        {assignment.content.split('/')[assignment.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    <></>
+                                                                }
+                                                                <hr />
+                                                                <div className='d-flex justify-content-between align-items-center'>
+                                                                    {
+                                                                        assignment.answer ?
+                                                                        <>
+                                                                            <hr/>
+                                                                            <h4 className='mb-0 lead'>Submitted by student at <strong>{formatDate(assignment.uploadDate)}</strong></h4>
+                                                                        </>
+                                                                        :
+                                                                        <></>
+                                                                    }
+                                                                    <div className='d-flex justify-content-between'>
+                                                                    {
+                                                                        assignment.answer ?
+                                                                        <>
+                                                                        {
+                                                                            assignment.answer.split('/')[assignment.answer.split('/').length-1].split('.')[1]=='pdf' ?
+                                                                            <a target='_blank' href={assignment.answer} className='btn btn-outline-info'>
+                                                                                <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='me-2'/>
+                                                                                {assignment.answer.split('/')[assignment.answer.split('/').length-1]}
+                                                                            </a>
+                                                                            :
+                                                                            assignment.answer.split('/')[assignment.answer.split('/').length-1].split('.')[1]=='docx' ?
+                                                                            <a target='_blank' href={assignment.answer} className='btn btn-outline-info'>
+                                                                                <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='me-2'/>
+                                                                                {assignment.answer.split('/')[assignment.answer.split('/').length-1]}
+                                                                            </a>
+                                                                            :
+                                                                            assignment.answer.split('/')[assignment.answer.split('/').length-1].split('.')[1]=='pptx' ?
+                                                                            <a target='_blank' href={assignment.answer} className='btn btn-outline-info'>
+                                                                                <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='me-2'/>
+                                                                                {assignment.answer.split('/')[assignment.answer.split('/').length-1]}
+                                                                            </a>
+                                                                            :
+                                                                            <></>
+                                                                        }
+                                                                        </>
+                                                                        :
+                                                                        <></>
+                                                                    }
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))
@@ -303,14 +382,94 @@ function Class() {
                                                     </div>
                                                 </div>
                                                 :
-                                                <div className='d-flex flex-column'>
+                                                <div className='d-flex flex-column py-3 align-items-center overflow-auto' style={{height:'75vh'}}>
                                                     {
                                                         subject.quizzes.map((quiz, index) => (
-                                                            <div className='bg-light p-3 rounded-3 shadow-lg w-100 my-2'>
-                                                                <h3 className='text-center'>{quiz.name}</h3>
-                                                                <p className='lead text-center'>{quiz.description}</p>
-                                                                <div className='d-flex justify-content-center align-items-center'>
-                                                                    <Link to={'/student/quiz/' + quiz._id} className='btn btn-info'>View Quiz</Link>
+                                                            <div className='col-11 bg-light border border-muted p-4 rounded-3 shadow-lg mb-3'>
+                                                                <div className='d-flex justify-content-between align-items-center'>
+                                                                    <span className='badge bg-info'># {index+1}</span>
+                                                                    <span className=''>May 12, 2023</span>
+                                                                </div>
+                                                                <div className='d-flex flex-column'>
+                                                                    <h3 className='mt-3 mb-1'>{quiz.title}</h3>
+                                                                    <p className='lead'>{quiz.description}</p>
+                                                                    <div className='d-flex text-dark my-3'>
+                                                                        <strong className='me-2 text-danger'>Deadline:</strong>
+                                                                        <span>{formatDate(quiz.dueDate)}</span>
+                                                                    </div>
+                                                                    {
+                                                                        quiz.link == "undefined" ? null :
+                                                                        <div className='d-flex text-dark my-3'>
+                                                                            <strong className='me-2'>Link:</strong>
+                                                                            <a target='_blank' href={quiz.link}>
+                                                                                {quiz.link}
+                                                                            </a>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                                {
+                                                                    quiz.content.split('/')[quiz.content.split('/').length-1].split('.')[1]=='pdf' ?
+                                                                    <a target='_blank' href={quiz.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='me-2'/>
+                                                                        {quiz.content.split('/')[quiz.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    quiz.content.split('/')[quiz.content.split('/').length-1].split('.')[1]=='docx' ?
+                                                                    <a target='_blank' href={quiz.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='me-2'/>
+                                                                        {quiz.content.split('/')[quiz.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    quiz.content.split('/')[quiz.content.split('/').length-1].split('.')[1]=='pptx' ?
+                                                                    <a target='_blank' href={quiz.content} className='btn btn-outline-info'>
+                                                                        <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='me-2'/>
+                                                                        {quiz.content.split('/')[quiz.content.split('/').length-1]}
+                                                                    </a>
+                                                                    :
+                                                                    <></>
+                                                                }
+                                                                <hr />
+                                                                <div className='d-flex justify-content-between align-items-center'>
+                                                                    {
+                                                                        
+                                                                        quiz.answer ?
+                                                                        <>
+                                                                            <hr />
+                                                                            <h4 className='mb-0 lead'>Submitted by student at <strong>{formatDate(quiz.uploadDate)}</strong></h4>
+                                                                        </>
+                                                                        :
+                                                                        <></>
+                                                                    }
+                                                                    <div className='d-flex justify-content-between'>
+                                                                    {
+                                                                        quiz.answer ?
+                                                                        <>
+                                                                        {
+                                                                            quiz.answer.split('/')[quiz.answer.split('/').length-1].split('.')[1]=='pdf' ?
+                                                                            <a target='_blank' href={quiz.answer} className='btn btn-outline-info'>
+                                                                                <img src="https://img.icons8.com/color/48/000000/pdf-2.png" width='30px' height='30px' className='me-2'/>
+                                                                                {quiz.answer.split('/')[quiz.answer.split('/').length-1]}
+                                                                            </a>
+                                                                            :
+                                                                            quiz.answer.split('/')[quiz.answer.split('/').length-1].split('.')[1]=='docx' ?
+                                                                            <a target='_blank' href={quiz.answer} className='btn btn-outline-info'>
+                                                                                <img src="https://img.icons8.com/color/48/000000/ms-word.png" width='30px' height='30px' className='me-2'/>
+                                                                                {quiz.answer.split('/')[quiz.answer.split('/').length-1]}
+                                                                            </a>
+                                                                            :
+                                                                            quiz.answer.split('/')[quiz.answer.split('/').length-1].split('.')[1]=='pptx' ?
+                                                                            <a target='_blank' href={quiz.answer} className='btn btn-outline-info'>
+                                                                                <img src="https://img.icons8.com/color/48/000000/ms-powerpoint.png" width='30px' height='30px' className='me-2'/>
+                                                                                {quiz.answer.split('/')[quiz.answer.split('/').length-1]}
+                                                                            </a>
+                                                                            :
+                                                                            <></>
+                                                                        }
+                                                                        </>
+                                                                        :
+                                                                        <></>
+                                                                    }
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))
