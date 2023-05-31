@@ -392,7 +392,6 @@ function Class() {
                                     <div className='p-3'>
                                         <div className='d-flex justify-content-between align-items-center'>
                                             <h3 className='text-center mb-0'>Announcements</h3>
-                                            <button className='btn btn-success mx-3' data-toggle='modal' data-target='#addAnnouncementModal'>Add Announcement</button>
                                         </div>
                                         <hr className='' />
                                         {

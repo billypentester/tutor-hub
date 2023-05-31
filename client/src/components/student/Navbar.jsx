@@ -1,7 +1,13 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 
 function Navbar({student}) {
+
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  function handleTabClick(tab) {
+    setActiveTab(tab);
+  }
 
   function logout() {
     localStorage.removeItem('student')
@@ -13,34 +19,30 @@ function Navbar({student}) {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link className="navbar-brand" href="#">Tutor Hub</Link>
-        {/* <form className="d-flex">
-          <input className="form-control me-sm-2" type="search" placeholder="Search"/>
-          <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form> */}
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarColor01">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link active" to="/student/dashboard">Dashboard
+              <Link className={`nav-link ${activeTab === 'dashboard' ? 'active' : ''}`} to="/student/dashboard" onClick={() => handleTabClick('dashboard')}>Dashboard
                 <span className="visually-hidden">(current)</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/finder">Finder</Link>
+              <Link className={`nav-link ${activeTab === 'finder' ? 'active' : ''}`} to="/student/dashboard/finder" onClick={() => handleTabClick('finder')}>Teachers</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/classrooms">Classrooms</Link>
+              <Link className={`nav-link ${activeTab === 'classrooms' ? 'active' : ''}`} to="/student/dashboard/classrooms" onClick={() => handleTabClick('classrooms')}>Classrooms</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/messages">Messages</Link>
+              <Link className={`nav-link ${activeTab === 'messages' ? 'active' : ''}`} to="/student/dashboard/messages" onClick={() => handleTabClick('messages')}>Messages</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/student/dashboard/appointments">Appointments</Link>
+              <Link className={`nav-link ${activeTab === 'appointments' ? 'active' : ''}`} to="/student/dashboard/appointments" onClick={() => handleTabClick('appointments')}>Appointments</Link>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <a className={`nav-link dropdown-toggle ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => handleTabClick('profile')} href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span className="mx-2 text-light h-4">Profile</span>
                 {
                   student.profile &&

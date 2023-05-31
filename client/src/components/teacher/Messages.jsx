@@ -32,7 +32,7 @@ function Messages() {
       sender: username,
       text: text.text
     }
-    setPerson([...person, message])
+    setPerson(prevPerson => ({...prevPerson, messages: [...prevPerson.messages, message]}));
     socket.emit("newMessage", message)
     setText({ text: '' });
   };
@@ -60,7 +60,12 @@ function Messages() {
         });
         return updatedConversation;
       });
-      setPerson(data.messages)
+      setPerson((prevPerson) => {
+        if (prevPerson._id === data._id) {
+          return data;
+        }
+        return prevPerson;
+      });
     });
 
     return () => {
@@ -75,8 +80,8 @@ function Messages() {
         conversation && conversation.length === 0 ?
         <Empty image='https://img.icons8.com/ios/100/000000/nothing-found.png' title='No Chats' subtitle={`You don't have any chats`} />
         :
-        <section className="my-4 text-center">
-          <div className="d-flex" style={{height: '85vh'}}>
+        <section className="text-center">
+          <div className="d-flex align-items-center justify-content-center" style={{height: '91vh'}}>
 
             <div className="col-3 bg-light rounded-start">
               <h3 className="text-center p-3 border-bottom border-1 mb-0 border-dark">Chats</h3>
@@ -91,7 +96,7 @@ function Messages() {
                     if(msg) {
                       return(
                         <div key={index} className="p-3 btn border-bottom" onClick={() => {
-                          setPerson(msg.messages)
+                          setPerson(msg)
                           msg.participants[0].username === username ? setParticipants(msg.participants[1]) : setParticipants(msg.participants[0])
                         }
                         }>
@@ -132,7 +137,7 @@ function Messages() {
                   
                   <div className="d-flex flex-column overflow-auto p-3">
                     {
-                      person.map((msg, index) => {
+                      person.messages.map((msg, index) => {
                         return(
                           <div key={index} className="d-flex flex-column">
                             {
@@ -156,8 +161,10 @@ function Messages() {
                   </div>
 
                   <div className="d-flex justify-content-between align-items-center" style={{height: '10vh'}}>
-                    <textarea className="form-control m-3" id="message" rows="1" placeholder="Message" required="required" data-validation-required-message="Please enter a message." name="text" value={text.text} onChange={(e) => setText({text: e.target.value})}></textarea>
-                    <button className="btn btn-primary btn-xl m-3" id="sendMessageButton" type="submit" onClick={sendMessage}>Send</button>
+                    <textarea className="form-control m-3" id="message" rows="1" placeholder="Message" required="required" data-validation-required-message="Please enter a message." name="text" value={text.text} onChange={(e) => setText({text: e.target.value})} style={{'resize':'none'}}></textarea>
+                    <button className="btn btn-primary btn-xl m-3" id="sendMessageButton" type="submit" onClick={sendMessage}>
+                      <i className="fas fa-paper-plane"></i>
+                    </button>
                   </div>
 
                 </div>

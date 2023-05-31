@@ -116,7 +116,7 @@ function Statistics() {
                   </div>
                 </div>
                 <div className='mt-4 col-12 text-center'>
-                  <Link to="/" className='btn btn-outline-primary'>Add more information to your profile</Link>
+                  <Link to="/student/dashboard/edit-profile" className='btn btn-outline-primary'>Add more information to your profile</Link>
                 </div>
             </div>  
           </div>
@@ -155,6 +155,7 @@ function Statistics() {
 
       <section className='mb-4'>
         <h3 className='mb-3'>Educational News</h3>
+        <hr />
         <div className='row'>
           
           {

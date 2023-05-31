@@ -9,6 +9,7 @@ function Messages() {
     const [loading, setLoading] = useState(false)
     const [alert, setAlert] = useState({type: '', message: ''})
     const [person, setPerson] = useState('')
+    const [reply, setReply] = useState('')
 
     const fetchcontacts = async () => {
         setLoading(true)
@@ -21,14 +22,30 @@ function Messages() {
         try{
             setLoading(true)
             const res = await axios.post('/api/admin/message/send', person)
+            if(res.status === 200)
+            {
+                console.log(res.data)
+                setcontacts((contacts) => contacts.map((contact) => {
+                    if(contact._id === res.data._id) {
+                        contact = res.data
+                    }
+                    return contact
+                }))
+                setLoading(false)
+                setAlert({type: 'success', message: 'Email sent successfully'})
+                setTimeout(function() {
+                    setAlert({type: '', message: ''})
+                }
+                , 5000);
+            }
+        }
+        catch(err) {
             setLoading(false)
-            setAlert({type: 'success', message: 'Email sent successfully'})
+            setAlert({type: 'danger', message: 'Something went wrong'})
             setTimeout(function() {
                 setAlert({type: '', message: ''})
             }
             , 5000);
-        }
-        catch(err) {
             console.log(err)
         }
     }
@@ -84,7 +101,12 @@ function Messages() {
                             <td>{contact.email}</td>
                             <td>{contact.message}</td>
                             <td>
-                                <button type="button" class="mx-2 btn btn-info" data-toggle="modal" data-target="#sendEmail" onClick={() => setPerson(contact)}>Send Email</button>
+                                {
+                                    contact.status == 'Replied' ?
+                                    <button type="button" class="mx-2 btn btn-success" data-toggle="modal" data-target="#viewReply" onClick={() => setReply(contact.reply)}>View Reply</button>
+                                    :
+                                    <button type="button" class="mx-2 btn btn-info" data-toggle="modal" data-target="#sendEmail" onClick={() => setPerson(contact)}>Send Email</button>
+                                }
                             </td>
                         </tr>
                     ))
@@ -114,7 +136,7 @@ function Messages() {
                                 <div className='row'>
                                     <div class="form-group">
                                         <label for="message" class="form-label">Message</label>
-                                        <input type="text" class="form-control" id="message" placeholder="Message here" name='message' value={person.message} onChange={handleChanges}/>
+                                        <input disabled type="text" class="form-control" id="message" placeholder="Message here" name='message' value={person.message} onChange={handleChanges}/>
                                     </div>
                                 </div>
                                 <div className='row'>
@@ -131,6 +153,32 @@ function Messages() {
                                 </div>
                                 <div className='d-flex justify-content-center'>
                                     <button type="button" class="btn btn-primary mt-4 w-75" data-dismiss="modal" onClick={sendEmail}>Send Email</button> 
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="modal fade" id="viewReply" tabindex="-1" aria-labelledby="viewReplyLabel" aria-hidden="true">
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Reply</h5>
+                        <button type="button" className="btn-close" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#viewReply">
+                        <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <form>
+                            <div className="row justify-content-center">
+                                <div className='row'>
+                                    {/* <h5 className="modal-title">Reply</h5> */}
+                                    <p className="lead">{reply}</p>
+                                </div>
+                                <div className='d-flex justify-content-end'>
+                                    <button type="button" class="btn btn-info mt-4 w-25" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </form>

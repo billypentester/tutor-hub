@@ -32,10 +32,7 @@ function AdminLogin() {
         catch (err) {
             setLoading(false)
             setAlert({type: 'danger', message: err.response.data.message})
-            setTimeout(function() {
-                setAlert({type: '', message: ''})
-            }
-            , 5000);
+            setTimeout(()=> {setAlert({type: '', message: ''})}, 5000);
         }
     }
 
@@ -47,44 +44,45 @@ function AdminLogin() {
                 loading && <Loader />
             }
 
-            <div className="col-3 loginBackground"></div>
+            <div className="col-3 loginBackgroundAdmin"></div>
 
             <div className="container">
-                <div className="row align-items-center justify-content-center">
+                <div className="row align-items-center justify-content-center" style={{height: '100vh'}}>
                     <div className="col-md-7 py-5">
                     <h3 className="display-5">Login</h3>
                     <p className="mb-4">Welcome Admin! Please log in to access your account.</p>
 
-                    <form>
+                        <form>
 
-                        <div className="row">
-                        <div className="form-group">
-                            <label for="exampleInputEmail" className="form-label mt-4">Email address</label>
-                            <input type="email" className="form-control" id="exampleInputEmail" aria-describedby="email" placeholder="Enter email" name="email" value={admin.email} onChange={handleChangeInput}/>
-                        </div>
-                        </div>
-
-                        <div className="row">
-                        <div className="form-group">
-                            <label for="exampleInputPassword" className="form-label mt-4">Password</label>
-                            <input type="password" className="form-control" id="exampleInputPassword" placeholder="Password" name="password" value={admin.password} onChange={handleChangeInput}/>
-                        </div>
-                        </div>
-                        
-                        <div className="d-flex mb-5 mt-4 align-items-center">
-                        <div className="d-flex align-items-center">
-                            <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                            <label className="form-check-label" for="flexCheckDefault">
-                                Keep me logged in
-                            </label>
+                            <div className="row">
+                            <div className="form-group">
+                                <label for="exampleInputEmail" className="form-label mt-4">Email address</label>
+                                <input type="email" className="form-control" id="exampleInputEmail" aria-describedby="email" placeholder="Enter email" name="email" value={admin.email} onChange={handleChangeInput}/>
                             </div>
-                        </div>
-                        </div>
+                            </div>
 
-                        <button className="btn px-5 btn-primary" onClick={handleSubmit}>Login</button>
+                            <div className="row">
+                            <div className="form-group">
+                                <label for="exampleInputPassword" className="form-label mt-4">Password</label>
+                                <input type="password" className="form-control" id="exampleInputPassword" placeholder="Password" name="password" value={admin.password} onChange={handleChangeInput}/>
+                            </div>
+                            </div>
+                            
+                            <div className="d-flex mb-5 mt-4 align-items-center">
+                            <div className="d-flex align-items-center">
+                                <div className="form-check">
+                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                                <label className="form-check-label" for="flexCheckDefault">
+                                    Keep me logged in
+                                </label>
+                                </div>
+                            </div>
+                            </div>
 
-                    </form>
+                            <button className="btn px-5 btn-primary" onClick={handleSubmit}>Login</button>
+
+                        </form>
+
                     </div>
                 </div>
             </div>

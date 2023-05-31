@@ -40,39 +40,40 @@ function Classrooms() {
         loading && <Loader />
       }
       {
-        !loading && classrooms.length === 0 && <Empty />
+        !loading && classrooms.length === 0 && <Empty image="https://img.icons8.com/ios/100/classroom.png" title="No Classrooms" subtitle="You are not enrolled in any classrooms yet." />
       }
-      
-      <div className='my-4'>
-        <div className='row flex-row flex-wrap'>
-        {
-          !loading && classrooms.length > 0 && 
-          classrooms.map(classroom => (
-            <Link className='col-4 m-2 bg-light border-secondary shadow-lg rounded-3 p-0 text-dark' style={{textDecoration: 'none'}} to={`/student/dashboard/class/${classroom._id}`} key={classroom._id}>
-              <div className='d-flex justify-content-between align-items-center p-3 bg-info text-white rounded-top'>
-                <div className='d-flex flex-column'>
-                  <h3 className='text-white mb-1'>{classroom.name}</h3>
-                  <p className='lead mb-0'>{classroom.teacher.name}</p>
+      {
+        !loading && classrooms.length > 0 &&
+        <div className='p-4'>
+          <div className='row flex-row flex-wrap'>
+          {
+            !loading && classrooms.length > 0 && 
+            classrooms.map(classroom => (
+              <Link className='col-4 m-2 bg-light border-secondary shadow-lg rounded-3 p-0 text-dark' style={{textDecoration: 'none'}} to={`/student/dashboard/class/${classroom._id}`} key={classroom._id}>
+                <div className='d-flex justify-content-between align-items-center p-3 bg-info text-white rounded-top'>
+                  <div className='d-flex flex-column'>
+                    <h3 className='text-white mb-1'>{classroom.name}</h3>
+                    <p className='lead mb-0'>{classroom.teacher.name}</p>
+                  </div>
+                  <img src={classroom.teacher.profile} alt="classroom" className="rounded-circle" width="80" height="80" />
                 </div>
-                <img src={classroom.teacher.profile} alt="classroom" className="rounded-circle" width="80" height="80" />
-              </div>
-              <div className='d-flex flex-wrap p-3'>
-                {
-                  classroom.subjects.map(subject => (
-                    <span key={subject.name} className="px-3 py-1 bg-info rounded-pill text-white m-2">{subject.name}</span>
-                  ))
-                }
-              </div>
-              <hr className='mx-4 my-0'/>
-              <div className='d-flex flex-column p-4'>
-                <span className="subject">Class Timing : <strong>{formatTime(classroom.schedule.startTime)} - {formatTime(classroom.schedule.endTime)}</strong></span>
-              </div>
-            </Link>
-          ))
-        }
+                <div className='d-flex flex-wrap p-3'>
+                  {
+                    classroom.subjects.map(subject => (
+                      <span key={subject.name} className="px-3 py-1 bg-info rounded-pill text-white m-2">{subject.name}</span>
+                    ))
+                  }
+                </div>
+                <hr className='mx-4 my-0'/>
+                <div className='d-flex flex-column p-4'>
+                  <span className="subject">Class Timing : <strong>{formatTime(classroom.schedule.startTime)} - {formatTime(classroom.schedule.endTime)}</strong></span>
+                </div>
+              </Link>
+            ))
+          }
+          </div>
         </div>
-      </div>
-     
+      }
     </>
   )
 }

@@ -214,6 +214,14 @@ CSS.g-6,
   height: 100vh;
 }
 
+.loginBackgroundAdmin {
+  background-image: url("./../images/admin.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+}
+
 
 .legendLine {
   position: relative;

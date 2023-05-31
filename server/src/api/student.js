@@ -91,7 +91,7 @@ const saveData = async(req, res, next) => {
 router.get('/student/payment/', payment)
 
 router.get('/payment/success/', saveData, (req, res) => {
-    res.redirect('http://localhost:3000/student/dashboard/classroom')
+    res.redirect('http://localhost:3000/student/dashboard/classrooms')
 })
 
 router.get('/payment/cancel', (req, res) => {

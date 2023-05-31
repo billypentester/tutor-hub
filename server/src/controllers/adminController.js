@@ -69,8 +69,8 @@ const sendEmail = async(req, res) => {
     const {email, subject, message, reply} = req.body;
     try{
         await sendMail({ from: process.env.email, to: email, subject: subject, text: `Message: ${message} \n\n Reply: ${reply}`}) 
-        const update = await Contact.findOneAndUpdate({email: email}, {status: 'Replied', reply: reply});
-        res.status(200).json({msg: 'Email sent successfully'});
+        const update = await Contact.findOneAndUpdate({email: email}, {status: 'Replied', reply: reply}, {new: true});
+        res.status(200).json(update);
     }
     catch(err){
         res.status(400).json(err.message);
