@@ -45,11 +45,12 @@ function Classrooms() {
       {
         !loading && classrooms.length > 0 &&
         <div className='p-4'>
-          <div className='row flex-row flex-wrap'>
+        <div className='row'>
           {
             !loading && classrooms.length > 0 && 
             classrooms.map(classroom => (
-              <Link className='col-4 m-2 bg-light border-secondary shadow-lg rounded-3 p-0 text-dark' style={{textDecoration: 'none'}} to={`/student/dashboard/class/${classroom._id}`} key={classroom._id}>
+            <Link className='col-4' style={{textDecoration: 'none'}} to={`/student/dashboard/class/${classroom._id}`} key={classroom._id}>
+              <div className='m-1 bg-light border-secondary shadow-lg rounded-3 p-0 text-dark'>
                 <div className='d-flex justify-content-between align-items-center p-3 bg-info text-white rounded-top'>
                   <div className='d-flex flex-column'>
                     <h3 className='text-white mb-1'>{classroom.name}</h3>
@@ -68,6 +69,7 @@ function Classrooms() {
                 <div className='d-flex flex-column p-4'>
                   <span className="subject">Class Timing : <strong>{formatTime(classroom.schedule.startTime)} - {formatTime(classroom.schedule.endTime)}</strong></span>
                 </div>
+              </div>
               </Link>
             ))
           }

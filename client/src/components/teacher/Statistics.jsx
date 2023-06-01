@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
-import axios from 'axios'
 import data from './data.json'
 
-function Statistics() {
+function Statistics({teacher}) {
 
   const [news, setNews] = useState(data)
-  const [teacher, setTeacher] = useState('')
 
   const profileFields = [
     { field: 'name', weight: 10 },
@@ -78,19 +76,13 @@ function Statistics() {
     return completionPercentage.toFixed(2);
   };
 
-  useEffect(() => {
-    const teacher = JSON.parse(localStorage.getItem('teacher'))
-    setTeacher(teacher)
-  }, [])
-
 
   return (
-    <div className='my-5'>
-
+    <>
       {
+        teacher &&
+        <div className='my-5'>
 
-        teacher &&   
-        <>
           <section className='mb-4'>
             <div className='d-flex justify-content-between align-items-center bg-light  rounded shadow-lg'>
               <div className='col-6 p-4'>
@@ -103,6 +95,7 @@ function Statistics() {
               </div>
             </div>
           </section>
+
           <section className='mb-5'>
             <div className='row flex-row justify-content-between align-items-stretch'>
 
@@ -119,7 +112,7 @@ function Statistics() {
                       </div>
                     </div>
                     <div className='mt-4 col-12 text-center'>
-                      <Link to="/" className='btn btn-outline-primary'>Add more information to your profile</Link>
+                      <Link to="/teacher/dashboard/edit-profile" className='btn btn-outline-primary'>Add more information to your profile</Link>
                     </div>
                 </div>  
               </div>
@@ -155,16 +148,13 @@ function Statistics() {
 
             </div>
           </section>
-        </>
-
-      }
 
       <section className='mb-4'>
         <h3 className='mb-3'>Educational News</h3>
+            <hr />
         <div className='row'>
-          
           {
-            news.map((item, index) => {
+              news && news.map((item, index) => {
               return (
                 <div className='col-3 mb-3' key={index}>
                   <div className='card'>
@@ -189,6 +179,8 @@ function Statistics() {
       </section>
 
     </div>
+      }
+    </>
   )
 }
 

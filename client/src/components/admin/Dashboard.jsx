@@ -12,8 +12,17 @@ import Appointments from './Appointments'
 
 function AdminDashoard() {
 
-  const [student, setStudent] = useState('')
+  const [admin, setAdmin] = useState('')
   const navigate = useNavigate()
+
+  async function getAdmin() {
+    const token = localStorage.getItem('admin')
+    if(!token) return navigate('/admin/login')
+  }
+
+  useEffect(() => {
+    getAdmin()
+  }, [])
 
   return (
     <>

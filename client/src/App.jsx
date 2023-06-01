@@ -1,5 +1,5 @@
-import React from 'react'
-import { Routes, Route } from "react-router-dom"
+import React, {useEffect} from 'react'
+import { Routes, Route, useNavigate } from "react-router-dom"
 
 import Home from './components/main/Home'
 import Login from './components/main/Login'
@@ -13,6 +13,26 @@ import AdminDashboard from './components/admin/Dashboard'
 
 
 function App() {
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      if (localStorage.getItem('student')) {
+        navigate('/student/dashboard')
+      }
+      else if (localStorage.getItem('teacher')) {
+        navigate('/teacher/dashboard')
+      }
+      else if (localStorage.getItem('admin')) {
+        console.log('admin')
+      }
+      else{
+        console.log()
+      }
+    }
+  }, [])
+  
 
   return (
     <div className="App">

@@ -30,7 +30,6 @@ function StudentDashoard() {
 
       try{
         if(localStorage.getItem('token')) {
-          console.log(localStorage.getItem('token'))
           const res = await axios.post('/api/student/details', {token: localStorage.getItem('token')})
           setStudent(res.data)
           localStorage.setItem('student', JSON.stringify(res.data))
