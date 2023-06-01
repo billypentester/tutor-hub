@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
+import {useNavigate} from 'react-router-dom'
 import Loader from './../utils/Loader'
+import Alert from './../utils/Alert'
 import { compose, withProps } from "recompose";
 import {withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 
@@ -29,6 +31,9 @@ function EditProfile() {
   const [availability, setAvailability] = useState('');
   const [map, setMap] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [alert, setAlert] = useState({type : '', message : ''});
+
+  const navigate = useNavigate()
 
   const submitProfile = async() => {
     setLoading(true)
@@ -60,10 +65,13 @@ function EditProfile() {
       localStorage.removeItem('experience')
       localStorage.removeItem('availability')
       localStorage.setItem('teacher', JSON.stringify(result.data))
-      alert('Profile Updated')
+      setAlert({type : 'success', message : 'Profile updated successfully'})
+      setTimeout(() => { 
+        setAlert({type : '', message : ''}) 
+        navigate('/teacher/dashboard/view-profile')
+       }, 3000)
     }
     setLoading(false)
-    console.log(result)
   }
 
   const handleChangeInput = (e) => {
@@ -145,51 +153,52 @@ function EditProfile() {
   }
 
   const saveInfo = (e) => {
-    setLoading(true)
     e.preventDefault()
+    setLoading(true)
     localStorage.setItem('info', JSON.stringify(teacher))
-    alert('Saved')
+    setAlert({type : 'success', message : 'Basic Info Saved'})
     setActiveIndex(activeIndex + 1)
+    setTimeout(() => {  setAlert({type : '', message : ''}) }, 2000)
     setLoading(false)
   }
 
+  const goback = () => {
+    setActiveIndex(activeIndex - 1)
+  }
+
   const saveEducation = (e) => {
-    setLoading(true)
     e.preventDefault()
+    setLoading(true)
     localStorage.setItem('education', JSON.stringify(education))
-    alert('Saved')
+    setAlert({type : 'success', message : 'Education Saved'})
     setActiveIndex(activeIndex + 1)
+    setTimeout(() => {  setAlert({type : '', message : ''}) }, 2000)
     setLoading(false)
   }
 
   const saveExperience = (e) => {
-    setLoading(true)
     e.preventDefault()
+    setLoading(true)
     localStorage.setItem('experience', JSON.stringify(experience))
-    alert('Saved')
+    setAlert({type : 'success', message : 'Experience Saved'})
     setActiveIndex(activeIndex + 1)
+    setTimeout(() => {  setAlert({type : '', message : ''}) }, 2000)
     setLoading(false)
   }
 
 
   const getLocation = () => {
-    // if(availability.address)
-    // {
-      setLoading(true)
-      // const res = axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${availability.location}&key=AIzaSyDHEjdq0-VWiBRx2ih2TNuAc-ImURiUdkU`);
-      // const {lat, lng} = res.data.results[0].geometry.location;
-      console.log(availability.address)
-      if(window.navigator.geolocation)
-      {
-        window.navigator.geolocation.getCurrentPosition((position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          setAvailability({...availability, ['location']: [lat, lng] })
-          setMap(true)
-          setLoading(false)
-        })
-      }
-    // }
+    setLoading(true)
+    if(window.navigator.geolocation)
+    {
+      window.navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setAvailability({...availability, ['location']: [lat, lng] })
+        setMap(true)
+        setLoading(false)
+      })
+    }
   }
 
 
@@ -203,7 +212,7 @@ function EditProfile() {
     <>
 
     {
-      loading && <Loader loading={loading} />
+      loading && <Loader />
     }
 
     <div className="my-4">
@@ -222,7 +231,7 @@ function EditProfile() {
 
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <button class="accordion-button" type="button">
                 Basic Information
               </button>
             </h2>
@@ -332,7 +341,7 @@ function EditProfile() {
 
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingTwo">
-              <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              <button class="accordion-button collapsed" type="button">
                 Educational Background
               </button>
             </h2>
@@ -408,12 +417,12 @@ function EditProfile() {
                       </div>
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div class="form-group">
                         <label for="formFile" class="form-label mt-4">Upload transcript (Marks sheet)</label>
                         <input class="form-control" type="file" id="formFile"/>
                       </div> 
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="d-flex my-4 align-items-center">
@@ -427,7 +436,8 @@ function EditProfile() {
                     </div>
                   </div>
 
-                  <div className='text-end my-4'>
+                  <div className='d-flex justify-content-between my-4'>
+                    <button className="btn px-5 btn-primary" onClick={goback}>Move Back</button>
                     <button className="btn px-5 btn-primary" onClick={saveEducation}>Save and Next</button>
                   </div>
 
@@ -441,7 +451,7 @@ function EditProfile() {
 
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingThree">
-              <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              <button class="accordion-button collapsed" type="button">
                 Experience
               </button>
             </h2>
@@ -534,7 +544,8 @@ function EditProfile() {
                       </div>    
                     </div>
 
-                    <div className='text-end my-4'>
+                    <div className='d-flex justify-content-between my-4'>
+                      <button className="btn px-5 btn-primary" onClick={goback}>Move Back</button>
                       <button className="btn px-5 btn-primary" onClick={saveExperience}>Save and Next</button>
                     </div>
 
@@ -548,7 +559,7 @@ function EditProfile() {
 
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingFour">
-              <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              <button class="accordion-button collapsed" type="button">
                 Availibility
               </button>
             </h2>
@@ -664,9 +675,13 @@ function EditProfile() {
                       </div>
                     </div>
                   }
+                  
+                  <div className='text-start my-4'>
+                    <button className="btn px-5 btn-primary" onClick={goback}>Move Back</button>
+                  </div>
 
-                  <div className='text-center mt-5 p-2'>
-                    <button className="btn btn-primary" onClick={submitProfile}>Submit</button>
+                  <div className='text-center mt-5'>
+                    <button className="btn btn-lg btn-success" onClick={submitProfile}>Submit</button>
                   </div>
 
                 </div>
@@ -679,6 +694,10 @@ function EditProfile() {
       </div>
           
     </div>
+
+    {
+      alert.message ? <Alert type={alert.type} message={alert.message} /> : ''
+    }
 
     </>
 

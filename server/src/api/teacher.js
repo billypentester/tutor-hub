@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes, classroomAssignments, classroomQuizzes} = require('../controllers/teacherController')
+const {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes, classroomAssignments, classroomQuizzes, deleteTeacher} = require('../controllers/teacherController')
 const {Register, Login} = require('../middleware/basic')
 const auth = require('../middleware/auth')
 
@@ -23,6 +23,7 @@ router.post('/teacher/signup', Register, signUp)
 router.post('/teacher/login', Login, login)
 router.post('/teacher/details', auth, userPanel)
 router.get('/teacher/verify/:token', emailVerification)
+router.post('/teacher/delete', auth, deleteTeacher)
 
 router.get('/teacher/search', searchTeacher);
 

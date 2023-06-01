@@ -99,11 +99,17 @@ const updateProfile = async(req, res) => {
 
 }
 
-const deleteProfile =  async(req, res) => {
+const deleteTeacher = async(req, res) => {
     try{
         const {email} = req.body;
-        const { id } = req.user;
-        const deletion =  await Teacher.findByIdAndDelete(id)  
+        console.log(email)
+        if(req.user.email == email){
+            await Teacher.findOneAndDelete({email: email})
+            res.json({msg: 'Teacher deleted successfully'})
+        }
+        else{
+            res.status(400).json({msg: 'You are not authorized to delete the account'})
+        }
     }
     catch(err){
         res.status(400).json(err.message);
@@ -343,5 +349,5 @@ const classroomNotes = async(req, res) => {
 
 
 
-module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteProfile, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes, classroomAssignments, classroomQuizzes}
+module.exports = {signUp, login, userPanel, emailVerification, updateProfile, getAllTeachers, deleteTeacher, getTeacherCount, getProfile, searchTeacher, getAppointments, cancelAppointment, acceptAppointment, modifyAppointment, getClassrooms, classroomAnnouncement, classroomNotes, classroomAssignments, classroomQuizzes}
 

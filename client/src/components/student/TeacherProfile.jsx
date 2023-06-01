@@ -44,6 +44,9 @@ function TeacherProfile() {
             text: text.text
         }
         socket.emit("newMessage", message);
+        setText('')
+        setAlert({type: 'success', message: 'Message Sent'})
+        setTimeout(() => setAlert({type: '', message: ''}), 5000);
     };
 
     const handlePayment = (e) => {

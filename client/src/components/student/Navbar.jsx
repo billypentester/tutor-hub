@@ -30,7 +30,7 @@ function Navbar({student}) {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${activeTab === 'finder' ? 'active' : ''}`} to="/student/dashboard/finder" onClick={() => handleTabClick('finder')}>Teachers</Link>
+              <Link className={`nav-link ${activeTab === 'finder' ? 'active' : ''}`} to="/student/dashboard/finder" onClick={() => handleTabClick('finder')}>Finder</Link>
             </li>
             <li className="nav-item">
               <Link className={`nav-link ${activeTab === 'classrooms' ? 'active' : ''}`} to="/student/dashboard/classrooms" onClick={() => handleTabClick('classrooms')}>Classrooms</Link>

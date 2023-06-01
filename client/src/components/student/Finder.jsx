@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import Loader from './../utils/Loader'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { compose, withProps } from "recompose";
-import {withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps";
+import {withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow, Polyline } from "react-google-maps";
 
 const getDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371; // Radius of the earth in kilometers
@@ -20,7 +20,7 @@ const MyMapComponent = compose(
   withProps({
     googleMapURL:"https://maps.googleapis.com/maps/api/js?&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: `480px` }} />,
     mapElement: <div style={{ height: `100%` }} />
   }),
   withScriptjs,
@@ -29,43 +29,110 @@ const MyMapComponent = compose(
 (({ searcherLocation, itemLocations }) => {
   
   const navigate = useNavigate();
+  const [isInfoWindowOpen, setInfoWindowOpen] = useState(false);
+  const [activeMarkerIndex, setActiveMarkerIndex] = useState(null);
 
   const handleMarkerClick = (username) => {
     navigate(`/student/dashboard/profile/${username}`);
   };
+
+  // const calculateZoomLevel = (markers) => {
+  //   const bounds = new window.google.maps.LatLngBounds();
+  //   markers.forEach((marker) => {
+  //     bounds.extend(new window.google.maps.LatLng(marker.lat, marker.lng));
+  //   });
+  //   const map = document.getElementById('map'); // Replace 'map' with the ID of your map element
+  //   const mapWidth = map.offsetWidth;
+  //   const mapHeight = map.offsetHeight;
+  //   const center = bounds.getCenter();
+  //   const ne = bounds.getNorthEast();
+  //   const sw = bounds.getSouthWest();
+  //   const scale = Math.pow(2, 14); // Adjust this value to control the zoom level
+  //   const projection = map.getProjection();
+  //   const centerPixel = projection.fromLatLngToPoint(center);
+  //   const nePixel = projection.fromLatLngToPoint(ne);
+  //   const swPixel = projection.fromLatLngToPoint(sw);
+  //   const zoomWidth = Math.floor(Math.log(mapWidth / Math.abs(nePixel.x - swPixel.x)) / Math.LN2);
+  //   const zoomHeight = Math.floor(Math.log(mapHeight / Math.abs(nePixel.y - swPixel.y)) / Math.LN2);
+  //   const zoom = Math.min(zoomWidth, zoomHeight, 20) - Math.log(scale) / Math.LN2;
+  //   return Math.round(zoom);
+  // };
+
+  // const zoom = calculateZoomLevel([...itemLocations, searcherLocation]);
   
   return(
-    <GoogleMap defaultZoom={12} defaultCenter={{ lat: searcherLocation.latitude, lng: searcherLocation.longitude }}>
-    <Marker position={{lat: searcherLocation.latitude, lng: searcherLocation.longitude}} />
-    {
-      itemLocations.map((itemLocation, index) => {
-        const distance = getDistance(searcherLocation.latitude, searcherLocation.longitude, itemLocation.location.lat, itemLocation.location.lng);
-        if (distance < 5){
-          return (
-            <Marker key={index} position={{lat: itemLocation.location.lat, lng: itemLocation.location.lng}} label={`${distance} km`} 
-              onClick={() => {
-                handleMarkerClick(itemLocation.username);
-              }}
-            >
-              <InfoWindow>
-                <div>
-                  <h6>{itemLocation.name}</h6>
-                  <p>{itemLocation.fee}</p>
-                  <p>{itemLocation.rating}</p> 
-                  <p>{itemLocation.username}</p>                 
-                </div>
-              </InfoWindow>
-            </Marker>
-          )
-        }
-
-        return null;
-
-      })
-    }
+    <GoogleMap defaultZoom={11} defaultCenter={{ lat: searcherLocation.latitude, lng: searcherLocation.longitude }}>
+      <Marker position={{lat: searcherLocation.latitude, lng: searcherLocation.longitude}} />
+      {
+        itemLocations
+          .map((itemLocation, index) => {
+            const distance = getDistance(
+              searcherLocation.latitude,
+              searcherLocation.longitude,
+              itemLocation.location.lat,
+              itemLocation.location.lng
+            );
+            return {
+              ...itemLocation,
+              distance
+            };
+          })
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 10)
+          .map((itemLocation, index) => {
+            return (
+              <Marker
+                key={index}
+                position={{ lat: itemLocation.location.lat, lng: itemLocation.location.lng }}
+                onClick={() => { handleMarkerClick(itemLocation.username); }}
+                icon={{
+                  url: 'https://img.icons8.com/color/48/visit.png',
+                  scaledSize: new window.google.maps.Size(50, 50),
+                }}
+                onMouseOver={
+                  ()=>{
+                    setActiveMarkerIndex(index);
+                    setInfoWindowOpen(true);
+                  }
+                }
+                onMouseOut={
+                  ()=>{
+                    setActiveMarkerIndex(null);
+                    setInfoWindowOpen(false);
+                  }
+                }
+              >
+                {
+                  isInfoWindowOpen && activeMarkerIndex === index &&
+                  <InfoWindow onCloseClick={() => setInfoWindowOpen(false)}>
+                    <div className="d-flex flex-column p-2">
+                      <div className="d-flex align-items-center">
+                        <img src={itemLocation.profile} className="rounded-circle p-2" alt="..." width="80" height="80" />
+                        <div>
+                          <h6 className='mb-1'>{itemLocation.name}</h6>
+                          <p className='mb-0'>{itemLocation.city}</p>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-center mt-2">
+                        <span className="badge bg-primary mx-1">
+                          <i className="fa-solid fa-star me-1"></i>
+                          {itemLocation.rating}
+                        </span>
+                        <span className="badge bg-primary mx-1">
+                          <i className="fa-solid fa-location-dot me-1"></i>
+                          {itemLocation.distance} km
+                        </span>
+                      </div>
+                    </div>
+                  </InfoWindow>
+                }
+              </Marker>
+            );
+          })
+      }
     </GoogleMap>
-
   )
+
 })
 
 function User({ name, profile, city, rating, expertise, username}) {
@@ -199,7 +266,10 @@ function Finder() {
     setFilteredUsers(filteredUsers);
   };
 
-  
+  const restoreResult = (e) => {
+    e.preventDefault();
+    setPosition(null);
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -281,7 +351,12 @@ function Finder() {
                       </div>
                     </div> 
                     <div className="col-3">
-                      <button type="submit" className="btn btn-primary w-100" onClick={getLocation}>Search by location</button>
+                      {
+                        position == null ?
+                        <button type="submit" className="btn btn-primary w-100" onClick={getLocation}>Search by location</button>
+                        :
+                        <button type="submit" className="btn btn-info w-100" onClick={restoreResult}>Clear location</button>
+                      }
                     </div>
                   </div>
                 </form>  
@@ -289,17 +364,18 @@ function Finder() {
             </div>
             <div className="card border-primary">
               <div className="card-body">
-                <h5 className="card-title">
-                  <span className="badge bg-light text-dark">{filteredUsers.length}</span>
-                  <span className="badge bg-primary text-light">Results</span>
-                </h5>
-                <div className='my-3'>
                   {
                     loading && <Loader />
                   }
                   {
                     !loading && position == null && 
-                    <UsersList users={filteredUsers} />
+                    <div className='my-3'>
+                      <h5 className="card-title my-3">
+                        <span className="badge bg-light text-dark">{filteredUsers.length}</span>
+                        <span className="badge bg-primary text-light">Results</span>
+                      </h5>
+                      <UsersList users={filteredUsers} />
+                    </div>
                   } 
                   {
                     !loading && position &&
@@ -312,8 +388,10 @@ function Finder() {
                           itemLocations={
                             filteredUsers.map((user) => {
                               return {
-                                name: user.username,
+                                name: user.name,
+                                profile: user.profile,
                                 username: user.username,
+                                city: user.city,
                                 location: {
                                   lat: user.location[0],
                                   lng: user.location[1],
@@ -328,7 +406,6 @@ function Finder() {
                       }
                     </div>
                   }
-                </div>
               </div>
             </div>
           </div>
