@@ -3,28 +3,42 @@ import './../../assets/css/home.css'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import Loader from '../utils/Loader'
+import Alert from '../utils/Alert'
+import Joi from 'joi';
 
 function Login() {
 
   const { role } = useParams()
+  const [alert, setAlert] = useState({'type': '', 'message': ''})
   const navigate = useNavigate()
 
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
-  })
+  const [user, setUser] = useState([])
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, seterror] = useState([])
 
   const authwithGoogle = async() => {
     const url = `http://localhost:5000/${role}/useGoogle`;
     window.location.href = url;
   }
 
+  const schema = Joi.object({
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'edu', 'pk'] } }).required().error(new Error('Email must be a valid email.')),
+    password: Joi.string().required().error(new Error('Password is required.')),
+  })
+
   const handleChangeInput = e => {
     const {name, value} = e.target
     setUser({...user, [name]:value})
+    const obj = {[name]:value}
+    const schema1 = Joi.object({[name]: schema.extract(name)})
+    const res = schema1.validate(obj)
+    if(res.error) {
+      seterror({...error, [name]: res.error.message})
+    }
+    else {
+      seterror({...error, [name]: null})
+    }
   }
 
   const handleSubmit = async e => {
@@ -43,7 +57,7 @@ function Login() {
     } 
     catch (err) {
       setLoading(false)
-      setError(err.response.data.message)
+      setAlert({'type': 'danger', 'message': err.response.data.message})
     }
   }
 
@@ -72,27 +86,21 @@ function Login() {
 
               <span className="text-muted text-center my-4 d-block legendLine">or</span>
 
-              {
-                error && 
-                <div className="postion-absolute w-100 alert alert-danger alert-dismissible m-0">
-                  <strong>Oh snap!</strong> {error}
-                  <button type="button" class="btn-close" data-dismiss="alert"></button>
-                </div>
-              }
-
               <form>
 
                 <div className="row">
                   <div className="form-group">
                     <label for="exampleInputEmail" className="form-label mt-4">Email address</label>
-                    <input type="email" className="form-control" id="exampleInputEmail" aria-describedby="email" placeholder="Enter email" name="email" value={user.email} onChange={handleChangeInput}/>
+                    <input type="email" className={error.email ? "form-control is-invalid" : "form-control" } id="exampleInputEmail" aria-describedby="email" placeholder="Enter email" name="email" value={user.email} onChange={handleChangeInput}/>
+                    { error.email && <div class="invalid-feedback">{error.email}</div> }
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="form-group">
                     <label for="exampleInputPassword" className="form-label mt-4">Password</label>
-                    <input type="password" className="form-control" id="exampleInputPassword" placeholder="Password" name="password" value={user.password} onChange={handleChangeInput}/>
+                    <input type="password" className={error.password ? "form-control is-invalid" : "form-control" } id="exampleInputPassword" placeholder="Password" name="password" value={user.password} onChange={handleChangeInput}/>
+                    { error.password && <div class="invalid-feedback">{error.password}</div> }
                   </div>
                 </div>
                 
@@ -107,7 +115,12 @@ function Login() {
                   </div>
                 </div>
 
-                <button className="btn px-5 btn-primary" onClick={handleSubmit}>Login</button>
+                {
+                  user.length != 2 && (error.email || error.password) ?
+                  <button type="submit" className="btn px-5 btn-primary" disabled>Fill the fields</button>
+                  :
+                  <button className="btn px-5 btn-primary" onClick={handleSubmit}>Login</button>
+                }
 
                 <span className="text-center d-block pt-4">
                   Don't have an account? <Link to={`/signup/${role}`} className="text-primary"> Signup</Link>
@@ -117,6 +130,10 @@ function Login() {
             </div>
           </div>
         </div>
+
+        {
+          alert.message && <Alert type={alert.type} message={alert.message} />
+        }
 
       </div>
     </div>

@@ -5,7 +5,9 @@ const url = require('url');
 
 const Register = async(req, res, next) => {
     const alreadyExist = req.body.role == 'student' ? await Student.findOne({email: req.body.email}) : await Teacher.findOne({email: req.body.email});
-    if(alreadyExist) return res.status(409).json({message: `User already exist`});
+    if(alreadyExist) {
+        if(alreadyExist.username == req.body.username) return res.status(409).json({message: 'Emai or Username already exist'});
+    }
     if(!req.body.name || !req.body.email || !req.body.password || !req.body.username) return res.status(400).json({message: 'Please fill all the fields'});
     next();
 }

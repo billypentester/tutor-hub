@@ -36,30 +36,6 @@ const MyMapComponent = compose(
     navigate(`/student/dashboard/profile/${username}`);
   };
 
-  // const calculateZoomLevel = (markers) => {
-  //   const bounds = new window.google.maps.LatLngBounds();
-  //   markers.forEach((marker) => {
-  //     bounds.extend(new window.google.maps.LatLng(marker.lat, marker.lng));
-  //   });
-  //   const map = document.getElementById('map'); // Replace 'map' with the ID of your map element
-  //   const mapWidth = map.offsetWidth;
-  //   const mapHeight = map.offsetHeight;
-  //   const center = bounds.getCenter();
-  //   const ne = bounds.getNorthEast();
-  //   const sw = bounds.getSouthWest();
-  //   const scale = Math.pow(2, 14); // Adjust this value to control the zoom level
-  //   const projection = map.getProjection();
-  //   const centerPixel = projection.fromLatLngToPoint(center);
-  //   const nePixel = projection.fromLatLngToPoint(ne);
-  //   const swPixel = projection.fromLatLngToPoint(sw);
-  //   const zoomWidth = Math.floor(Math.log(mapWidth / Math.abs(nePixel.x - swPixel.x)) / Math.LN2);
-  //   const zoomHeight = Math.floor(Math.log(mapHeight / Math.abs(nePixel.y - swPixel.y)) / Math.LN2);
-  //   const zoom = Math.min(zoomWidth, zoomHeight, 20) - Math.log(scale) / Math.LN2;
-  //   return Math.round(zoom);
-  // };
-
-  // const zoom = calculateZoomLevel([...itemLocations, searcherLocation]);
-  
   return(
     <GoogleMap defaultZoom={11} defaultCenter={{ lat: searcherLocation.latitude, lng: searcherLocation.longitude }}>
       <Marker position={{lat: searcherLocation.latitude, lng: searcherLocation.longitude}} />
