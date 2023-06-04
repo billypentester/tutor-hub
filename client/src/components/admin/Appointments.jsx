@@ -62,12 +62,13 @@ function Appointments() {
             <thead>
                 <tr class="table-dark text-center">
                     <th scope="col">#</th>
+                    <th scope="col">Date</th>
                     <th scope="col">Student</th>
                     <th scope="col">Date</th>
                     <th scope="col">Time</th>
                     <th scope="col">Duration</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Action</th>
+                    {/* <th scope="col">Action</th> */}
                 </tr>
             </thead>
             <tbody>  
@@ -78,6 +79,7 @@ function Appointments() {
                     (appointment.length > 0) ? appointment.map((appointment, index) => (
                         <tr key={appointment._id} class="table-secondary text-center">
                             <th scope="row">{index + 1}</th>
+                            <td>{formatDate(formatDate(appointment.createdAt))}</td>
                             <td>{appointment.student}</td>
                             <td>{formatDate(appointment.appointmentDate)}</td>
                             <td>{formatTime(appointment.appointmentTime)}</td>
@@ -89,10 +91,10 @@ function Appointments() {
                                 <span className="badge bg-danger">{appointment.status}</span>
                               }
                             </td>
-                            <td>
-                                {/* <button type="button" class="mx-2 btn btn-warning">Update</button> */}
+                            {/* <td>
+                                <button type="button" class="mx-2 btn btn-warning">Update</button>
                                 <button type="button" class="mx-2 btn btn-danger">Delete</button>
-                            </td>
+                            </td> */}
                         </tr>
                     ))
                     :

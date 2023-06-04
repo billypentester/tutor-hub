@@ -573,7 +573,7 @@ function EditProfile() {
                     <div className="col-md-4">
                       <div className="form-group">
                         <label for="hours" className="form-label mt-4">Available hours in day</label>
-                        <input type="text" className="form-control" id="hours" placeholder="No. of available hours" name="hours" value={availability.hours} onChange={handleChangeInputAvailability}/>
+                        <input type="text" className="form-control" id="hours" placeholder="No. of available hours" name="hour" value={availability.hour} onChange={handleChangeInputAvailability}/>
                       </div> 
                     </div>
 

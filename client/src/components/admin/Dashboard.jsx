@@ -16,7 +16,7 @@ function AdminDashoard() {
   const navigate = useNavigate()
 
   async function getAdmin() {
-    const token = localStorage.getItem('admin')
+    const token = localStorage.getItem('token')
     if(!token) return navigate('/admin/login')
   }
 
