@@ -101,7 +101,7 @@ function Messages() {
                         }
                         }>
                           <div className="d-flex justify-content-between align-items-center">
-                            <img src={msg.participants[1].profile} alt="profile" className="rounded-circle" style={{height: '50px', width: '50px'}} />
+                            <img src={msg.participants[0].username === username ? msg.participants[1].profile : msg.participants[0].profile} alt="profile" className="rounded-circle" style={{height: '50px', width: '50px'}} />
                             <div className="d-flex flex-column">
                               <h5 className='text-end'>
                               {

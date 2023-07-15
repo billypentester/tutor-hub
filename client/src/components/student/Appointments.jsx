@@ -150,7 +150,7 @@ function Appointments() {
                                     :
                                     <div className="d-flex">
                                         <p className="card-text me-2">{separateLinkAndText(appointment.notes)[1]}</p>
-                                        <a href="#" className="card-text">{separateLinkAndText(appointment.notes)[0]}</a>
+                                        <a href={separateLinkAndText(appointment.notes)[0]} className="card-text">{separateLinkAndText(appointment.notes)[0]}</a>
                                     </div>
                                 }
                             </div>
