@@ -11,6 +11,6 @@
     "start-server": "cd server && npm run dev && cd .."
   },
   "keywords": [],
-  "author": "",
+  "author": "Bilal Ahmad",
   "license": "ISC"
 }
