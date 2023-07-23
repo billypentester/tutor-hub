@@ -4,7 +4,6 @@ const Contact = require('../model/contactSchema');
 const contactUs = async(req, res) => {
     
     const {name, email, message} = req.body;
-    console.log(req.body);
     if(!name || !email || !message) return res.status(400).json({msg: 'Please enter all fields'})
 
     const newContact = new Contact({

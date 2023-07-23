@@ -15,7 +15,7 @@ import EditProfile from './EditProfile'
 import DeleteProfile from './DeleteProfile'
 import TeacherProfile from './TeacherProfile'
 
-
+import { io } from 'socket.io-client';
 
 function StudentDashoard() {
 
@@ -32,12 +32,17 @@ function StudentDashoard() {
         if(localStorage.getItem('token')) {
           const res = await axios.post('/api/student/details', {token: localStorage.getItem('token')})
           setStudent(res.data)
+          // const socket = io('');
+          // socket.emit('associateId', {username: res.data.username})
           localStorage.setItem('student', JSON.stringify(res.data))
         } 
         else
         {
           const res = await axios.post('/api/student/details', {token})
-          setStudent(res.data)          
+          setStudent(res.data)  
+          console.log(res.data) 
+          // const socket = io('');       
+          // socket.emit('associateId', {username: res.data.username})
           localStorage.setItem('student', JSON.stringify(res.data))
           localStorage.setItem('token', token)
         } 

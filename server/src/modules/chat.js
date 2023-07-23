@@ -4,14 +4,30 @@ const Chat = require('./../model/chatSchema');
 function setupSocket(server) {
 
   const io = socketIO(server);
+  var clients = [];
 
   io.on('connection', (socket) => {
     
-    console.log('A new user connected');
+    console.log('A new user connected: ', socket.id);
   
     socket.on('disconnect', () => {
-      console.log('A user disconnected');
+      clients = clients.filter(client => client.socketId !== socket.id);
+      console.log('A user disconnected: ', socket.id);
     });
+
+    socket.on('associateId', async(data) => {
+      const { username } = data;
+      const client = clients.find(client => client.username === username);
+      if (client) {
+        client.socketId = socket.id;
+      }
+      else
+      {
+        clients.push({ username: username, socketId: socket.id });
+      }
+      console.log(clients);
+    });
+
   
     socket.on('newMessage', async(data) => {
 
@@ -57,9 +73,20 @@ function setupSocket(server) {
         ]
       });
 
-      console.log(messages.messages[messages.messages.length - 1]);
+      // send message to only sender and receiver
 
-      io.emit('syncMessages', messages);
+      const senderClient = clients.find(client => client.username == messages.participants[0].username);
+      const receiverClient = clients.find(client => client.username == messages.participants[1].username);
+
+      if (senderClient) {
+        io.to(senderClient.socketId).emit('syncMessages', messages.messages[messages.messages.length - 1]);
+        console.log(`Message sent to ${senderClient.socketId} successfully: ` + messages.messages[messages.messages.length - 1])
+      }
+
+      if (receiverClient) {
+        io.to(receiverClient.socketId).emit('syncMessages', messages.messages[messages.messages.length - 1]);
+        console.log(`Message sent to ${receiverClient.socketId} successfully: ` + messages.messages[messages.messages.length - 1])
+      }
       
     });
 

@@ -32,10 +32,13 @@ function Messages() {
       sender: username,
       text: text.text
     }
-    setPerson(prevPerson => ({...prevPerson, messages: [...prevPerson.messages, message]}));
     socket.emit("newMessage", message)
     setText({ text: '' });
   };
+
+  useEffect(() => {
+    socket.emit('associateId', { username: username })
+  }, [])
 
   useEffect(() => {
     socket.emit("getMessages", {participants : username})
@@ -43,35 +46,30 @@ function Messages() {
       setConversation(data)
       setLoading(false)
     })
-    return () => {
-      socket.off('receiveMessages')
-    }
   }, [])
 
   useEffect(() => {
-
     socket.on('syncMessages', (data) => {
-      setConversation(prevConversation => {
-        const updatedConversation = prevConversation.map(msg => {
-          if (msg._id === data._id) {
-            return data;
+      setConversation((prevConversation) => {
+        return prevConversation.map((convo, index) => {
+          if(convo.participants[0].username === data.sender || convo.participants[1].username === data.sender){
+            return {
+              ...convo,
+              messages: [...convo.messages, data]
+            }
           }
-          return msg;
-        });
-        return updatedConversation;
-      });
-      setPerson((prevPerson) => {
-        if (prevPerson._id === data._id) {
-          return data;
+          else{
+            return convo
+          }
+        })
+      })
+      setPerson((prevPerson) => {  
+        return {
+          ...prevPerson,
+          messages: [...prevPerson.messages, data]
         }
-        return prevPerson;
-      });
+      })
     });
-
-    return () => {
-      socket.off('syncMessages')
-    }
-
   }, [])
 
   return (

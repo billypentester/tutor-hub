@@ -95,7 +95,6 @@ const getStudentCount = async(req, res) => {
 const deleteStudent = async(req, res) => {
     try{
         const {email} = req.body;
-        console.log(email)
         if(req.user.email == email){
             await Student.findOneAndDelete({email: email})
             res.json({msg: 'Student deleted successfully'})
@@ -112,7 +111,6 @@ const deleteStudent = async(req, res) => {
 const updateStudent = async(req, res) => {
     try{
         const {data} = req.body;
-        console.log(data)
         if(req.user.email == data.email){
             const result = await Student.findOneAndUpdate({email: data.email}, data, {new: true})
             res.json(result);
@@ -129,7 +127,6 @@ const appointment = async(req, res) => {
         const {student, teacher, appointmentDate, appointmentTime, duration, notes} = req.body;
         const appointment = new Appointment({student, teacher, appointmentDate, appointmentTime, duration, notes})
         const result = await appointment.save();
-        console.log(result)
         res.status(200).json({ msg: 'Appointment created successfully'})
     }
     catch(err){
@@ -150,7 +147,6 @@ const getAppointments = async(req, res) => {
             result.sort((a, b) => {
                 return new Date(b.createdAt) - new Date(a.createdAt)
             })
-            console.log(result)
             res.json(result)
         }
     }
@@ -229,7 +225,6 @@ const payment = async (req, res) => {
 
 const getClassrooms = async(req, res) => {
     try{
-        console.log(req.body)
         const classrooms = await Classroom.find({'student.username': req.body.username})
         res.status(200).json(classrooms)
     }
@@ -278,8 +273,6 @@ const uploadAssignment = async(req, res) => {
 
 const uploadQuiz = async(req, res) => {
     try{
-        console.log(req.body)
-        console.log(req.file)
         const {classroom, subject, quiz, link} = req.body;
         const filename = req.file == undefined ? '' : req.file.filename;
         const result = await Classroom.findOne({_id: classroom})

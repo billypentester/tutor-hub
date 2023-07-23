@@ -12,6 +12,7 @@ import Class from './Class'
 import Messages from './Messages'
 import Appointments from './Appointments'
 
+import { io } from 'socket.io-client';
 
 function TeacherDashoard() {
 
@@ -29,6 +30,8 @@ function TeacherDashoard() {
           const res = await axios.post('/api/teacher/details', {token: localStorage.getItem('token')})
           console.log(res)
           setTeacher(res.data)
+          // const socket = io('');
+          // socket.emit('associateId', {username: res.data.username})
           localStorage.setItem('teacher', JSON.stringify(res.data))
         } 
         else
@@ -36,6 +39,8 @@ function TeacherDashoard() {
           const res = await axios.post('/api/teacher/details', {token})
           console.log(res)
           setTeacher(res.data)
+          // const socket = io('');
+          // socket.emit('associateId', {username: res.data.username})
           localStorage.setItem('token', token)
           localStorage.setItem('teacher', JSON.stringify(res.data))
         } 

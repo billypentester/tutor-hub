@@ -46,7 +46,6 @@ passport.use('student', new GoogleStrategy(student, async(accessToken, refreshTo
 passport.use('teacher', new GoogleStrategy(teacher, async(accessToken, refreshToken, profile, done) => {
     const find = await Teacher.findOne({email: profile.emails[0].value})
     if(find) return done(null, find)
-    console.log(profile)
     const user = new Teacher({
         name: profile.displayName,
         email: profile.emails[0].value,

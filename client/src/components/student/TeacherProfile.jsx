@@ -5,9 +5,6 @@ import Loader from './../utils/Loader'
 import TutorProfile from './../utils/TutorProfile'
 import  {useNavigate} from 'react-router-dom'
 import Alert from './../utils/Alert'
-import { io } from 'socket.io-client';
-
-const socket = io('');
 
 function TeacherProfile() {
 

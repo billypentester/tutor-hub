@@ -227,7 +227,6 @@ function formatTime(timeStr) {
 const modifyAppointment = async(req, res) => {
     try{
         const {appointment, date, time} = req.body;
-        console.log(appointment, date, time)
         const updation = await Appointment.findByIdAndUpdate(appointment, { notes: `Teacher has requested to modify the appointment to ${formatDate(date)} at ${formatTime(time)}`}, {new: true})
         res.json(updation)
     }
@@ -238,7 +237,6 @@ const modifyAppointment = async(req, res) => {
 
 const getClassrooms = async(req, res) => {
     try{
-        console.log(req.body)
         const classrooms = await Classroom.find({'teacher.username': req.body.username})
         res.status(200).json(classrooms)
     }
@@ -250,7 +248,6 @@ const getClassrooms = async(req, res) => {
 
 const classroomAnnouncement = async(req, res) => {
     try{
-        console.log(req.body)
         const {classroom, announcement} = req.body;
         const update = await Classroom.findByIdAndUpdate(classroom, { $push: { announcements: announcement } }, {new: true})
         // set announcements in descending order
